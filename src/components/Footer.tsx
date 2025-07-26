@@ -7,8 +7,8 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="md:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <img src="/bspot-logo.png" alt="B-Spot Technologies" className="w-12 h-12" />
+            <div className="flex items-center space-x-4 mb-6">
+              <img src="/bspot-logo.png" alt="B-Spot Technologies" className="w-16 h-16 object-contain" />
               <div className="text-xl font-bold text-foreground">
                 B-SPOT <span className="text-primary">TECHNOLOGIES</span>
               </div>
