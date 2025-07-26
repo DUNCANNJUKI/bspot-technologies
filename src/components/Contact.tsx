@@ -81,11 +81,11 @@ const Contact = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">First Name</label>
-                    <Input placeholder="John" className="bg-background border-border" />
+                    <Input placeholder="BEE" className="bg-background border-border" />
                   </div>
                   <div>
                     <label className="text-sm font-medium text-foreground mb-2 block">Last Name</label>
-                    <Input placeholder="Doe" className="bg-background border-border" />
+                    <Input placeholder="ENT" className="bg-background border-border" />
                   </div>
                 </div>
                 
