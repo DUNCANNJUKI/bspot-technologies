@@ -7,10 +7,8 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="md:col-span-2">
-            <div className="flex items-center space-x-2 mb-6">
-              <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center shadow-tech-glow">
-                <Wifi className="w-6 h-6 text-primary-foreground" />
-              </div>
+            <div className="flex items-center space-x-3 mb-6">
+              <img src="/bspot-logo.png" alt="B-Spot Technologies" className="w-12 h-12" />
               <div className="text-xl font-bold text-foreground">
                 B-SPOT <span className="text-primary">TECHNOLOGIES</span>
               </div>
@@ -22,7 +20,7 @@ const Footer = () => {
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4" />
-                <span>+1 (555) 123-4567</span>
+                <span>+254-750-444-167</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4" />

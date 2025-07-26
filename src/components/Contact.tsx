@@ -9,7 +9,7 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Phone",
-      details: ["+1 (555) 123-4567", "+1 (555) 987-6543"],
+      details: ["+254-750-444-167", "24/7 Support Line"],
       description: "Call us for immediate assistance"
     },
     {
@@ -94,10 +94,10 @@ const Contact = () => {
                   <Input type="email" placeholder="john@example.com" className="bg-background border-border" />
                 </div>
                 
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Phone</label>
-                  <Input type="tel" placeholder="+1 (555) 123-4567" className="bg-background border-border" />
-                </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 block">Phone</label>
+                    <Input type="tel" placeholder="+254-750-444-167" className="bg-background border-border" />
+                  </div>
                 
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">Service Needed</label>
