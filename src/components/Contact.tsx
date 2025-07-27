@@ -21,7 +21,7 @@ const Contact = () => {
     {
       icon: MapPin,
       title: "Service Area",
-      details: ["Metro Area Coverage", "Nationwide Solutions"],
+      details: ["Nairobi Area Coverage", "Nationwide Solutions"],
       description: "We serve multiple locations"
     },
     {
