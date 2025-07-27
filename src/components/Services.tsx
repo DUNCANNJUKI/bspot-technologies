@@ -1,5 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Wifi, Building, Calendar, Users, Settings, Headphones } from "lucide-react";
+import wifiConnectivity from "@/assets/wifi-connectivity.jpg";
+import accessPoint from "@/assets/access-point.jpg";
 
 const Services = () => {
   const services = [
@@ -42,9 +44,19 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-20 bg-gradient-secondary">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+    <section id="services" className="py-20 bg-gradient-secondary relative overflow-hidden">
+      {/* Background Images */}
+      <div 
+        className="absolute top-0 right-0 w-1/3 h-full bg-cover bg-center opacity-10 animate-fade-in"
+        style={{ backgroundImage: `url(${wifiConnectivity})` }}
+      />
+      <div 
+        className="absolute bottom-0 left-0 w-1/4 h-1/2 bg-cover bg-center opacity-10 animate-fade-in"
+        style={{ backgroundImage: `url(${accessPoint})`, animationDelay: '0.5s' }}
+      />
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
             Our <span className="text-primary">Services</span>
           </h2>
@@ -58,7 +70,8 @@ const Services = () => {
           {services.map((service, index) => (
             <Card 
               key={index} 
-              className="bg-card border-border hover:shadow-card-shadow transition-all duration-300 hover:-translate-y-2"
+              className="bg-card border-border hover:shadow-card-shadow transition-all duration-300 hover:-translate-y-2 animate-fade-in hover-scale"
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <CardHeader>
                 <div className="w-16 h-16 bg-gradient-primary rounded-lg flex items-center justify-center mb-4 shadow-tech-glow">

@@ -24,7 +24,7 @@ const About = () => {
   return (
     <section id="about" className="py-20 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
             About <span className="text-primary">B-SPOT TECHNOLOGIES</span>
           </h2>
@@ -36,7 +36,7 @@ const About = () => {
         </div>
 
         {/* Company Overview */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 animate-fade-in" style={{ animationDelay: '0.2s' }}>
           <div className="max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold mb-6 text-foreground">Growing Across Kenya</h3>
             <p className="text-lg text-muted-foreground mb-8">
@@ -45,19 +45,19 @@ const About = () => {
               our services and build lasting relationships with clients throughout the region.
             </p>
             <div className="grid md:grid-cols-4 gap-6">
-              <div className="bg-card border border-border rounded-lg p-4">
+              <div className="bg-card border border-border rounded-lg p-4 hover-scale animate-fade-in" style={{ animationDelay: '0.4s' }}>
                 <h4 className="font-semibold text-primary mb-2">Nairobi</h4>
                 <p className="text-sm text-muted-foreground">Capital city coverage</p>
               </div>
-              <div className="bg-card border border-border rounded-lg p-4">
+              <div className="bg-card border border-border rounded-lg p-4 hover-scale animate-fade-in" style={{ animationDelay: '0.5s' }}>
                 <h4 className="font-semibold text-primary mb-2">Kikuyu</h4>
                 <p className="text-sm text-muted-foreground">Local community services</p>
               </div>
-              <div className="bg-card border border-border rounded-lg p-4">
+              <div className="bg-card border border-border rounded-lg p-4 hover-scale animate-fade-in" style={{ animationDelay: '0.6s' }}>
                 <h4 className="font-semibold text-primary mb-2">Meru</h4>
                 <p className="text-sm text-muted-foreground">Regional expansion</p>
               </div>
-              <div className="bg-card border border-border rounded-lg p-4">
+              <div className="bg-card border border-border rounded-lg p-4 hover-scale animate-fade-in" style={{ animationDelay: '0.7s' }}>
                 <h4 className="font-semibold text-primary mb-2">Regen</h4>
                 <p className="text-sm text-muted-foreground">Growing network</p>
               </div>
@@ -67,7 +67,7 @@ const About = () => {
 
         {/* Values Section */}
         <div className="grid md:grid-cols-2 gap-8">
-          <div>
+          <div className="animate-fade-in" style={{ animationDelay: '0.8s' }}>
             <h3 className="text-3xl font-bold mb-6 text-foreground">Our Mission</h3>
             <p className="text-lg text-muted-foreground mb-6">
               To provide businesses and organizations across Kenya with cutting-edge WiFi solutions that 
@@ -84,7 +84,11 @@ const About = () => {
 
           <div className="grid gap-6">
             {values.map((value, index) => (
-              <Card key={index} className="bg-card border-border">
+              <Card 
+                key={index} 
+                className="bg-card border-border hover-scale animate-fade-in" 
+                style={{ animationDelay: `${1 + index * 0.1}s` }}
+              >
                 <CardContent className="p-6">
                   <h4 className="text-xl font-semibold mb-3 text-foreground">{value.title}</h4>
                   <p className="text-muted-foreground">{value.description}</p>
