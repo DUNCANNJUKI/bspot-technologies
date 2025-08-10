@@ -22,76 +22,88 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="py-20 bg-background">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-            About <span className="text-primary">B-SPOT TECHNOLOGIES</span>
+    <section id="about" className="py-24 bg-background relative">
+      {/* Elegant Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-20 left-20 w-40 h-40 border border-primary rounded-full animate-float" />
+        <div className="absolute bottom-20 right-20 w-32 h-32 border border-primary rounded-lg rotate-45 animate-float" style={{ animationDelay: '2s' }} />
+      </div>
+      
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center mb-20 animate-scale-in">
+          <h2 className="text-5xl md:text-6xl font-bold mb-8 text-foreground leading-tight">
+            About <span className="elegant-text">B-SPOT TECHNOLOGIES</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Based in Kenya with 2 years of operation, we are a leading provider of professional 
-            WiFi hotspot solutions. We serve Regen, Kikuyu, Meru, Nairobi and are rapidly extending 
-            our reach to deliver reliable, fast, and secure internet connectivity for businesses and events.
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            A visionary force in Kenya's connectivity landscape, delivering 
+            <span className="text-primary font-medium"> transformative WiFi experiences</span> across 
+            Nairobi, Kikuyu, Meru, and Regen with <span className="text-primary font-medium">two years of proven excellence</span>.
           </p>
         </div>
 
-        {/* Company Overview */}
-        <div className="text-center mb-16 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold mb-6 text-foreground">Growing Across Kenya</h3>
-            <p className="text-lg text-muted-foreground mb-8">
-              In just 2 years of operation, B-SPOT TECHNOLOGIES has established a strong presence 
-              across key locations in Kenya. Our commitment to excellence has enabled us to expand 
-              our services and build lasting relationships with clients throughout the region.
+        {/* Premium Company Overview */}
+        <div className="text-center mb-20 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          <div className="max-w-5xl mx-auto">
+            <h3 className="text-3xl md:text-4xl font-bold mb-8 text-foreground">Expanding Across Kenya</h3>
+            <p className="text-lg md:text-xl text-muted-foreground mb-12 leading-relaxed">
+              In just two years, B-SPOT TECHNOLOGIES has carved a distinctive path in Kenya's connectivity sector, 
+              establishing premium network solutions that define industry standards across multiple regions.
             </p>
-            <div className="grid md:grid-cols-4 gap-6">
-              <div className="bg-card border border-border rounded-lg p-4 hover-scale animate-fade-in" style={{ animationDelay: '0.4s' }}>
-                <h4 className="font-semibold text-primary mb-2">Nairobi</h4>
-                <p className="text-sm text-muted-foreground">Capital city coverage</p>
+            <div className="grid md:grid-cols-4 gap-8">
+              <div className="luxury-card rounded-2xl p-8 hover-lift animate-scale-in group" style={{ animationDelay: '0.4s' }}>
+                <h4 className="text-xl font-bold elegant-text mb-3">Nairobi</h4>
+                <p className="text-muted-foreground font-medium">Capital Excellence</p>
+                <div className="w-full h-1 bg-gradient-elegant rounded-full mt-4 opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
-              <div className="bg-card border border-border rounded-lg p-4 hover-scale animate-fade-in" style={{ animationDelay: '0.5s' }}>
-                <h4 className="font-semibold text-primary mb-2">Kikuyu</h4>
-                <p className="text-sm text-muted-foreground">Local community services</p>
+              <div className="luxury-card rounded-2xl p-8 hover-lift animate-scale-in group" style={{ animationDelay: '0.5s' }}>
+                <h4 className="text-xl font-bold elegant-text mb-3">Kikuyu</h4>
+                <p className="text-muted-foreground font-medium">Community Focus</p>
+                <div className="w-full h-1 bg-gradient-elegant rounded-full mt-4 opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
-              <div className="bg-card border border-border rounded-lg p-4 hover-scale animate-fade-in" style={{ animationDelay: '0.6s' }}>
-                <h4 className="font-semibold text-primary mb-2">Meru</h4>
-                <p className="text-sm text-muted-foreground">Regional expansion</p>
+              <div className="luxury-card rounded-2xl p-8 hover-lift animate-scale-in group" style={{ animationDelay: '0.6s' }}>
+                <h4 className="text-xl font-bold elegant-text mb-3">Meru</h4>
+                <p className="text-muted-foreground font-medium">Regional Innovation</p>
+                <div className="w-full h-1 bg-gradient-elegant rounded-full mt-4 opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
-              <div className="bg-card border border-border rounded-lg p-4 hover-scale animate-fade-in" style={{ animationDelay: '0.7s' }}>
-                <h4 className="font-semibold text-primary mb-2">Regen</h4>
-                <p className="text-sm text-muted-foreground">Growing network</p>
+              <div className="luxury-card rounded-2xl p-8 hover-lift animate-scale-in group" style={{ animationDelay: '0.7s' }}>
+                <h4 className="text-xl font-bold elegant-text mb-3">Regen</h4>
+                <p className="text-muted-foreground font-medium">Network Growth</p>
+                <div className="w-full h-1 bg-gradient-elegant rounded-full mt-4 opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Values Section */}
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="animate-fade-in" style={{ animationDelay: '0.8s' }}>
-            <h3 className="text-3xl font-bold mb-6 text-foreground">Our Mission</h3>
-            <p className="text-lg text-muted-foreground mb-6">
-              To provide businesses and organizations across Kenya with cutting-edge WiFi solutions that 
-              enhance connectivity, productivity, and user experience. We believe that reliable 
-              internet access is essential in today's digital world, and we're committed to bridging 
-              the connectivity gap in our communities.
-            </p>
-            <p className="text-lg text-muted-foreground">
-              Our team of certified network engineers and technicians work tirelessly to ensure 
-              your WiFi infrastructure meets the highest standards of performance and security, 
-              backed by our 2 years of proven experience in the Kenyan market.
-            </p>
+        {/* Premium Values Section */}
+        <div className="grid lg:grid-cols-2 gap-16">
+          <div className="animate-slide-up" style={{ animationDelay: '0.8s' }}>
+            <h3 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">Our Mission</h3>
+            <div className="space-y-6">
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                To elevate Kenya's connectivity landscape through 
+                <span className="text-primary font-medium"> innovative WiFi solutions</span> that empower 
+                businesses, communities, and individuals to thrive in the digital age.
+              </p>
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                Our certified engineering team leverages 
+                <span className="text-primary font-medium"> cutting-edge technology</span> and 
+                <span className="text-primary font-medium"> proven methodologies</span> to deliver 
+                network infrastructures that exceed industry standards.
+              </p>
+            </div>
           </div>
 
-          <div className="grid gap-6">
+          <div className="grid gap-8">
             {values.map((value, index) => (
               <Card 
                 key={index} 
-                className="bg-card border-border hover-scale animate-fade-in" 
-                style={{ animationDelay: `${1 + index * 0.1}s` }}
+                className="luxury-card hover-lift animate-slide-up group" 
+                style={{ animationDelay: `${1 + index * 0.15}s` }}
               >
-                <CardContent className="p-6">
-                  <h4 className="text-xl font-semibold mb-3 text-foreground">{value.title}</h4>
-                  <p className="text-muted-foreground">{value.description}</p>
+                <CardContent className="p-8">
+                  <h4 className="text-2xl font-bold mb-4 elegant-text">{value.title}</h4>
+                  <p className="text-muted-foreground text-lg leading-relaxed">{value.description}</p>
+                  <div className="w-full h-1 bg-gradient-elegant rounded-full mt-6 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 </CardContent>
               </Card>
             ))}

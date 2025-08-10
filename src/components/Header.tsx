@@ -6,28 +6,30 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-      <div className="container mx-auto px-4 py-4">
+    <header className="fixed top-0 w-full z-50 glass-effect border-b border-border/50">
+      <div className="container mx-auto px-6 py-5">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center space-x-4">
-            <img src="/lovable-uploads/b036e33e-4110-40c6-8b4e-b6fa6c3ec745.png" alt="B-Spot Technologies" className="w-16 h-16 object-contain" />
-            <div className="text-xl font-bold text-foreground">
-              B-SPOT <span className="text-primary">TECHNOLOGIES</span>
+          {/* Premium Logo */}
+          <div className="flex items-center space-x-4 group">
+            <div className="w-14 h-14 rounded-xl luxury-card p-2 group-hover:shadow-tech-glow transition-all duration-300">
+              <img src="/lovable-uploads/b036e33e-4110-40c6-8b4e-b6fa6c3ec745.png" alt="B-Spot Technologies" className="w-full h-full object-contain" />
+            </div>
+            <div className="text-xl font-bold text-foreground tracking-tight">
+              B-SPOT <span className="elegant-text">TECHNOLOGIES</span>
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            <a href="#home" className="text-foreground hover:text-primary transition-colors">Home</a>
-            <a href="#services" className="text-foreground hover:text-primary transition-colors">Services</a>
-            <a href="#about" className="text-foreground hover:text-primary transition-colors">About</a>
-            <a href="#contact" className="text-foreground hover:text-primary transition-colors">Contact</a>
+          {/* Elegant Desktop Navigation */}
+          <nav className="hidden md:flex space-x-10">
+            <a href="#home" className="text-foreground hover:text-primary transition-all duration-300 font-medium tracking-wide relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Home</a>
+            <a href="#services" className="text-foreground hover:text-primary transition-all duration-300 font-medium tracking-wide relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Services</a>
+            <a href="#about" className="text-foreground hover:text-primary transition-all duration-300 font-medium tracking-wide relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">About</a>
+            <a href="#contact" className="text-foreground hover:text-primary transition-all duration-300 font-medium tracking-wide relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Contact</a>
           </nav>
 
-          {/* CTA Button */}
+          {/* Premium CTA Button */}
           <div className="hidden md:block">
-            <Button className="bg-gradient-primary hover:shadow-tech-glow transition-all duration-300">
+            <Button className="premium-button rounded-xl px-6 py-3 font-semibold tracking-wide">
               Get Started
             </Button>
           </div>

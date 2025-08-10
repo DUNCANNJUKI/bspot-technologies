@@ -8,75 +8,78 @@ const Hero = () => {
     <section id="home" className="min-h-screen flex items-center relative overflow-hidden">
       {/* Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30 animate-fade-in"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 animate-fade-in"
         style={{ backgroundImage: `url(${networkInfrastructure})` }}
       />
       
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-hero opacity-90" />
+      {/* Elegant Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-hero opacity-95" />
+      
+      {/* Floating Geometric Elements */}
+      <div className="absolute top-20 left-10 w-32 h-32 border border-primary/20 rounded-full animate-float opacity-30" />
+      <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-elegant rounded-lg opacity-20 animate-float" style={{ animationDelay: '1s' }} />
+      <div className="absolute bottom-20 left-20 w-16 h-16 border-2 border-primary/30 rotate-45 opacity-40 animate-float" style={{ animationDelay: '2s' }} />
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Main Heading */}
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-fade-in">
-            B-SPOT
-          </h1>
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            TECHNOLOGIES
-          </h2>
+        <div className="max-w-5xl mx-auto text-center">
+          {/* Premium Main Heading */}
+          <div className="mb-8 animate-scale-in">
+            <h1 className="text-6xl md:text-8xl font-bold mb-4 elegant-text leading-none tracking-tight">
+              B-SPOT
+            </h1>
+            <h2 className="text-4xl md:text-6xl font-light text-foreground/90 tracking-widest">
+              TECHNOLOGIES
+            </h2>
+          </div>
           
-          {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            Professional WiFi hotspot solutions delivering fast, reliable, and secure internet connectivity 
-            for businesses, events, and communities across Kenya.
+          {/* Elegant Subtitle */}
+          <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.3s' }}>
+            Crafting premium WiFi experiences that connect communities across Kenya with 
+            <span className="text-primary font-medium"> enterprise-grade reliability</span> and 
+            <span className="text-primary font-medium"> unmatched performance</span>.
           </p>
 
-          {/* Feature Icons */}
-          <div className="flex justify-center space-x-8 mb-12 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            <div className="flex flex-col items-center hover-scale">
-              <div className="w-16 h-16 bg-card rounded-full flex items-center justify-center shadow-card-shadow mb-3 hover:shadow-tech-glow transition-all duration-300">
-                <Zap className="w-8 h-8 text-primary" />
+          {/* Premium Feature Icons */}
+          <div className="flex justify-center gap-12 mb-16 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+            <div className="flex flex-col items-center group">
+              <div className="w-20 h-20 luxury-card rounded-2xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
+                <Zap className="w-10 h-10 text-primary" />
               </div>
-              <span className="text-sm text-muted-foreground">Fast Speed</span>
+              <span className="text-sm font-medium text-muted-foreground">Lightning Fast</span>
             </div>
-            <div className="flex flex-col items-center hover-scale">
-              <div className="w-16 h-16 bg-card rounded-full flex items-center justify-center shadow-card-shadow mb-3 hover:shadow-tech-glow transition-all duration-300">
-                <Shield className="w-8 h-8 text-primary" />
+            <div className="flex flex-col items-center group">
+              <div className="w-20 h-20 luxury-card rounded-2xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
+                <Shield className="w-10 h-10 text-primary" />
               </div>
-              <span className="text-sm text-muted-foreground">Secure</span>
+              <span className="text-sm font-medium text-muted-foreground">Enterprise Secure</span>
             </div>
-            <div className="flex flex-col items-center hover-scale">
-              <div className="w-16 h-16 bg-card rounded-full flex items-center justify-center shadow-card-shadow mb-3 hover:shadow-tech-glow transition-all duration-300">
-                <Wifi className="w-8 h-8 text-primary" />
+            <div className="flex flex-col items-center group">
+              <div className="w-20 h-20 luxury-card rounded-2xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
+                <Wifi className="w-10 h-10 text-primary" />
               </div>
-              <span className="text-sm text-muted-foreground">Reliable</span>
+              <span className="text-sm font-medium text-muted-foreground">Always Reliable</span>
             </div>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.8s' }}>
+          {/* Premium CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center animate-slide-up" style={{ animationDelay: '0.7s' }}>
             <Button 
               size="lg" 
-              className="bg-gradient-primary hover:shadow-tech-glow transition-all duration-300 text-lg px-8 py-6 hover-scale"
+              className="premium-button text-lg px-10 py-7 rounded-2xl font-semibold tracking-wide"
             >
-              Get Started Today
-              <ArrowRight className="ml-2 w-5 h-5" />
+              Start Your Journey
+              <ArrowRight className="ml-3 w-5 h-5" />
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 text-lg px-8 py-6 hover-scale"
+              className="glass-effect border-primary/50 text-primary hover:bg-primary/10 transition-all duration-500 text-lg px-10 py-7 rounded-2xl font-semibold tracking-wide backdrop-blur-md hover-lift"
             >
-              Learn More
+              Explore Solutions
             </Button>
           </div>
         </div>
       </div>
-
-      {/* Floating Animation Elements */}
-      <div className="absolute top-20 left-10 w-4 h-4 bg-primary rounded-full opacity-60 animate-pulse" />
-      <div className="absolute top-40 right-20 w-6 h-6 bg-accent rounded-full opacity-40 animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute bottom-20 left-20 w-3 h-3 bg-primary rounded-full opacity-50 animate-pulse" style={{ animationDelay: '2s' }} />
     </section>
   );
 };

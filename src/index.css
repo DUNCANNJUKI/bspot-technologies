@@ -8,43 +8,50 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 26% 14%;
-    --foreground: 210 40% 98%;
+    --background: 15 10% 8%;
+    --foreground: 45 15% 96%;
 
-    --card: 222 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 20 14% 12%;
+    --card-foreground: 45 15% 96%;
 
-    --popover: 222 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 20 14% 12%;
+    --popover-foreground: 45 15% 96%;
 
-    --primary: 45 93% 47%;
-    --primary-foreground: 240 10% 3.9%;
+    --primary: 43 96% 56%;
+    --primary-foreground: 20 5% 15%;
 
-    --secondary: 217 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 25 20% 18%;
+    --secondary-foreground: 45 15% 96%;
 
-    --muted: 217 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 25 20% 18%;
+    --muted-foreground: 43 20% 70%;
 
-    --accent: 45 93% 47%;
-    --accent-foreground: 240 10% 3.9%;
+    --accent: 43 96% 56%;
+    --accent-foreground: 20 5% 15%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 45 15% 96%;
 
-    --border: 217 32.6% 17.5%;
-    --input: 217 32.6% 17.5%;
-    --ring: 45 93% 47%;
+    --border: 25 20% 20%;
+    --input: 25 20% 20%;
+    --ring: 43 96% 56%;
 
-    /* Custom design system for B-SPOT */
-    --gradient-primary: linear-gradient(135deg, hsl(45, 93%, 47%), hsl(45, 93%, 65%));
-    --gradient-secondary: linear-gradient(135deg, hsl(220, 26%, 14%), hsl(217, 32.6%, 17.5%));
-    --gradient-hero: linear-gradient(135deg, hsl(220, 26%, 14%) 0%, hsl(45, 93%, 47%) 100%);
-    --tech-glow: 0 0 20px hsl(45, 93%, 47% / 0.4);
-    --card-shadow: 0 8px 32px hsl(45, 93%, 47% / 0.15);
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Premium Classic Design System */
+    --gradient-primary: linear-gradient(135deg, hsl(43, 96%, 56%), hsl(45, 100%, 72%));
+    --gradient-secondary: linear-gradient(135deg, hsl(15, 10%, 8%), hsl(25, 20%, 18%));
+    --gradient-hero: linear-gradient(135deg, hsl(15, 10%, 8%) 0%, hsl(43, 96%, 56%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(20, 14%, 12%), hsl(25, 20%, 16%));
+    --gradient-elegant: linear-gradient(165deg, hsl(43, 96%, 56%) 0%, hsl(38, 88%, 48%) 50%, hsl(30, 80%, 40%) 100%);
+    
+    --tech-glow: 0 0 30px hsl(43, 96%, 56% / 0.6);
+    --card-shadow: 0 12px 40px hsl(43, 96%, 56% / 0.2);
+    --elegant-shadow: 0 20px 60px hsl(43, 96%, 56% / 0.15);
+    --premium-shadow: 0 25px 50px -12px hsl(15, 10%, 8% / 0.8);
+    
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-elegant: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -103,14 +110,47 @@ All colors MUST be HSL.
 }
 
 @layer components {
-  /* Animation utilities */
+  /* Premium Animation utilities */
   .hover-scale {
-    @apply transition-transform duration-200 hover:scale-105;
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-elegant-shadow;
+  }
+  
+  .hover-lift {
+    @apply transition-all duration-500 hover:-translate-y-3 hover:shadow-premium-shadow;
   }
   
   .animate-fade-in {
-    animation: fade-in 0.6s ease-out forwards;
+    animation: fade-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     opacity: 0;
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  
+  /* Classic UI Elements */
+  .glass-effect {
+    @apply backdrop-blur-md border border-border/50 bg-card/80;
+  }
+  
+  .luxury-card {
+    @apply bg-gradient-card border border-border/30 shadow-premium-shadow backdrop-blur-sm;
+  }
+  
+  .premium-button {
+    @apply bg-gradient-elegant text-primary-foreground font-semibold shadow-card-shadow hover:shadow-tech-glow transition-all duration-300 hover:scale-105;
+  }
+  
+  .elegant-text {
+    @apply bg-gradient-elegant bg-clip-text text-transparent;
   }
 }
 
