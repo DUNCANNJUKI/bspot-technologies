@@ -8,72 +8,72 @@ const Hero = () => {
     <section id="home" className="min-h-screen flex items-center relative overflow-hidden">
       {/* Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 animate-fade-in"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15 animate-fade-in"
         style={{ backgroundImage: `url(${networkInfrastructure})` }}
       />
       
-      {/* Elegant Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-hero opacity-95" />
+      {/* Professional Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-hero opacity-98" />
       
-      {/* Floating Geometric Elements */}
-      <div className="absolute top-20 left-10 w-32 h-32 border border-primary/20 rounded-full animate-float opacity-30" />
-      <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-elegant rounded-lg opacity-20 animate-float" style={{ animationDelay: '1s' }} />
-      <div className="absolute bottom-20 left-20 w-16 h-16 border-2 border-primary/30 rotate-45 opacity-40 animate-float" style={{ animationDelay: '2s' }} />
+      {/* Refined Geometric Elements */}
+      <div className="absolute top-20 left-10 w-24 h-24 border border-primary/15 rounded-full animate-float opacity-40" />
+      <div className="absolute top-40 right-20 w-20 h-20 bg-gradient-elegant rounded-lg opacity-15 animate-float" style={{ animationDelay: '1s' }} />
+      <div className="absolute bottom-20 left-20 w-16 h-16 border-2 border-primary/20 rotate-45 opacity-30 animate-float" style={{ animationDelay: '2s' }} />
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-5xl mx-auto text-center">
-          {/* Premium Main Heading */}
-          <div className="mb-8 animate-scale-in">
-            <h1 className="text-6xl md:text-8xl font-bold mb-4 elegant-text leading-none tracking-tight">
+          {/* Professional Main Heading */}
+          <div className="mb-12 animate-scale-in">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 elegant-text leading-none tracking-tight">
               B-SPOT
             </h1>
-            <h2 className="text-4xl md:text-6xl font-light text-foreground/90 tracking-widest">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-foreground/90 tracking-widest">
               TECHNOLOGIES
             </h2>
           </div>
           
-          {/* Elegant Subtitle */}
-          <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.3s' }}>
-            Crafting premium WiFi experiences that connect communities across Kenya with 
-            <span className="text-primary font-medium"> enterprise-grade reliability</span> and 
-            <span className="text-primary font-medium"> unmatched performance</span>.
+          {/* Professional Subtitle */}
+          <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-16 max-w-4xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.3s' }}>
+            Connecting communities with affordable and seamless internet connections through 
+            <span className="text-primary font-semibold"> enterprise-grade reliability</span> and 
+            <span className="text-primary font-semibold"> innovative solutions</span>.
           </p>
 
-          {/* Premium Feature Icons */}
-          <div className="flex justify-center gap-12 mb-16 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+          {/* Professional Feature Icons */}
+          <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-12 mb-16 animate-fade-in" style={{ animationDelay: '0.5s' }}>
             <div className="flex flex-col items-center group">
-              <div className="w-20 h-20 luxury-card rounded-2xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
-                <Zap className="w-10 h-10 text-primary" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 luxury-card rounded-xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
+                <Zap className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
               </div>
-              <span className="text-sm font-medium text-muted-foreground">Lightning Fast</span>
+              <span className="text-sm font-semibold text-muted-foreground">Lightning Fast</span>
             </div>
             <div className="flex flex-col items-center group">
-              <div className="w-20 h-20 luxury-card rounded-2xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
-                <Shield className="w-10 h-10 text-primary" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 luxury-card rounded-xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
+                <Shield className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
               </div>
-              <span className="text-sm font-medium text-muted-foreground">Enterprise Secure</span>
+              <span className="text-sm font-semibold text-muted-foreground">Enterprise Secure</span>
             </div>
             <div className="flex flex-col items-center group">
-              <div className="w-20 h-20 luxury-card rounded-2xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
-                <Wifi className="w-10 h-10 text-primary" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 luxury-card rounded-xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
+                <Wifi className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
               </div>
-              <span className="text-sm font-medium text-muted-foreground">Always Reliable</span>
+              <span className="text-sm font-semibold text-muted-foreground">Always Reliable</span>
             </div>
           </div>
 
-          {/* Premium CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-6 justify-center animate-slide-up" style={{ animationDelay: '0.7s' }}>
+          {/* Professional CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center animate-slide-up" style={{ animationDelay: '0.7s' }}>
             <Button 
               size="lg" 
-              className="premium-button text-lg px-10 py-7 rounded-2xl font-semibold tracking-wide"
+              className="premium-button text-base sm:text-lg px-8 sm:px-10 py-4 sm:py-6 rounded-xl font-semibold tracking-wide"
             >
               Start Your Journey
-              <ArrowRight className="ml-3 w-5 h-5" />
+              <ArrowRight className="ml-2 sm:ml-3 w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
-              className="glass-effect border-primary/50 text-primary hover:bg-primary/10 transition-all duration-500 text-lg px-10 py-7 rounded-2xl font-semibold tracking-wide backdrop-blur-md hover-lift"
+              className="glass-effect border-primary/30 text-primary hover:bg-primary/10 transition-all duration-500 text-base sm:text-lg px-8 sm:px-10 py-4 sm:py-6 rounded-xl font-semibold tracking-wide backdrop-blur-md hover-lift"
             >
               Explore Solutions
             </Button>
