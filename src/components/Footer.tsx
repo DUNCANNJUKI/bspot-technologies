@@ -2,72 +2,78 @@ import { Wifi, Phone, Mail, MapPin } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-secondary border-t border-border/30 py-16">
-      <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-4 gap-12 mb-12">
+    <footer className="bg-gradient-secondary border-t border-border/20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
           {/* Company Info */}
-          <div className="col-span-2 animate-fade-in">
-            <div className="flex items-center space-x-4 mb-6">
-              <div className="w-12 h-12 rounded-xl luxury-card p-2">
+          <div className="lg:col-span-2 animate-fade-in">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-10 h-10 rounded-lg luxury-card p-1.5">
                 <img src="/lovable-uploads/b036e33e-4110-40c6-8b4e-b6fa6c3ec745.png" alt="B-Spot Technologies" className="w-full h-full object-contain" />
               </div>
-              <div className="text-xl font-bold text-foreground">
-                B-SPOT <span className="elegant-text">TECHNOLOGIES</span>
+              <div className="text-lg font-bold text-foreground">
+                B-SPOT <span className="elegant-text font-light">TECHNOLOGIES</span>
               </div>
             </div>
-            <p className="text-muted-foreground mb-6 leading-relaxed text-lg max-w-md">
-              Crafting premium WiFi experiences that connect communities across Kenya with 
+            <p className="text-muted-foreground mb-8 leading-relaxed max-w-md">
+              Connecting communities with affordable and seamless internet connections through 
               enterprise-grade reliability and unmatched performance.
             </p>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-primary" />
-                <span className="text-foreground font-medium">+254-750-444-167</span>
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Phone className="w-4 h-4 text-primary" />
+                </div>
+                <span className="text-foreground text-sm font-medium">+254-750-444-167</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-primary" />
-                <span className="text-foreground font-medium">info@bspot-tech.com</span>
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Mail className="w-4 h-4 text-primary" />
+                </div>
+                <span className="text-foreground text-sm font-medium">info@bspot-tech.com</span>
               </div>
               <div className="flex items-center space-x-3">
-                <MapPin className="w-5 h-5 text-primary" />
-                <span className="text-foreground font-medium">Nairobi Area Coverage</span>
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <MapPin className="w-4 h-4 text-primary" />
+                </div>
+                <span className="text-foreground text-sm font-medium">Nairobi Area Coverage</span>
               </div>
             </div>
           </div>
 
           {/* Services */}
           <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <h3 className="text-xl font-bold mb-6 elegant-text">Premium Services</h3>
+            <h3 className="text-lg font-semibold mb-6 text-foreground">Our Services</h3>
             <ul className="space-y-3">
-              <li><a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">Business WiFi Solutions</a></li>
-              <li><a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">Event WiFi Services</a></li>
-              <li><a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">Network Installation</a></li>
-              <li><a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">24/7 Technical Support</a></li>
-              <li><a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">WiFi Optimization</a></li>
+              <li><a href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium">Business WiFi Solutions</a></li>
+              <li><a href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium">Event WiFi Services</a></li>
+              <li><a href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium">Network Installation</a></li>
+              <li><a href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium">24/7 Technical Support</a></li>
+              <li><a href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium">WiFi Optimization</a></li>
             </ul>
           </div>
 
           {/* Quick Links */}
           <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <h3 className="text-xl font-bold mb-6 elegant-text">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-6 text-foreground">Quick Links</h3>
             <ul className="space-y-3">
-              <li><a href="#home" className="text-muted-foreground hover:text-primary transition-colors font-medium">Home</a></li>
-              <li><a href="#about" className="text-muted-foreground hover:text-primary transition-colors font-medium">About Us</a></li>
-              <li><a href="#services" className="text-muted-foreground hover:text-primary transition-colors font-medium">Our Services</a></li>
-              <li><a href="#contact" className="text-muted-foreground hover:text-primary transition-colors font-medium">Contact</a></li>
+              <li><a href="#home" className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium">Home</a></li>
+              <li><a href="#about" className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium">About Us</a></li>
+              <li><a href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium">Our Services</a></li>
+              <li><a href="#contact" className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium">Contact</a></li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-border/30 pt-8 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-muted-foreground font-medium">
-              © 2024 B-SPOT TECHNOLOGIES. Crafted with excellence in Kenya.
+        {/* Professional Bottom Bar */}
+        <div className="border-t border-border/20 pt-8 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+            <p className="text-muted-foreground text-sm font-medium">
+              © 2024 B-SPOT TECHNOLOGIES. All rights reserved.
             </p>
             <div className="flex items-center space-x-2 text-muted-foreground">
               <Wifi className="w-4 h-4 text-primary" />
-              <span className="font-medium">Connecting Kenya, One Network at a Time</span>
+              <span className="text-sm font-medium">Connecting communities nationwide</span>
             </div>
           </div>
         </div>
