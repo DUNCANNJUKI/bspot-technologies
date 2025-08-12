@@ -40,24 +40,24 @@ const Hero = () => {
           </p>
 
           {/* Professional Feature Icons */}
-          <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-12 mb-16 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+          <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16 mb-20 animate-fade-in" style={{ animationDelay: '0.5s' }}>
             <div className="flex flex-col items-center group">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 luxury-card rounded-xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
-                <Zap className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+              <div className="w-18 h-18 sm:w-24 sm:h-24 luxury-card rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-tech-glow transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2">
+                <Zap className="w-9 h-9 sm:w-12 sm:h-12 text-primary drop-shadow-lg" />
               </div>
-              <span className="text-sm font-semibold text-muted-foreground">Lightning Fast</span>
+              <span className="text-sm sm:text-base font-semibold text-muted-foreground tracking-wide">Lightning Fast</span>
             </div>
             <div className="flex flex-col items-center group">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 luxury-card rounded-xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
-                <Shield className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+              <div className="w-18 h-18 sm:w-24 sm:h-24 luxury-card rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-tech-glow transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2">
+                <Shield className="w-9 h-9 sm:w-12 sm:h-12 text-primary drop-shadow-lg" />
               </div>
-              <span className="text-sm font-semibold text-muted-foreground">Enterprise Secure</span>
+              <span className="text-sm sm:text-base font-semibold text-muted-foreground tracking-wide">Enterprise Secure</span>
             </div>
             <div className="flex flex-col items-center group">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 luxury-card rounded-xl flex items-center justify-center mb-4 group-hover:shadow-tech-glow transition-all duration-500 group-hover:scale-110">
-                <Wifi className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+              <div className="w-18 h-18 sm:w-24 sm:h-24 luxury-card rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-tech-glow transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2">
+                <Wifi className="w-9 h-9 sm:w-12 sm:h-12 text-primary drop-shadow-lg" />
               </div>
-              <span className="text-sm font-semibold text-muted-foreground">Always Reliable</span>
+              <span className="text-sm sm:text-base font-semibold text-muted-foreground tracking-wide">Always Reliable</span>
             </div>
           </div>
 

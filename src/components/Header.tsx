@@ -11,8 +11,8 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Professional Logo */}
           <div className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-lg luxury-card p-1.5 group-hover:shadow-tech-glow transition-all duration-300">
-              <img src="/lovable-uploads/b036e33e-4110-40c6-8b4e-b6fa6c3ec745.png" alt="B-Spot Technologies" className="w-full h-full object-contain" />
+            <div className="w-12 h-12 rounded-xl bg-gradient-elegant p-2 shadow-tech-glow border border-primary/20 group-hover:shadow-premium-shadow group-hover:scale-110 transition-all duration-500">
+              <img src="/lovable-uploads/b036e33e-4110-40c6-8b4e-b6fa6c3ec745.png" alt="B-Spot Technologies" className="w-full h-full object-contain filter brightness-110 contrast-125" />
             </div>
             <div className="text-lg font-bold text-foreground tracking-tight">
               B-SPOT <span className="elegant-text font-light">TECHNOLOGIES</span>
