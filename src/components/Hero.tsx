@@ -64,11 +64,14 @@ const Hero = () => {
           {/* Professional CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center animate-slide-up" style={{ animationDelay: '0.7s' }}>
             <Button 
+              asChild
               size="lg" 
               className="premium-button text-base sm:text-lg px-8 sm:px-10 py-4 sm:py-6 rounded-xl font-semibold tracking-wide"
             >
-              Start Your Journey
-              <ArrowRight className="ml-2 sm:ml-3 w-4 h-4 sm:w-5 sm:h-5" />
+              <a href="#contact">
+                Start Your Journey
+                <ArrowRight className="ml-2 sm:ml-3 w-4 h-4 sm:w-5 sm:h-5" />
+              </a>
             </Button>
             <Button 
               size="lg" 

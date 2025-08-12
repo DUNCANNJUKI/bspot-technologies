@@ -29,8 +29,8 @@ const Header = () => {
 
           {/* Professional CTA Button */}
           <div className="hidden lg:block">
-            <Button className="premium-button rounded-lg px-6 py-2.5 font-medium tracking-wide text-sm">
-              Get Started
+            <Button asChild className="premium-button rounded-lg px-6 py-2.5 font-medium tracking-wide text-sm">
+              <a href="#contact">Get Started</a>
             </Button>
           </div>
 
@@ -52,8 +52,8 @@ const Header = () => {
                 <a href="#services" className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2 border-b border-border/10">Services</a>
                 <a href="#about" className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2 border-b border-border/10">About</a>
                 <a href="#contact" className="text-sm font-medium text-foreground hover:text-primary transition-colors py-2 border-b border-border/10">Contact</a>
-                <Button className="premium-button rounded-lg w-full mt-4 py-3 font-medium">
-                  Get Started
+                <Button asChild className="premium-button rounded-lg w-full mt-4 py-3 font-medium">
+                  <a href="#contact">Get Started</a>
                 </Button>
               </nav>
             </div>
