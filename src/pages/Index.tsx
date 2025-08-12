@@ -4,8 +4,10 @@ import Services from "@/components/Services";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import { useSecurityHeaders } from "@/hooks/useSecurityHeaders";
 
 const Index = () => {
+  useSecurityHeaders();
   return (
     <div className="min-h-screen bg-background font-tech">
       <Header />
