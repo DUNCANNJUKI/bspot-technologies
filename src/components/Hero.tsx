@@ -1,7 +1,9 @@
+
 import { Button } from "./ui/button";
 import { ArrowRight, Wifi, Zap, Shield } from "lucide-react";
 import heroImage from "@/assets/hero-bg.jpg";
 import networkInfrastructure from "@/assets/network-infrastructure.jpg";
+import AnimatedNetwork from "./AnimatedNetwork";
 
 const Hero = () => {
   return (
@@ -14,6 +16,9 @@ const Hero = () => {
       
       {/* Professional Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-hero opacity-98" />
+      
+      {/* Animated Network Visualization */}
+      <AnimatedNetwork />
       
       {/* Refined Geometric Elements */}
       <div className="absolute top-20 left-10 w-24 h-24 border border-primary/15 rounded-full animate-float opacity-40" />

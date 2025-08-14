@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -196,6 +197,19 @@ All colors MUST be HSL.
   .digital-flicker {
     animation: digitalFlicker 0.1s linear infinite;
   }
+
+  /* Network Animation Utilities */
+  .network-pulse {
+    animation: networkPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .signal-wave {
+    animation: signalWave 3s ease-in-out infinite;
+  }
+  
+  .data-flow {
+    animation: dataFlow 4s linear infinite;
+  }
 }
 
 /* Technology keyframes */
@@ -289,6 +303,50 @@ All colors MUST be HSL.
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* Network Animation Keyframes */
+@keyframes networkPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes signalWave {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes dataFlow {
+  0% {
+    transform: translateX(-100px) translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100px) translateY(-20px);
+    opacity: 0;
   }
 }
 
