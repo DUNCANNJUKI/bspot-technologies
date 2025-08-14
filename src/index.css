@@ -189,7 +189,6 @@ All colors MUST be HSL.
     animation: digitalFlicker 0.1s linear infinite;
   }
 }
-}
 
 /* Technology keyframes */
 @keyframes tech-glow {
