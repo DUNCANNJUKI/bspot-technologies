@@ -206,48 +206,66 @@ const ChatbotWidget = () => {
     <>
       {/* Floating Chat Button */}
       {!isOpen && (
-        <Button
-          onClick={handleOpen}
-          className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-tech-glow bg-gradient-elegant hover:scale-110 transition-all duration-300 z-50"
-        >
-          <Bot className="w-6 h-6 text-primary-foreground" />
-        </Button>
+        <div className="fixed bottom-6 right-6 z-50">
+          <Button
+            onClick={handleOpen}
+            className="relative w-16 h-16 rounded-full shadow-tech-glow bg-gradient-elegant hover:scale-110 hover:shadow-premium-shadow transition-all duration-300 group"
+          >
+            <div className="absolute inset-0 rounded-full bg-gradient-elegant opacity-0 group-hover:opacity-20 animate-pulse"></div>
+            <ChatbotAvatar 
+              isTyping={false}
+              isSpeaking={false}
+              mood="neutral"
+              size="sm"
+            />
+          </Button>
+          {/* Notification badge */}
+          <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full flex items-center justify-center animate-pulse">
+            <div className="w-2 h-2 bg-white rounded-full"></div>
+          </div>
+        </div>
       )}
 
       {/* Chat Widget */}
       {isOpen && (
-        <Card className="fixed bottom-6 right-6 w-80 h-96 shadow-premium-shadow border border-primary/20 bg-gradient-card backdrop-blur-sm z-50 animate-scale-in">
-          <CardHeader className="pb-3 bg-gradient-elegant rounded-t-lg">
+        <Card className="fixed bottom-6 right-6 w-96 h-[500px] shadow-premium-shadow border border-primary/30 bg-card/95 backdrop-blur-md z-50 animate-scale-in rounded-xl overflow-hidden">
+          <CardHeader className="pb-4 pt-4 px-6 bg-gradient-elegant border-b border-primary/20">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                {/* Replace the simple bot icon with the futuristic avatar */}
-                <ChatbotAvatar 
-                  isTyping={isTyping}
-                  isSpeaking={false}
-                  mood={avatarMood}
-                  size="sm"
-                />
-                <div>
-                  <CardTitle className="text-sm text-primary-foreground">B-SPOT Assistant</CardTitle>
-                  <p className="text-xs text-primary-foreground/80">Online • AI Powered</p>
+              <div className="flex items-center space-x-4">
+                <div className="relative">
+                  <ChatbotAvatar 
+                    isTyping={isTyping}
+                    isSpeaking={false}
+                    mood={avatarMood}
+                    size="sm"
+                  />
+                  {/* Online status indicator */}
+                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 border-2 border-background rounded-full animate-pulse"></div>
+                </div>
+                <div className="flex flex-col">
+                  <CardTitle className="text-base font-semibold text-primary-foreground">B-SPOT Assistant</CardTitle>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <p className="text-xs text-primary-foreground/90 font-medium">Online • AI Powered</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex space-x-1">
+              <div className="flex items-center space-x-2">
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsOpen(false)}
-                  className="w-6 h-6 text-primary-foreground hover:bg-primary-foreground/20"
+                  className="w-8 h-8 text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/15 rounded-md transition-all duration-200"
                 >
-                  <Minimize2 className="w-3 h-3" />
+                  <Minimize2 className="w-4 h-4" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsOpen(false)}
-                  className="w-6 h-6 text-primary-foreground hover:bg-primary-foreground/20"
+                  className="w-8 h-8 text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/15 rounded-md transition-all duration-200"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="w-4 h-4" />
                 </Button>
               </div>
             </div>
@@ -255,34 +273,55 @@ const ChatbotWidget = () => {
 
           <CardContent className="flex flex-col h-full p-0">
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background/50">
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4 bg-background/20 custom-scrollbar">
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} items-end space-x-2`}
                 >
+                  {!message.isUser && (
+                    <div className="flex-shrink-0 mb-1">
+                      <ChatbotAvatar 
+                        isTyping={false}
+                        isSpeaking={false}
+                        mood={avatarMood}
+                        size="sm"
+                      />
+                    </div>
+                  )}
                   <div
-                    className={`max-w-[70%] px-3 py-2 rounded-lg text-sm ${
+                    className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
                       message.isUser
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-foreground border border-border/50'
+                        ? 'bg-gradient-elegant text-primary-foreground rounded-br-md font-medium'
+                        : 'bg-muted/80 text-foreground border border-border/30 rounded-bl-md backdrop-blur-sm'
                     }`}
                   >
-                    {message.text}
+                    <p className="whitespace-pre-wrap">{message.text}</p>
+                    <div className={`text-xs mt-2 opacity-70 ${message.isUser ? 'text-right' : 'text-left'}`}>
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
                   </div>
+                  {message.isUser && (
+                    <div className="flex-shrink-0 w-8 h-8 bg-gradient-elegant rounded-full flex items-center justify-center mb-1">
+                      <div className="w-4 h-4 bg-primary-foreground rounded-full"></div>
+                    </div>
+                  )}
                 </div>
               ))}
               
               {isTyping && (
-                <div className="flex justify-start items-center space-x-2">
-                  <ChatbotAvatar 
-                    isTyping={true}
-                    isSpeaking={false}
-                    mood="thinking"
-                    size="sm"
-                  />
-                  <div className="bg-muted text-foreground px-3 py-2 rounded-lg text-sm border border-border/50">
-                    <div className="flex space-x-1">
+                <div className="flex justify-start items-end space-x-2">
+                  <div className="flex-shrink-0 mb-1">
+                    <ChatbotAvatar 
+                      isTyping={true}
+                      isSpeaking={false}
+                      mood="thinking"
+                      size="sm"
+                    />
+                  </div>
+                  <div className="bg-muted/80 text-foreground px-4 py-3 rounded-2xl rounded-bl-md text-sm border border-border/30 backdrop-blur-sm">
+                    <div className="flex space-x-1 items-center">
+                      <span className="text-xs text-muted-foreground mr-2">AI is thinking</span>
                       <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
                       <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.1s]"></div>
                       <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.2s]"></div>
@@ -293,27 +332,39 @@ const ChatbotWidget = () => {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-border/30 bg-background/80">
-              <div className="flex space-x-2">
-                <Input
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Ask about our WiFi solutions..."
-                  className="flex-1 border-border/50 bg-background/50"
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                />
+            <div className="px-6 py-4 border-t border-border/20 bg-background/50 backdrop-blur-sm">
+              <div className="flex items-end space-x-3">
+                <div className="flex-1 relative">
+                  <Input
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder="Ask about our WiFi solutions, coverage areas, or support..."
+                    className="w-full pr-12 py-3 px-4 border-border/40 bg-background/80 backdrop-blur-sm rounded-xl text-sm placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                    onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
+                    maxLength={500}
+                  />
+                  <div className="absolute right-3 bottom-3 text-xs text-muted-foreground/50">
+                    {inputValue.length}/500
+                  </div>
+                </div>
                 <Button
                   onClick={handleSendMessage}
                   size="icon"
-                  className="bg-gradient-elegant hover:scale-105 transition-all duration-200"
+                  className="w-10 h-10 bg-gradient-elegant hover:scale-105 hover:shadow-tech-glow transition-all duration-200 rounded-xl"
                   disabled={!inputValue.trim() || isTyping}
                 >
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground mt-2 text-center">
-                Powered by B-SPOT Technologies AI
-              </p>
+              <div className="flex items-center justify-between mt-3 px-1">
+                <p className="text-xs text-muted-foreground/80">
+                  Powered by B-SPOT Technologies AI
+                </p>
+                <div className="flex items-center space-x-1 text-xs text-muted-foreground/60">
+                  <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
+                  <span>24/7 Support Available</span>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
