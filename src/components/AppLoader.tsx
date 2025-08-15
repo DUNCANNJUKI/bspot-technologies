@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 const AppLoader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
@@ -19,11 +20,11 @@ const AppLoader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
       <div className="flex flex-col items-center space-y-4">
         <div className="relative">
           <img 
-            src="/bspot-logo.png" 
+            src="/lovable-uploads/b036e33e-4110-40c6-8b4e-b6fa6c3ec745.png" 
             alt="B-SPOT Technologies" 
-            className="w-24 h-24 animate-pulse"
+            className="w-24 h-24 animate-pulse rounded-lg"
           />
-          <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping"></div>
+          <div className="absolute inset-0 rounded-lg bg-primary/20 animate-ping"></div>
         </div>
         <div className="flex space-x-1">
           <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
