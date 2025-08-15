@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { Bot, Send, X, Minimize2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import ChatbotAvatar from "./ChatbotAvatar";
 
 interface Message {
   id: string;
@@ -17,6 +17,7 @@ const ChatbotWidget = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [avatarMood, setAvatarMood] = useState<'neutral' | 'happy' | 'thinking' | 'error'>('neutral');
 
   const getTimeGreeting = () => {
     const hour = new Date().getHours();
@@ -176,20 +177,27 @@ const ChatbotWidget = () => {
     addMessage(userMessage, true);
     setInputValue("");
     setIsTyping(true);
+    setAvatarMood('thinking');
     
     // Simulate typing delay
     setTimeout(() => {
       const response = botResponse(userMessage);
       addMessage(response);
       setIsTyping(false);
+      setAvatarMood('happy');
+      
+      // Return to neutral after response
+      setTimeout(() => setAvatarMood('neutral'), 2000);
     }, 1000);
   };
 
   const handleOpen = () => {
     setIsOpen(true);
+    setAvatarMood('happy');
     if (messages.length === 0) {
       setTimeout(() => {
         addMessage(`${getTimeGreeting()} Welcome to B-SPOT Technologies! I'm your AI assistant, ready to help with our WiFi solutions, coverage areas, services, and support. How can I assist you today?`);
+        setAvatarMood('neutral');
       }, 500);
     }
   };
@@ -211,10 +219,14 @@ const ChatbotWidget = () => {
         <Card className="fixed bottom-6 right-6 w-80 h-96 shadow-premium-shadow border border-primary/20 bg-gradient-card backdrop-blur-sm z-50 animate-scale-in">
           <CardHeader className="pb-3 bg-gradient-elegant rounded-t-lg">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-                  <Bot className="w-4 h-4 text-primary-foreground" />
-                </div>
+              <div className="flex items-center space-x-3">
+                {/* Replace the simple bot icon with the futuristic avatar */}
+                <ChatbotAvatar 
+                  isTyping={isTyping}
+                  isSpeaking={false}
+                  mood={avatarMood}
+                  size="sm"
+                />
                 <div>
                   <CardTitle className="text-sm text-primary-foreground">B-SPOT Assistant</CardTitle>
                   <p className="text-xs text-primary-foreground/80">Online • AI Powered</p>
@@ -262,7 +274,13 @@ const ChatbotWidget = () => {
               ))}
               
               {isTyping && (
-                <div className="flex justify-start">
+                <div className="flex justify-start items-center space-x-2">
+                  <ChatbotAvatar 
+                    isTyping={true}
+                    isSpeaking={false}
+                    mood="thinking"
+                    size="sm"
+                  />
                   <div className="bg-muted text-foreground px-3 py-2 rounded-lg text-sm border border-border/50">
                     <div className="flex space-x-1">
                       <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
