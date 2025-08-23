@@ -1,0 +1,418 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 15 10% 8%;
+    --foreground: 45 15% 96%;
+
+    --card: 20 14% 12%;
+    --card-foreground: 45 15% 96%;
+
+    --popover: 20 14% 12%;
+    --popover-foreground: 45 15% 96%;
+
+    --primary: 43 96% 56%;
+    --primary-foreground: 20 5% 15%;
+
+    --secondary: 25 20% 18%;
+    --secondary-foreground: 45 15% 96%;
+
+    --muted: 25 20% 18%;
+    --muted-foreground: 43 20% 70%;
+
+    --accent: 43 96% 56%;
+    --accent-foreground: 20 5% 15%;
+
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 45 15% 96%;
+
+    --border: 25 20% 20%;
+    --input: 25 20% 20%;
+    --ring: 43 96% 56%;
+
+    /* Premium Classic Design System */
+    --gradient-primary: linear-gradient(135deg, hsl(43, 96%, 56%), hsl(45, 100%, 72%));
+    --gradient-secondary: linear-gradient(135deg, hsl(15, 10%, 8%), hsl(25, 20%, 18%));
+    --gradient-hero: linear-gradient(135deg, hsl(15, 10%, 8%) 0%, hsl(43, 96%, 56%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(20, 14%, 12%), hsl(25, 20%, 16%));
+    --gradient-elegant: linear-gradient(165deg, hsl(43, 96%, 56%) 0%, hsl(38, 88%, 48%) 50%, hsl(30, 80%, 40%) 100%);
+    --gradient-radial: radial-gradient(circle, var(--tw-gradient-stops));
+    
+    --tech-glow: 0 0 30px hsl(43, 96%, 56% / 0.6);
+    --card-shadow: 0 12px 40px hsl(43, 96%, 56% / 0.2);
+    --elegant-shadow: 0 20px 60px hsl(43, 96%, 56% / 0.15);
+    --premium-shadow: 0 25px 50px -12px hsl(15, 10%, 8% / 0.8);
+    
+    /* Special company name animations */
+    --company-gradient-1: linear-gradient(45deg, hsl(43, 96%, 56%), hsl(194, 100%, 60%), hsl(284, 100%, 70%));
+    --company-gradient-2: linear-gradient(45deg, hsl(284, 100%, 70%), hsl(43, 96%, 56%), hsl(194, 100%, 60%));
+    --company-gradient-3: linear-gradient(45deg, hsl(194, 100%, 60%), hsl(284, 100%, 70%), hsl(43, 96%, 56%));
+    
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-elegant: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 45 93% 47%;
+    --primary-foreground: 240 10% 3.9%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 45 93% 47%;
+    --accent-foreground: 240 10% 3.9%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 45 93% 47%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer components {
+  /* Premium Animation utilities */
+  .hover-scale {
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-elegant-shadow;
+  }
+  
+  .hover-lift {
+    @apply transition-all duration-500 hover:-translate-y-3 hover:shadow-premium-shadow;
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    opacity: 0;
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  
+  /* Classic UI Elements */
+  .glass-effect {
+    @apply backdrop-blur-md border border-border/50 bg-card/80;
+  }
+  
+  .luxury-card {
+    @apply bg-gradient-card border border-border/30 shadow-premium-shadow backdrop-blur-sm;
+  }
+  
+  .logo-container {
+    @apply bg-gradient-elegant border border-primary/25 shadow-tech-glow backdrop-blur-sm;
+  }
+  
+  .premium-button {
+    @apply bg-gradient-elegant text-primary-foreground font-semibold shadow-card-shadow hover:shadow-tech-glow transition-all duration-300 hover:scale-105;
+  }
+  
+  .elegant-text {
+    @apply bg-gradient-elegant bg-clip-text text-transparent;
+  }
+
+  /* Chatbot Avatar specific utilities */
+  .bg-gradient-radial {
+    background-image: var(--gradient-radial);
+  }
+  
+  /* Technology-focused animations */
+  .tech-title {
+    background: var(--company-gradient-1);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: tech-glow 3s ease-in-out infinite alternate, colorShift 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px hsl(43, 96%, 56% / 0.3));
+  }
+  
+  .tech-subtitle {
+    @apply text-foreground/90;
+    animation: float 4s ease-in-out infinite, letterGlow 2s ease-in-out infinite alternate;
+  }
+  
+  .matrix-effect {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .matrix-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(43, 96%, 56% / 0.2), transparent);
+    animation: matrix-scan 4s ease-in-out infinite;
+  }
+  
+  .digital-flicker {
+    animation: digitalFlicker 0.1s linear infinite;
+  }
+
+  /* Network Animation Utilities */
+  .network-pulse {
+    animation: networkPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .signal-wave {
+    animation: signalWave 3s ease-in-out infinite;
+  }
+  
+  .data-flow {
+    animation: dataFlow 4s linear infinite;
+  }
+
+  /* Avatar animation utilities */
+  .avatar-glow {
+    animation: avatarGlow 2s ease-in-out infinite alternate;
+  }
+
+  .circuit-flow {
+    animation: circuitFlow 3s linear infinite;
+  }
+
+  /* Chatbot specific utilities */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.3);
+    border-radius: 2px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.5);
+  }
+}
+
+/* Technology keyframes */
+@keyframes tech-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px hsl(43, 96%, 56% / 0.3)) drop-shadow(0 0 20px hsl(43, 96%, 56% / 0.1));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px hsl(43, 96%, 56% / 0.5)) drop-shadow(0 0 40px hsl(43, 96%, 56% / 0.2));
+  }
+}
+
+@keyframes colorShift {
+  0% {
+    background: var(--company-gradient-1);
+  }
+  33% {
+    background: var(--company-gradient-2);
+  }
+  66% {
+    background: var(--company-gradient-3);
+  }
+  100% {
+    background: var(--company-gradient-1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes letterGlow {
+  0%, 100% {
+    text-shadow: 0 0 5px hsl(43, 96%, 56% / 0.2);
+  }
+  50% {
+    text-shadow: 0 0 15px hsl(43, 96%, 56% / 0.4), 0 0 25px hsl(43, 96%, 56% / 0.2);
+  }
+}
+
+@keyframes matrix-scan {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes digitalFlicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.98;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Network Animation Keyframes */
+@keyframes networkPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes signalWave {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes dataFlow {
+  0% {
+    transform: translateX(-100px) translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100px) translateY(-20px);
+    opacity: 0;
+  }
+}
+
+/* Avatar specific animations */
+@keyframes avatarGlow {
+  0% {
+    box-shadow: 0 0 20px hsl(194, 100%, 60% / 0.3);
+  }
+  100% {
+    box-shadow: 0 0 30px hsl(194, 100%, 60% / 0.6), 0 0 40px hsl(43, 96%, 56% / 0.3);
+  }
+}
+
+@keyframes circuitFlow {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

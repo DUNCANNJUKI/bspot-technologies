@@ -1,0 +1,95 @@
+
+import { Button } from "./ui/button";
+import { ArrowRight, Wifi, Zap, Shield } from "lucide-react";
+import heroImage from "@/assets/hero-bg.jpg";
+import networkInfrastructure from "@/assets/network-infrastructure.jpg";
+import AnimatedNetwork from "./AnimatedNetwork";
+
+const Hero = () => {
+  return (
+    <section id="home" className="min-h-screen flex items-center relative overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15 animate-fade-in"
+        style={{ backgroundImage: `url(${networkInfrastructure})` }}
+      />
+      
+      {/* Professional Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-hero opacity-98" />
+      
+      {/* Animated Network Visualization */}
+      <AnimatedNetwork />
+      
+      {/* Refined Geometric Elements */}
+      <div className="absolute top-20 left-10 w-24 h-24 border border-primary/15 rounded-full animate-float opacity-40" />
+      <div className="absolute top-40 right-20 w-20 h-20 bg-gradient-elegant rounded-lg opacity-15 animate-float" style={{ animationDelay: '1s' }} />
+      <div className="absolute bottom-20 left-20 w-16 h-16 border-2 border-primary/20 rotate-45 opacity-30 animate-float" style={{ animationDelay: '2s' }} />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-5xl mx-auto text-center">
+          {/* Technology-Empowered Main Heading */}
+          <div className="mb-12 animate-scale-in matrix-effect">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 tech-title leading-none tracking-tight digital-flicker">
+              B-SPOT
+            </h1>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tech-subtitle tracking-widest">
+              TECHNOLOGIES
+            </h2>
+          </div>
+          
+          {/* Professional Subtitle */}
+          <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-16 max-w-4xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.3s' }}>
+            Connecting communities with affordable and seamless internet connections through 
+            <span className="text-primary font-semibold"> enterprise-grade reliability</span> and 
+            <span className="text-primary font-semibold"> innovative solutions</span>.
+          </p>
+
+          {/* Professional Feature Icons */}
+          <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16 mb-20 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+            <div className="flex flex-col items-center group">
+              <div className="w-18 h-18 sm:w-24 sm:h-24 luxury-card rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-tech-glow transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2">
+                <Zap className="w-9 h-9 sm:w-12 sm:h-12 text-primary drop-shadow-lg" />
+              </div>
+              <span className="text-sm sm:text-base font-semibold text-muted-foreground tracking-wide">Lightning Fast</span>
+            </div>
+            <div className="flex flex-col items-center group">
+              <div className="w-18 h-18 sm:w-24 sm:h-24 luxury-card rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-tech-glow transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2">
+                <Shield className="w-9 h-9 sm:w-12 sm:h-12 text-primary drop-shadow-lg" />
+              </div>
+              <span className="text-sm sm:text-base font-semibold text-muted-foreground tracking-wide">Enterprise Secure</span>
+            </div>
+            <div className="flex flex-col items-center group">
+              <div className="w-18 h-18 sm:w-24 sm:h-24 luxury-card rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-tech-glow transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2">
+                <Wifi className="w-9 h-9 sm:w-12 sm:h-12 text-primary drop-shadow-lg" />
+              </div>
+              <span className="text-sm sm:text-base font-semibold text-muted-foreground tracking-wide">Always Reliable</span>
+            </div>
+          </div>
+
+          {/* Professional CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center animate-slide-up" style={{ animationDelay: '0.7s' }}>
+            <Button 
+              asChild
+              size="lg" 
+              className="premium-button text-base sm:text-lg px-8 sm:px-10 py-4 sm:py-6 rounded-xl font-semibold tracking-wide"
+            >
+              <a href="#contact">
+                Start Your Journey
+                <ArrowRight className="ml-2 sm:ml-3 w-4 h-4 sm:w-5 sm:h-5" />
+              </a>
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="glass-effect border-primary/30 text-primary hover:bg-primary/10 transition-all duration-500 text-base sm:text-lg px-8 sm:px-10 py-4 sm:py-6 rounded-xl font-semibold tracking-wide backdrop-blur-md hover-lift"
+            >
+              Explore Solutions
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
