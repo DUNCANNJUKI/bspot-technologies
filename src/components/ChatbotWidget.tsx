@@ -206,10 +206,10 @@ const ChatbotWidget = () => {
     <>
       {/* Floating Chat Button */}
       {!isOpen && (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50">
           <Button
             onClick={handleOpen}
-            className="relative w-16 h-16 rounded-full shadow-tech-glow bg-gradient-elegant hover:scale-110 hover:shadow-premium-shadow transition-all duration-300 group"
+            className="relative w-14 h-14 md:w-16 md:h-16 rounded-full shadow-tech-glow bg-gradient-elegant hover:scale-110 hover:shadow-premium-shadow transition-all duration-300 group"
           >
             <div className="absolute inset-0 rounded-full bg-gradient-elegant opacity-0 group-hover:opacity-20 animate-pulse"></div>
             <ChatbotAvatar 
@@ -220,15 +220,15 @@ const ChatbotWidget = () => {
             />
           </Button>
           {/* Notification badge */}
-          <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full flex items-center justify-center animate-pulse">
-            <div className="w-2 h-2 bg-white rounded-full"></div>
+          <div className="absolute -top-1 -right-1 w-4 h-4 md:w-5 md:h-5 bg-green-400 rounded-full flex items-center justify-center animate-pulse">
+            <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full"></div>
           </div>
         </div>
       )}
 
       {/* Chat Widget */}
       {isOpen && (
-        <Card className="fixed bottom-6 right-6 w-96 h-[500px] shadow-premium-shadow border border-primary/30 bg-card/95 backdrop-blur-md z-50 animate-scale-in rounded-xl overflow-hidden">
+        <Card className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-[calc(100vw-2rem)] max-w-sm md:w-96 h-[calc(100vh-8rem)] max-h-[500px] shadow-premium-shadow border border-primary/30 bg-card/95 backdrop-blur-md z-50 animate-scale-in rounded-xl overflow-hidden">
           <CardHeader className="pb-4 pt-4 px-6 bg-gradient-elegant border-b border-primary/20">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
