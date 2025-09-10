@@ -4,7 +4,7 @@ const { spawn } = require('child_process');
 
 // Run vite build in development mode
 {
-  "scripts": {
+ "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
