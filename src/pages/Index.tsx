@@ -11,9 +11,9 @@ import { useSecurityHeaders } from "@/hooks/useSecurityHeaders";
 const Index = () => {
   useSecurityHeaders();
   return (
-    <div className="min-h-screen bg-background font-tech">
+    <div className="min-h-screen bg-background font-tech w-full overflow-x-hidden">
       <Header />
-      <main className="pt-20">
+      <main className="pt-20 w-full overflow-x-hidden">
         <Hero />
         <Services />
         <About />

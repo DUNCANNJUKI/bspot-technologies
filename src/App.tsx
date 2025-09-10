@@ -1,23 +1,20 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AppLoader from "./components/AppLoader";
 
-const queryClient = new QueryClient();
-
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <div className="w-full overflow-x-hidden">
         {isLoading && <AppLoader onLoadComplete={() => setIsLoading(false)} />}
         <BrowserRouter>
           <Routes>
@@ -26,8 +23,8 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+      </div>
+    </TooltipProvider>
   );
 };
 
