@@ -63,182 +63,166 @@ const ChatbotAvatar: React.FC<ChatbotAvatarProps> = ({
   };
 
   return (
-    <div className={`relative ${sizeClasses[size]} mx-auto`}>
-      {/* Background glow effect */}
-      <div className="absolute inset-0 bg-gradient-radial from-cyan-500/20 via-blue-500/10 to-transparent rounded-full blur-xl animate-pulse" />
-      
-      {/* Main head structure */}
-      <div className="relative w-full h-full">
-        {/* Head base - metallic panels */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-200 via-white to-slate-300 rounded-full shadow-2xl">
-          {/* Electric blue accents */}
-          <div className="absolute inset-1 bg-gradient-to-br from-blue-500/20 via-cyan-400/30 to-blue-600/20 rounded-full" />
-          
-          {/* Glowing jawline accent */}
-          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-3/4 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent rounded-full opacity-80">
-            <div className="w-full h-full bg-cyan-300 rounded-full animate-pulse shadow-lg shadow-cyan-400/50" />
+    <div className={`relative ${sizeClasses[size]} mx-auto flex items-center justify-center`}>
+      {/* Outer holographic circle with animated border */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-500/30 via-blue-500/20 to-purple-500/30 p-0.5 shadow-2xl">
+        <div className="w-full h-full rounded-full bg-gradient-to-br from-slate-800 via-slate-900 to-black border border-cyan-400/30">
+          {/* Animated scanning ring */}
+          <div className="absolute inset-1 rounded-full border-2 border-cyan-400/40 animate-pulse">
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 w-2 h-2 bg-cyan-400 rounded-full animate-bounce" />
           </div>
           
-          {/* Temple accents */}
-          <div className="absolute top-4 left-2 w-1 h-3 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full opacity-70 animate-pulse" />
-          <div className="absolute top-4 right-2 w-1 h-3 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full opacity-70 animate-pulse" />
-        </div>
-
-        {/* Semi-transparent headpiece with moving circuitry */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-4/5 h-1/3 bg-gradient-to-b from-blue-500/30 to-transparent rounded-t-full backdrop-blur-sm border border-cyan-400/30">
-          {/* Moving circuitry patterns */}
-          <svg className="w-full h-full opacity-60" viewBox="0 0 40 20">
-            <path 
-              d={`M5 10 L${10 + circuitryPulse * 2} 10 L${15 + circuitryPulse} 5 L${25 + circuitryPulse} 5 L${30 + circuitryPulse * 1.5} 10 L35 10`}
-              stroke="cyan" 
-              strokeWidth="0.5" 
-              fill="none"
-              className="animate-pulse"
-            />
-            <circle cx={10 + circuitryPulse * 2} cy="10" r="0.5" fill="cyan" className="animate-pulse" />
-            <circle cx={25 + circuitryPulse} cy="5" r="0.5" fill="blue" className="animate-pulse" />
-          </svg>
-        </div>
-
-        {/* LED Eyes */}
-        <div className="absolute top-6 left-1/2 transform -translate-x-1/2 flex space-x-3">
-          {/* Left Eye */}
-          <div className="relative">
-            <div className={`w-3 h-3 bg-gradient-to-br from-cyan-300 to-blue-500 rounded-full shadow-lg shadow-cyan-400/50 transition-all duration-150 ${getEyeIntensity()}`}>
-              {/* Eye blink overlay */}
-              <div className={`absolute inset-0 bg-slate-300 rounded-full transition-all duration-150 ${eyeBlink ? 'scale-y-0' : 'scale-y-100 opacity-0'}`} />
-              {/* Pupil */}
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-white rounded-full opacity-80" />
-            </div>
-            {/* Eye glow */}
-            <div className="absolute inset-0 w-3 h-3 bg-cyan-400 rounded-full blur-sm opacity-40 animate-pulse" />
-          </div>
-
-          {/* Right Eye */}
-          <div className="relative">
-            <div className={`w-3 h-3 bg-gradient-to-br from-cyan-300 to-blue-500 rounded-full shadow-lg shadow-cyan-400/50 transition-all duration-150 ${getEyeIntensity()}`}>
-              {/* Eye blink overlay */}
-              <div className={`absolute inset-0 bg-slate-300 rounded-full transition-all duration-150 ${eyeBlink ? 'scale-y-0' : 'scale-y-100 opacity-0'}`} />
-              {/* Pupil */}
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-white rounded-full opacity-80" />
-            </div>
-            {/* Eye glow */}
-            <div className="absolute inset-0 w-3 h-3 bg-cyan-400 rounded-full blur-sm opacity-40 animate-pulse" />
-          </div>
-        </div>
-
-        {/* Display Panel (forehead area) */}
-        <div className="absolute top-3 left-1/2 transform -translate-x-1/2 w-8 h-2 bg-gradient-to-r from-slate-400/30 via-cyan-400/20 to-slate-400/30 rounded-full backdrop-blur-sm border border-cyan-400/20">
-          {/* Data overlay effect */}
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="flex space-x-0.5">
-              {[0, 1, 2].map((i) => (
-                <div
-                  key={i}
-                  className={`w-0.5 h-0.5 bg-cyan-400 rounded-full transition-opacity duration-300 ${
-                    isTyping ? 'animate-pulse' : 'opacity-30'
-                  }`}
-                  style={{ animationDelay: `${i * 0.2}s` }}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Mouth with natural movement */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
-          <svg width="24" height="8" viewBox="0 0 24 8" className="transition-all duration-200">
-            <path
-              d={getMouthPath()}
-              stroke="slate-600"
-              strokeWidth="1.5"
-              fill="none"
-              strokeLinecap="round"
-              className={`transition-all duration-200 ${isSpeaking ? 'animate-pulse' : ''}`}
-            />
-          </svg>
-          {/* Flexible material effect around mouth */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-200/20 to-transparent rounded-full blur-sm" />
-        </div>
-
-        {/* Soundwave animations on cheeks when speaking */}
-        {isSpeaking && (
-          <>
-            {/* Left cheek soundwaves */}
-            <div className="absolute left-1 top-1/2 transform -translate-y-1/2">
-              {[0, 1, 2].map((i) => (
-                <div
-                  key={`left-${i}`}
-                  className="absolute w-0.5 bg-cyan-400/60 rounded-full animate-pulse"
-                  style={{
-                    left: `${i * 2}px`,
-                    height: `${4 + Math.sin(Date.now() * 0.01 + i) * 2}px`,
-                    animationDelay: `${i * 0.1}s`
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* Right cheek soundwaves */}
-            <div className="absolute right-1 top-1/2 transform -translate-y-1/2">
-              {[0, 1, 2].map((i) => (
-                <div
-                  key={`right-${i}`}
-                  className="absolute w-0.5 bg-cyan-400/60 rounded-full animate-pulse"
-                  style={{
-                    right: `${i * 2}px`,
-                    height: `${4 + Math.sin(Date.now() * 0.01 + i + Math.PI) * 2}px`,
-                    animationDelay: `${i * 0.1}s`
-                  }}
-                />
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Audio visualizers near neck */}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-2 flex space-x-1">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className={`w-0.5 bg-gradient-to-t from-cyan-400 to-blue-500 rounded-full transition-all duration-150 ${
-                isSpeaking ? 'animate-pulse' : 'opacity-40'
-              }`}
-              style={{
-                height: `${2 + (isSpeaking ? Math.sin(Date.now() * 0.02 + i) * 2 : 0)}px`,
-                animationDelay: `${i * 0.1}s`
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Backlit logo on chest area */}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-6 w-6 h-6 bg-gradient-to-br from-slate-200 to-slate-300 rounded-lg shadow-lg">
-          <div className="absolute inset-1 bg-gradient-to-br from-cyan-400/30 via-blue-500/20 to-cyan-400/30 rounded backdrop-blur-sm">
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="w-2 h-2 bg-gradient-to-br from-cyan-300 to-blue-500 rounded-full animate-pulse shadow-lg shadow-cyan-400/50" />
+          {/* Inner robotic head container - perfectly centered */}
+          <div className="absolute inset-2 rounded-full bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 shadow-inner flex items-center justify-center">
+            {/* Robotic face structure */}
+            <div className="relative w-16 h-16 bg-gradient-to-br from-slate-100 via-white to-slate-200 rounded-full shadow-lg border border-slate-300">
+              
+              {/* Metallic panel lines */}
+              <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-slate-400 to-transparent" />
+              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-slate-400 to-transparent" />
+              
+              {/* Circuit pattern forehead */}
+              <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-10 h-3 bg-slate-800/10 rounded-full border border-cyan-400/30">
+                <svg className="w-full h-full" viewBox="0 0 40 12">
+                  <path d="M2 6 L10 6 L15 3 L25 3 L30 6 L38 6" stroke="rgb(34 211 238)" strokeWidth="0.5" fill="none" className="animate-pulse" />
+                  <circle cx="10" cy="6" r="0.5" fill="rgb(34 211 238)" className="animate-ping" />
+                  <circle cx="30" cy="6" r="0.5" fill="rgb(59 130 246)" className="animate-ping" style={{ animationDelay: '0.5s' }} />
+                </svg>
+              </div>
+              
+              {/* LED Eyes with more robotic design */}
+              <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {/* Left Eye */}
+                <div className="relative">
+                  <div className="w-4 h-4 bg-slate-800 rounded-full border border-slate-600 flex items-center justify-center">
+                    <div className={`w-2.5 h-2.5 bg-gradient-to-br from-cyan-300 to-blue-500 rounded-full transition-all duration-150 ${getEyeIntensity()}`}>
+                      <div className={`absolute inset-0 bg-slate-800 rounded-full transition-all duration-150 ${eyeBlink ? 'scale-y-100' : 'scale-y-0'}`} />
+                      <div className="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-white rounded-full opacity-90" />
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 w-4 h-4 bg-cyan-400 rounded-full blur-sm opacity-30 animate-pulse" />
+                </div>
+                
+                {/* Right Eye */}
+                <div className="relative">
+                  <div className="w-4 h-4 bg-slate-800 rounded-full border border-slate-600 flex items-center justify-center">
+                    <div className={`w-2.5 h-2.5 bg-gradient-to-br from-cyan-300 to-blue-500 rounded-full transition-all duration-150 ${getEyeIntensity()}`}>
+                      <div className={`absolute inset-0 bg-slate-800 rounded-full transition-all duration-150 ${eyeBlink ? 'scale-y-100' : 'scale-y-0'}`} />
+                      <div className="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-white rounded-full opacity-90" />
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 w-4 h-4 bg-cyan-400 rounded-full blur-sm opacity-30 animate-pulse" />
+                </div>
+              </div>
+              
+              {/* Status indicator (forehead) */}
+              <div className="absolute top-2.5 left-1/2 transform -translate-x-1/2 w-6 h-1 bg-slate-800/20 rounded-full border border-cyan-400/20 flex items-center justify-center">
+                <div className="flex space-x-0.5">
+                  {[0, 1, 2].map((i) => (
+                    <div
+                      key={i}
+                      className={`w-0.5 h-0.5 bg-cyan-400 rounded-full transition-opacity duration-300 ${
+                        isTyping ? 'animate-pulse' : 'opacity-40'
+                      }`}
+                      style={{ animationDelay: `${i * 0.2}s` }}
+                    />
+                  ))}
+                </div>
+              </div>
+              
+              {/* Robotic mouth with speaker grille */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-6 h-2 bg-slate-800 rounded-full border border-slate-600 flex items-center justify-center">
+                <div className="flex space-x-0.5">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      className={`w-0.5 bg-cyan-400 rounded-full transition-all duration-200 ${
+                        isSpeaking ? 'animate-pulse' : 'opacity-60'
+                      }`}
+                      style={{
+                        height: `${2 + (isSpeaking ? Math.sin(Date.now() * 0.02 + i) * 1 : 0)}px`,
+                        animationDelay: `${i * 0.1}s`
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+              
+              {/* Neck connector */}
+              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-gradient-to-b from-slate-300 to-slate-400 rounded-b border-x border-slate-400">
+                <div className="absolute inset-0.5 bg-gradient-to-b from-cyan-400/20 to-blue-500/20 rounded-b" />
+              </div>
+              
+              {/* Temple sensors */}
+              <div className="absolute top-3 left-1 w-1 h-2 bg-slate-800 rounded-full border border-cyan-400/50">
+                <div className="w-full h-full bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full animate-pulse opacity-60" />
+              </div>
+              <div className="absolute top-3 right-1 w-1 h-2 bg-slate-800 rounded-full border border-cyan-400/50">
+                <div className="w-full h-full bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full animate-pulse opacity-60" />
+              </div>
+              
+              {/* Mood-based features */}
+              {mood === 'thinking' && (
+                <>
+                  <div className="absolute top-2 left-2 w-1.5 h-0.5 bg-yellow-400 rounded-full animate-pulse" />
+                  <div className="absolute top-2 right-2 w-1.5 h-0.5 bg-yellow-400 rounded-full animate-pulse" />
+                </>
+              )}
+              
+              {isSpeaking && (
+                <>
+                  {/* Sound waves */}
+                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-2">
+                    {[0, 1, 2].map((i) => (
+                      <div
+                        key={`left-wave-${i}`}
+                        className="absolute w-0.5 bg-cyan-400/40 rounded-full animate-pulse"
+                        style={{
+                          left: `${i * 1.5}px`,
+                          height: `${2 + Math.sin(Date.now() * 0.02 + i) * 1}px`,
+                          animationDelay: `${i * 0.1}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <div className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-2">
+                    {[0, 1, 2].map((i) => (
+                      <div
+                        key={`right-wave-${i}`}
+                        className="absolute w-0.5 bg-cyan-400/40 rounded-full animate-pulse"
+                        style={{
+                          right: `${i * 1.5}px`,
+                          height: `${2 + Math.sin(Date.now() * 0.02 + i + Math.PI) * 1}px`,
+                          animationDelay: `${i * 0.1}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
-          {/* Dynamic lighting effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent rounded-lg animate-pulse" />
+          
+          {/* Orbital data points */}
+          <div className="absolute inset-0 rounded-full">
+            {[0, 1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-ping"
+                style={{
+                  top: `${20 + Math.sin((Date.now() * 0.001) + (i * Math.PI / 2)) * 30}%`,
+                  left: `${50 + Math.cos((Date.now() * 0.001) + (i * Math.PI / 2)) * 40}%`,
+                  animationDelay: `${i * 0.5}s`
+                }}
+              />
+            ))}
+          </div>
         </div>
-
-        {/* Eyebrow sensors for emphasis */}
-        {mood === 'thinking' && (
-          <>
-            <div className="absolute top-5 left-6 w-2 h-0.5 bg-cyan-400 rounded-full transform rotate-12 animate-pulse" />
-            <div className="absolute top-5 right-6 w-2 h-0.5 bg-cyan-400 rounded-full transform -rotate-12 animate-pulse" />
-          </>
-        )}
       </div>
-
-      {/* Clean futuristic interface background elements */}
-      <div className="absolute -inset-4 opacity-20 pointer-events-none">
-        {/* Soft glowing panels */}
-        <div className="absolute top-0 left-0 w-2 h-2 bg-cyan-400 rounded blur-sm animate-pulse" />
-        <div className="absolute top-0 right-0 w-2 h-2 bg-blue-500 rounded blur-sm animate-pulse" style={{ animationDelay: '0.5s' }} />
-        <div className="absolute bottom-0 left-0 w-2 h-2 bg-blue-400 rounded blur-sm animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-0 right-0 w-2 h-2 bg-cyan-500 rounded blur-sm animate-pulse" style={{ animationDelay: '1.5s' }} />
+      
+      {/* Background tech pattern */}
+      <div className="absolute -inset-2 opacity-10 pointer-events-none">
+        <div className="w-full h-full rounded-full border border-dashed border-cyan-400 animate-spin" style={{ animationDuration: '20s' }} />
       </div>
     </div>
   );
