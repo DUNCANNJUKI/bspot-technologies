@@ -4,13 +4,14 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(async ({ mode }) => {
   const plugins = [react()];
   
   if (mode === 'development') {
     try {
-      const { componentTagger } = require('lovable-tagger');
-      plugins.push(componentTagger());
+      const mod = await import('lovable-tagger');
+      const componentTagger = (mod as any).componentTagger ?? (mod as any).default?.componentTagger;
+      if (componentTagger) plugins.push(componentTagger());
     } catch (e) {
       console.warn('lovable-tagger not available:', e);
     }
