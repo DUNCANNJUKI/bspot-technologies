@@ -21,9 +21,9 @@ const ChatbotWidget = () => {
 
   const getTimeGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good morning!";
-    if (hour < 17) return "Good afternoon!";
-    return "Good evening!";
+    if (hour < 12) return "Good morning! ☀️";
+    if (hour < 17) return "Good afternoon! 🌤️";
+    return "Good evening! 🌙";
   };
 
   const addMessage = (text: string, isUser: boolean = false) => {
@@ -44,7 +44,7 @@ const ChatbotWidget = () => {
         lowerMessage.includes("who created") || 
         lowerMessage.includes("who built") ||
         lowerMessage.includes("who made")) {
-      return "I was developed by Mr Bee from Bspot Technologies Labs.";
+      return "I was lovingly crafted by Mr Bee from B-SPOT Technologies Labs! 🐝 He gave me the ability to help you with all your WiFi needs. Pretty cool, right?";
     }
     
     // Services offered
@@ -151,7 +151,7 @@ const ChatbotWidget = () => {
     if (lowerMessage.includes("hello") || lowerMessage.includes("hi") || 
         lowerMessage.includes("hey") || lowerMessage.includes("good morning") || 
         lowerMessage.includes("good afternoon") || lowerMessage.includes("good evening")) {
-      return `${getTimeGreeting()} Welcome to B-SPOT Technologies! I'm here to help you with information about our premium WiFi solutions, coverage areas, and services. How can I assist you today?`;
+      return `${getTimeGreeting()} It's wonderful to meet you! Welcome to B-SPOT Technologies! 🎉 I'm your friendly AI assistant, and I'm super excited to help you discover our amazing WiFi solutions. What can I help you explore today?`;
     }
     
     // Emergency/Urgent support
@@ -163,11 +163,11 @@ const ChatbotWidget = () => {
     
     // Thank you responses
     if (lowerMessage.includes("thank") || lowerMessage.includes("thanks")) {
-      return "You're welcome! B-SPOT Technologies is always here to help with your connectivity needs. If you have any other questions about our services, coverage areas, or need technical support, feel free to ask or call us at +254-750-444-167.";
+      return "Aww, you're so welcome! 😊 It makes me happy to help! B-SPOT Technologies is always here for you. Feel free to ask me anything else about our services, or give us a call at +254-750-444-167. I'm here whenever you need me!";
     }
     
     // Default response
-    return "I'm your B-SPOT Technologies assistant, ready to help with information about our WiFi solutions, coverage in Nairobi, Kikuyu, Meru, and Regen, our services (Business WiFi, Event WiFi, Hotspot Management, Network Installation, 24/7 Support, and Optimization), or technical support. You can also call us directly at +254-750-444-167. What would you like to know?";
+    return "I'm your friendly B-SPOT Technologies assistant! 🤖 I'd love to help you discover our amazing WiFi solutions across Nairobi, Kikuyu, Meru, and Regen! I can tell you about our Business WiFi, Event WiFi, Hotspot Management, Network Installation, 24/7 Support, and Optimization services. Or if you prefer to chat directly, call us at +254-750-444-167! What sparks your curiosity today?";
   };
 
   const handleSendMessage = async () => {
@@ -196,7 +196,7 @@ const ChatbotWidget = () => {
     setAvatarMood('happy');
     if (messages.length === 0) {
       setTimeout(() => {
-        addMessage(`${getTimeGreeting()} Welcome to B-SPOT Technologies! I'm your AI assistant, ready to help with our WiFi solutions, coverage areas, services, and support. How can I assist you today?`);
+        addMessage(`${getTimeGreeting()} Welcome to B-SPOT Technologies! 🎉 I'm your friendly AI assistant, and I'm thrilled to meet you! I'm here to make discovering our WiFi solutions fun and easy. What would you like to explore together?`);
         setAvatarMood('neutral');
       }, 500);
     }
@@ -206,29 +206,36 @@ const ChatbotWidget = () => {
     <>
       {/* Floating Chat Button */}
       {!isOpen && (
-        <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50">
+        <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 group">
           <Button
             onClick={handleOpen}
-            className="relative w-14 h-14 md:w-16 md:h-16 rounded-full shadow-tech-glow bg-gradient-elegant hover:scale-110 hover:shadow-premium-shadow transition-all duration-300 group"
+            className="relative w-16 h-16 md:w-18 md:h-18 rounded-full shadow-tech-glow bg-gradient-elegant hover:scale-110 hover:shadow-premium-shadow transition-all duration-300 border-2 border-primary/20"
           >
-            <div className="absolute inset-0 rounded-full bg-gradient-elegant opacity-0 group-hover:opacity-20 animate-pulse"></div>
+            <div className="absolute inset-0 rounded-full bg-gradient-elegant opacity-0 group-hover:opacity-30 animate-pulse"></div>
             <ChatbotAvatar 
               isTyping={false}
               isSpeaking={false}
-              mood="neutral"
+              mood="happy"
               size="sm"
             />
           </Button>
+          {/* Floating greeting tooltip */}
+          <div className="absolute bottom-full right-0 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+            <div className="bg-card/95 backdrop-blur-md border border-primary/30 rounded-lg px-3 py-2 text-sm text-foreground whitespace-nowrap shadow-lg">
+              Hi! Need help? 👋
+              <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-primary/30"></div>
+            </div>
+          </div>
           {/* Notification badge */}
-          <div className="absolute -top-1 -right-1 w-4 h-4 md:w-5 md:h-5 bg-green-400 rounded-full flex items-center justify-center animate-pulse">
-            <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full"></div>
+          <div className="absolute -top-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-green-400 rounded-full flex items-center justify-center animate-pulse shadow-md">
+            <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-white rounded-full"></div>
           </div>
         </div>
       )}
 
       {/* Chat Widget */}
       {isOpen && (
-        <Card className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-[calc(100vw-2rem)] max-w-sm md:w-96 h-[calc(100vh-8rem)] max-h-[500px] shadow-premium-shadow border border-primary/30 bg-card/95 backdrop-blur-md z-50 animate-scale-in rounded-xl overflow-hidden">
+        <Card className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-[calc(100vw-2rem)] max-w-sm md:w-96 h-[calc(100vh-8rem)] max-h-[520px] shadow-premium-shadow border border-primary/30 bg-card/95 backdrop-blur-md z-50 animate-scale-in rounded-2xl overflow-hidden">
           <CardHeader className="pb-4 pt-4 px-6 bg-gradient-elegant border-b border-primary/20">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -243,10 +250,10 @@ const ChatbotWidget = () => {
                   <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 border-2 border-background rounded-full animate-pulse"></div>
                 </div>
                 <div className="flex flex-col">
-                  <CardTitle className="text-base font-semibold text-primary-foreground">B-SPOT Assistant</CardTitle>
+                  <CardTitle className="text-base font-semibold text-primary-foreground">B-SPOT Assistant 🤖</CardTitle>
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <p className="text-xs text-primary-foreground/90 font-medium">Online • AI Powered</p>
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
+                    <p className="text-xs text-primary-foreground/90 font-medium">Online • Ready to help! 💡</p>
                   </div>
                 </div>
               </div>
@@ -273,53 +280,57 @@ const ChatbotWidget = () => {
 
           <CardContent className="flex flex-col h-full p-0">
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4 bg-background/20 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 space-y-4 bg-background/20 custom-scrollbar">
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} items-end space-x-2`}
+                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} items-end space-x-3 animate-fade-in`}
                 >
                   {!message.isUser && (
-                    <div className="flex-shrink-0 mb-1">
-                      <ChatbotAvatar 
-                        isTyping={false}
-                        isSpeaking={false}
-                        mood={avatarMood}
-                        size="sm"
-                      />
+                    <div className="flex-shrink-0 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-gradient-elegant/20 border border-primary/30 flex items-center justify-center">
+                        <ChatbotAvatar 
+                          isTyping={false}
+                          isSpeaking={false}
+                          mood={avatarMood}
+                          size="sm"
+                        />
+                      </div>
                     </div>
                   )}
                   <div
-                    className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                    className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-md transition-all duration-200 hover:shadow-lg ${
                       message.isUser
-                        ? 'bg-gradient-elegant text-primary-foreground rounded-br-md font-medium'
-                        : 'bg-muted/80 text-foreground border border-border/30 rounded-bl-md backdrop-blur-sm'
+                        ? 'bg-gradient-elegant text-primary-foreground rounded-br-md font-medium ml-auto'
+                        : 'bg-muted/90 text-foreground border border-border/30 rounded-bl-md backdrop-blur-sm'
                     }`}
                   >
                     <p className="whitespace-pre-wrap">{message.text}</p>
-                    <div className={`text-xs mt-2 opacity-70 ${message.isUser ? 'text-right' : 'text-left'}`}>
+                    <div className={`text-xs mt-2 opacity-60 ${message.isUser ? 'text-right' : 'text-left'}`}>
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                   {message.isUser && (
-                    <div className="flex-shrink-0 w-8 h-8 bg-gradient-elegant rounded-full flex items-center justify-center mb-1">
-                      <div className="w-4 h-4 bg-primary-foreground rounded-full"></div>
+                    <div className="flex-shrink-0 w-8 h-8 bg-gradient-elegant rounded-full flex items-center justify-center mb-2 shadow-md">
+                      <div className="w-3 h-3 bg-primary-foreground rounded-full"></div>
                     </div>
                   )}
                 </div>
               ))}
               
               {isTyping && (
-                <div className="flex justify-start items-end space-x-2">
-                  <div className="flex-shrink-0 mb-1">
-                    <ChatbotAvatar 
-                      isTyping={true}
-                      isSpeaking={false}
-                      mood="thinking"
-                      size="sm"
-                    />
+                <div className="flex justify-start items-end space-x-3 animate-fade-in">
+                  <div className="flex-shrink-0 mb-2">
+                    <div className="w-8 h-8 rounded-full bg-gradient-elegant/20 border border-primary/30 flex items-center justify-center">
+                      <ChatbotAvatar 
+                        isTyping={true}
+                        isSpeaking={false}
+                        mood="thinking"
+                        size="sm"
+                      />
+                    </div>
                   </div>
-                  <div className="bg-muted/80 text-foreground px-4 py-3 rounded-2xl rounded-bl-md text-sm border border-border/30 backdrop-blur-sm">
+                  <div className="bg-muted/90 text-foreground px-4 py-3 rounded-2xl rounded-bl-md text-sm border border-border/30 backdrop-blur-sm shadow-md">
                     <div className="flex space-x-1 items-center">
                       <span className="text-xs text-muted-foreground mr-2">AI is thinking</span>
                       <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
@@ -332,38 +343,54 @@ const ChatbotWidget = () => {
             </div>
 
             {/* Input Area */}
-            <div className="px-6 py-4 border-t border-border/20 bg-background/50 backdrop-blur-sm">
-              <div className="flex items-end space-x-3">
-                <div className="flex-1 relative">
+            <div className="p-4 md:p-6 border-t border-primary/20 bg-card/50 backdrop-blur-sm">
+              <div className="flex space-x-3 items-end">
+                <div className="flex-1">
                   <Input
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="Ask about our WiFi solutions, coverage areas, or support..."
-                    className="w-full pr-12 py-3 px-4 border-border/40 bg-background/80 backdrop-blur-sm rounded-xl text-sm placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
-                    onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
-                    maxLength={500}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    placeholder="Ask me anything about WiFi solutions! 😊"
+                    className="resize-none border-primary/30 bg-background/80 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-tech-glow/30 rounded-xl h-12"
+                    disabled={isTyping}
                   />
-                  <div className="absolute right-3 bottom-3 text-xs text-muted-foreground/50">
-                    {inputValue.length}/500
-                  </div>
                 </div>
                 <Button
                   onClick={handleSendMessage}
-                  size="icon"
-                  className="w-10 h-10 bg-gradient-elegant hover:scale-105 hover:shadow-tech-glow transition-all duration-200 rounded-xl"
                   disabled={!inputValue.trim() || isTyping}
+                  className="w-12 h-12 rounded-xl bg-gradient-elegant hover:bg-gradient-elegant/90 text-primary-foreground shadow-card-shadow hover:shadow-tech-glow transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-5 h-5" />
                 </Button>
               </div>
-              <div className="flex items-center justify-between mt-3 px-1">
-                <p className="text-xs text-muted-foreground/80">
-                  Powered by B-SPOT Technologies AI
+              
+              {/* Quick suggestion chips */}
+              <div className="flex flex-wrap gap-2 mt-4 opacity-90">
+                <button 
+                  onClick={() => {setInputValue("What services do you offer?"); setTimeout(handleSendMessage, 100);}}
+                  className="text-xs px-3 py-2 bg-primary/15 text-primary rounded-full hover:bg-primary/25 transition-all duration-200 border border-primary/30 hover:shadow-md hover:scale-105"
+                >
+                  Our Services 🔧
+                </button>
+                <button 
+                  onClick={() => {setInputValue("What areas do you cover?"); setTimeout(handleSendMessage, 100);}}
+                  className="text-xs px-3 py-2 bg-primary/15 text-primary rounded-full hover:bg-primary/25 transition-all duration-200 border border-primary/30 hover:shadow-md hover:scale-105"
+                >
+                  Coverage Areas 📍
+                </button>
+                <button 
+                  onClick={() => {setInputValue("Contact information"); setTimeout(handleSendMessage, 100);}}
+                  className="text-xs px-3 py-2 bg-primary/15 text-primary rounded-full hover:bg-primary/25 transition-all duration-200 border border-primary/30 hover:shadow-md hover:scale-105"
+                >
+                  Get in Touch 📞
+                </button>
+              </div>
+              
+              {/* Friendly footer */}
+              <div className="text-center mt-3">
+                <p className="text-xs text-muted-foreground">
+                  Powered by B-SPOT Technologies with ❤️
                 </p>
-                <div className="flex items-center space-x-1 text-xs text-muted-foreground/60">
-                  <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
-                  <span>24/7 Support Available</span>
-                </div>
               </div>
             </div>
           </CardContent>
