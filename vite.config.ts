@@ -2,14 +2,20 @@ import type { UserConfig } from "vite";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  const plugins = [
-    react(),
-    mode === 'development' && componentTagger(),
-  ].filter(Boolean);
+export default defineConfig(async ({ mode }) => {
+  const plugins = [react()];
+  
+  if (mode === 'development') {
+    try {
+      const mod = await import('lovable-tagger');
+      const componentTagger = (mod as any).componentTagger ?? (mod as any).default?.componentTagger;
+      if (componentTagger) plugins.push(componentTagger());
+    } catch (e) {
+      console.warn('lovable-tagger not available:', e);
+    }
+  }
   
   const config: UserConfig = {
     base: './', // Use relative paths for static hosting

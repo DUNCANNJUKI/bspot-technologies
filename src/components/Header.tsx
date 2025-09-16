@@ -12,7 +12,7 @@ const Header = () => {
           {/* Professional Logo */}
           <div className="flex items-center space-x-3 group">
             <div className="w-12 h-12 rounded-xl bg-gradient-elegant p-2 shadow-tech-glow border border-primary/20 group-hover:shadow-premium-shadow group-hover:scale-110 transition-all duration-500">
-              <img src="./bspot-logo.png" alt="B-Spot Technologies" className="w-full h-full object-contain filter brightness-110 contrast-125" />
+              <img src="/bspot-logo.png" alt="B-Spot Technologies" className="w-full h-full object-contain filter brightness-110 contrast-125" />
             </div>
             <div className="text-lg font-bold text-foreground tracking-tight">
               B-SPOT <span className="elegant-text font-light">TECHNOLOGIES</span>

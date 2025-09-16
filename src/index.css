@@ -18,42 +18,33 @@ All colors MUST be HSL.
     --popover: 20 14% 12%;
     --popover-foreground: 45 15% 96%;
 
-    --primary: 43 96% 56%;
-    --primary-foreground: 20 5% 15%;
+    /* Premium B-Spot Design System - Matching Logo Colors */
+    --primary: 210 100% 50%; /* Bright blue from logo */
+    --primary-foreground: 220 20% 98%;
 
-    --secondary: 25 20% 18%;
-    --secondary-foreground: 45 15% 96%;
+    --secondary: 45 95% 60%; /* Golden yellow from logo */
+    --secondary-foreground: 220 20% 15%;
 
-    --muted: 25 20% 18%;
-    --muted-foreground: 43 20% 70%;
+    --accent: 210 100% 50%; /* Matching primary blue */
+    --accent-foreground: 220 20% 98%;
 
-    --accent: 43 96% 56%;
-    --accent-foreground: 20 5% 15%;
-
-    --destructive: 0 65% 48%;
-    --destructive-foreground: 45 15% 96%;
-
-    --border: 25 20% 20%;
-    --input: 25 20% 20%;
-    --ring: 43 96% 56%;
-
-    /* Premium Classic Design System */
-    --gradient-primary: linear-gradient(135deg, hsl(43, 96%, 56%), hsl(45, 100%, 72%));
-    --gradient-secondary: linear-gradient(135deg, hsl(15, 10%, 8%), hsl(25, 20%, 18%));
-    --gradient-hero: linear-gradient(135deg, hsl(15, 10%, 8%) 0%, hsl(43, 96%, 56%) 100%);
+    /* Logo-inspired gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(210, 100%, 50%), hsl(200, 95%, 55%));
+    --gradient-secondary: linear-gradient(135deg, hsl(45, 95%, 60%), hsl(50, 90%, 65%));
+    --gradient-hero: linear-gradient(135deg, hsl(15, 10%, 8%) 0%, hsl(210, 100%, 50%) 50%, hsl(45, 95%, 60%) 100%);
     --gradient-card: linear-gradient(145deg, hsl(20, 14%, 12%), hsl(25, 20%, 16%));
-    --gradient-elegant: linear-gradient(165deg, hsl(43, 96%, 56%) 0%, hsl(38, 88%, 48%) 50%, hsl(30, 80%, 40%) 100%);
+    --gradient-elegant: linear-gradient(165deg, hsl(210, 100%, 50%) 0%, hsl(200, 95%, 55%) 50%, hsl(45, 95%, 60%) 100%);
     --gradient-radial: radial-gradient(circle, var(--tw-gradient-stops));
     
-    --tech-glow: 0 0 30px hsl(43, 96%, 56% / 0.6);
-    --card-shadow: 0 12px 40px hsl(43, 96%, 56% / 0.2);
-    --elegant-shadow: 0 20px 60px hsl(43, 96%, 56% / 0.15);
+    --tech-glow: 0 0 30px hsl(210, 100%, 50% / 0.6);
+    --card-shadow: 0 12px 40px hsl(210, 100%, 50% / 0.2);
+    --elegant-shadow: 0 20px 60px hsl(210, 100%, 50% / 0.15);
     --premium-shadow: 0 25px 50px -12px hsl(15, 10%, 8% / 0.8);
     
-    /* Special company name animations */
-    --company-gradient-1: linear-gradient(45deg, hsl(43, 96%, 56%), hsl(194, 100%, 60%), hsl(284, 100%, 70%));
-    --company-gradient-2: linear-gradient(45deg, hsl(284, 100%, 70%), hsl(43, 96%, 56%), hsl(194, 100%, 60%));
-    --company-gradient-3: linear-gradient(45deg, hsl(194, 100%, 60%), hsl(284, 100%, 70%), hsl(43, 96%, 56%));
+    /* Logo-inspired company animations */
+    --company-gradient-1: linear-gradient(45deg, hsl(210, 100%, 50%), hsl(45, 95%, 60%), hsl(200, 95%, 55%));
+    --company-gradient-2: linear-gradient(45deg, hsl(45, 95%, 60%), hsl(210, 100%, 50%), hsl(200, 95%, 55%));
+    --company-gradient-3: linear-gradient(45deg, hsl(200, 95%, 55%), hsl(45, 95%, 60%), hsl(210, 100%, 50%));
     
     --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --transition-elegant: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
@@ -253,10 +244,10 @@ All colors MUST be HSL.
 /* Technology keyframes */
 @keyframes tech-glow {
   0%, 100% {
-    filter: drop-shadow(0 0 10px hsl(43, 96%, 56% / 0.3)) drop-shadow(0 0 20px hsl(43, 96%, 56% / 0.1));
+    filter: drop-shadow(0 0 10px hsl(210, 100%, 50% / 0.3)) drop-shadow(0 0 20px hsl(210, 100%, 50% / 0.1));
   }
   50% {
-    filter: drop-shadow(0 0 20px hsl(43, 96%, 56% / 0.5)) drop-shadow(0 0 40px hsl(43, 96%, 56% / 0.2));
+    filter: drop-shadow(0 0 20px hsl(210, 100%, 50% / 0.5)) drop-shadow(0 0 40px hsl(210, 100%, 50% / 0.2));
   }
 }
 
@@ -286,10 +277,10 @@ All colors MUST be HSL.
 
 @keyframes letterGlow {
   0%, 100% {
-    text-shadow: 0 0 5px hsl(43, 96%, 56% / 0.2);
+    text-shadow: 0 0 5px hsl(210, 100%, 50% / 0.2);
   }
   50% {
-    text-shadow: 0 0 15px hsl(43, 96%, 56% / 0.4), 0 0 25px hsl(43, 96%, 56% / 0.2);
+    text-shadow: 0 0 15px hsl(210, 100%, 50% / 0.4), 0 0 25px hsl(210, 100%, 50% / 0.2);
   }
 }
 
@@ -391,10 +382,10 @@ All colors MUST be HSL.
 /* Avatar specific animations */
 @keyframes avatarGlow {
   0% {
-    box-shadow: 0 0 20px hsl(194, 100%, 60% / 0.3);
+    box-shadow: 0 0 20px hsl(210, 100%, 50% / 0.3);
   }
   100% {
-    box-shadow: 0 0 30px hsl(194, 100%, 60% / 0.6), 0 0 40px hsl(43, 96%, 56% / 0.3);
+    box-shadow: 0 0 30px hsl(210, 100%, 50% / 0.6), 0 0 40px hsl(45, 95%, 60% / 0.3);
   }
 }
 
