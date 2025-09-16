@@ -7,15 +7,7 @@ import path from "path";
 export default defineConfig(async ({ mode }) => {
   const plugins = [react()];
   
-  if (mode === 'development') {
-    try {
-      const mod = await import('lovable-tagger');
-      const componentTagger = (mod as any).componentTagger ?? (mod as any).default?.componentTagger;
-      if (componentTagger) plugins.push(componentTagger());
-    } catch (e) {
-      console.warn('lovable-tagger not available:', e);
-    }
-  }
+  // Clean static build - no development plugins needed
   
   const config: UserConfig = {
     base: './', // Use relative paths for static hosting
