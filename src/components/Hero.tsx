@@ -38,10 +38,10 @@ const Hero = () => {
           </div>
           
           {/* Professional Subtitle */}
-          <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-16 max-w-4xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.3s' }}>
+          <p className="text-lg sm:text-xl md:text-2xl text-white/80 mb-16 max-w-4xl mx-auto leading-relaxed animate-slide-up font-medium" style={{ animationDelay: '0.3s' }}>
             Connecting communities with affordable and seamless internet connections through 
-            <span className="text-primary font-semibold"> enterprise-grade reliability</span> and 
-            <span className="text-primary font-semibold"> innovative solutions</span>.
+            <span className="text-secondary font-semibold"> enterprise-grade reliability</span> and 
+            <span className="text-secondary font-semibold"> innovative solutions</span>.
           </p>
 
           {/* Professional Feature Icons */}
@@ -50,19 +50,19 @@ const Hero = () => {
               <div className="w-18 h-18 sm:w-24 sm:h-24 luxury-card rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-tech-glow transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2">
                 <Zap className="w-9 h-9 sm:w-12 sm:h-12 text-primary drop-shadow-lg" />
               </div>
-              <span className="text-sm sm:text-base font-semibold text-muted-foreground tracking-wide">Lightning Fast</span>
+              <span className="text-sm sm:text-base font-semibold text-white/90 tracking-wide">Lightning Fast</span>
             </div>
             <div className="flex flex-col items-center group">
               <div className="w-18 h-18 sm:w-24 sm:h-24 luxury-card rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-tech-glow transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2">
                 <Shield className="w-9 h-9 sm:w-12 sm:h-12 text-primary drop-shadow-lg" />
               </div>
-              <span className="text-sm sm:text-base font-semibold text-muted-foreground tracking-wide">Enterprise Secure</span>
+              <span className="text-sm sm:text-base font-semibold text-white/90 tracking-wide">Enterprise Secure</span>
             </div>
             <div className="flex flex-col items-center group">
               <div className="w-18 h-18 sm:w-24 sm:h-24 luxury-card rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-tech-glow transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-2">
                 <Wifi className="w-9 h-9 sm:w-12 sm:h-12 text-primary drop-shadow-lg" />
               </div>
-              <span className="text-sm sm:text-base font-semibold text-muted-foreground tracking-wide">Always Reliable</span>
+              <span className="text-sm sm:text-base font-semibold text-white/90 tracking-wide">Always Reliable</span>
             </div>
           </div>
 
