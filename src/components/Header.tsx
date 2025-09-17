@@ -6,7 +6,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 w-full z-50 backdrop-blur-xl bg-gradient-to-r from-background/80 via-background/70 to-background/80 border-b border-primary/10 shadow-2xl relative overflow-hidden">
+    <header className="fixed top-0 left-0 right-0 w-full z-50 backdrop-blur-xl bg-gradient-to-r from-background/80 via-background/70 to-background/80 border-b border-primary/10 shadow-2xl overflow-hidden">
       {/* Animated Background Logo */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
         <img 
