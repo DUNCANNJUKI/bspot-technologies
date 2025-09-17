@@ -87,6 +87,7 @@ const config: Config = {
         'data-flow': 'dataFlow 4s linear infinite',
         'avatar-glow': 'avatarGlow 2s ease-in-out infinite alternate',
         'circuit-flow': 'circuitFlow 3s linear infinite',
+        'swing': 'swing 6s ease-in-out infinite',
       },
     },
   },

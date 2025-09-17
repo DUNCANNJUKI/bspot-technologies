@@ -6,7 +6,15 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 w-full z-50 backdrop-blur-xl bg-gradient-to-r from-background/80 via-background/70 to-background/80 border-b border-primary/10 shadow-2xl">
+    <header className="fixed top-0 w-full z-50 backdrop-blur-xl bg-gradient-to-r from-background/80 via-background/70 to-background/80 border-b border-primary/10 shadow-2xl relative overflow-hidden">
+      {/* Animated Background Logo */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
+        <img 
+          src="/bspot-bg-logo.png" 
+          alt="" 
+          className="w-96 h-96 object-contain animate-[swing_6s_ease-in-out_infinite]" 
+        />
+      </div>
       {/* Modern accent line */}
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
       
@@ -28,10 +36,10 @@ const Header = () => {
               <div className="absolute inset-0 rounded-2xl bg-primary/10 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
             </div>
             <div className="flex flex-col">
-              <div className="text-2xl font-black text-white tracking-tight leading-none">
+              <div className="text-2xl font-black bg-gradient-to-r from-white via-primary/90 to-secondary bg-clip-text text-transparent tracking-tight leading-none animate-pulse">
                 B-SPOT
               </div>
-              <div className="text-sm font-light text-primary/90 tracking-[0.2em] leading-none mt-0.5">
+              <div className="text-sm font-light text-primary/90 tracking-[0.2em] leading-none mt-0.5 group-hover:text-white transition-colors duration-500">
                 TECHNOLOGIES
               </div>
             </div>
@@ -62,13 +70,15 @@ const Header = () => {
           <div className="hidden lg:flex items-center space-x-4">
             <Button 
               asChild 
-              className="relative overflow-hidden bg-gradient-to-r from-primary via-primary to-secondary hover:from-secondary hover:via-primary hover:to-primary text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-primary/25 hover:shadow-2xl transition-all duration-500 hover:scale-105 border-0"
+              className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-700 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-cyan-400/50 hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-cyan-400/30 hover:border-cyan-300/50"
             >
-              <a href="#contact" className="flex items-center space-x-2">
-                <span className="relative z-10">Get Started</span>
-                <ChevronDown className="w-4 h-4 rotate-270 transition-transform duration-300 group-hover:translate-x-1" />
-                {/* Animated background */}
-                <div className="absolute inset-0 bg-gradient-to-r from-secondary/20 to-primary/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+              <a href="#contact" className="flex items-center space-x-2 group">
+                <span className="relative z-10 tracking-wide">Get Started</span>
+                <ChevronDown className="w-4 h-4 rotate-270 transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-[225deg]" />
+                {/* Tech glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 to-blue-500/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+                {/* Pulse ring */}
+                <div className="absolute inset-0 rounded-xl border-2 border-cyan-400/0 group-hover:border-cyan-400/50 animate-pulse"></div>
               </a>
             </Button>
           </div>
@@ -114,9 +124,9 @@ const Header = () => {
               <div className="pt-4 px-4">
                 <Button 
                   asChild 
-                  className="w-full bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-primary/25 hover:shadow-xl transition-all duration-500 hover:scale-105"
+                  className="w-full bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-700 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-cyan-400/50 hover:shadow-xl transition-all duration-500 hover:scale-105 border border-cyan-400/30"
                 >
-                  <a href="#contact" onClick={() => setIsMenuOpen(false)}>
+                  <a href="#contact" onClick={() => setIsMenuOpen(false)} className="tracking-wide">
                     Get Started
                   </a>
                 </Button>

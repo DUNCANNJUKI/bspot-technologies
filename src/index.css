@@ -398,6 +398,15 @@ All colors MUST be HSL.
   }
 }
 
+@keyframes swing {
+  0%, 100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
 @layer base {
   * {
     border-color: hsl(var(--border));
