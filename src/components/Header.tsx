@@ -15,17 +15,17 @@ const Header = () => {
           {/* Modern Logo with Animation */}
           <div className="flex items-center space-x-4 group cursor-pointer">
             <div className="relative">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 via-secondary/10 to-primary/5 backdrop-blur-sm p-3 border border-primary/20 shadow-lg group-hover:shadow-primary/20 group-hover:shadow-2xl transition-all duration-700 group-hover:scale-105 group-hover:rotate-3">
+              <div className="w-20 h-20 rounded-2xl bg-white/95 backdrop-blur-sm p-2 border border-primary/20 shadow-lg group-hover:shadow-primary/20 group-hover:shadow-2xl transition-all duration-700 group-hover:scale-105">
                 <img 
-                  src="/bspot-logo.png" 
+                  src="/bspot-logo-new.png" 
                   alt="B-Spot Technologies" 
                   className="w-full h-full object-contain drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-700" 
                 />
                 {/* Animated ring */}
-                <div className="absolute inset-0 rounded-2xl border-2 border-primary/0 group-hover:border-primary/30 transition-all duration-700 group-hover:rotate-180"></div>
+                <div className="absolute inset-0 rounded-2xl border-2 border-primary/0 group-hover:border-primary/30 transition-all duration-700"></div>
               </div>
               {/* Glow effect */}
-              <div className="absolute inset-0 rounded-2xl bg-primary/5 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+              <div className="absolute inset-0 rounded-2xl bg-primary/10 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
             </div>
             <div className="flex flex-col">
               <div className="text-2xl font-black text-white tracking-tight leading-none">
