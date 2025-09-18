@@ -21,9 +21,13 @@ const ChatbotWidget = () => {
 
   const getTimeGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good morning! ☀️";
-    if (hour < 17) return "Good afternoon! 🌤️";
-    return "Good evening! 🌙";
+    if (hour < 12) return "SYSTEM_GREETING.MORNING_PROTOCOL_ACTIVATED ☀️";
+    if (hour < 17) return "SYSTEM_GREETING.AFTERNOON_PROTOCOL_ACTIVATED 🌤️";
+    return "SYSTEM_GREETING.EVENING_PROTOCOL_ACTIVATED 🌙";
+  };
+
+  const getRoboticGreeting = () => {
+    return "Hi Our esteemed client, welcome to B-Spot technologies, How may I assist you today? 🤖";
   };
 
   const addMessage = (text: string, isUser: boolean = false) => {
@@ -151,7 +155,7 @@ const ChatbotWidget = () => {
     if (lowerMessage.includes("hello") || lowerMessage.includes("hi") || 
         lowerMessage.includes("hey") || lowerMessage.includes("good morning") || 
         lowerMessage.includes("good afternoon") || lowerMessage.includes("good evening")) {
-      return `${getTimeGreeting()} It's wonderful to meet you! Welcome to B-SPOT Technologies! 🎉 I'm your friendly AI assistant, and I'm super excited to help you discover our amazing WiFi solutions. What can I help you explore today?`;
+      return `${getTimeGreeting()} HUMAN_INTERACTION_DETECTED... PROCESSING_GREETING... ${getRoboticGreeting()} My circuits are optimized to assist with B-SPOT Technologies WiFi solutions. AWAITING_COMMAND... 🔧`;
     }
     
     // Emergency/Urgent support
@@ -167,7 +171,7 @@ const ChatbotWidget = () => {
     }
     
     // Default response
-    return "I'm your friendly B-SPOT Technologies assistant! 🤖 I'd love to help you discover our amazing WiFi solutions across Nairobi, Kikuyu, Meru, and Regen! I can tell you about our Business WiFi, Event WiFi, Hotspot Management, Network Installation, 24/7 Support, and Optimization services. Or if you prefer to chat directly, call us at +254-750-444-167! What sparks your curiosity today?";
+    return "ERROR_404: QUERY_NOT_RECOGNIZED... ACCESSING_MAIN_DATABASE... 🤖 SYSTEM_MESSAGE: I am B-SPOT AI Protocol v2.0! My neural networks contain comprehensive data on WiFi solutions across [NAIROBI, KIKUYU, MERU, REGEN]. Available modules: [BUSINESS_WIFI], [EVENT_WIFI], [HOTSPOT_MANAGEMENT], [NETWORK_INSTALLATION], [24/7_SUPPORT], [OPTIMIZATION_SERVICES]. DIRECT_COMMUNICATION_CHANNEL: +254-750-444-167. Please specify your query parameters... 🔧";
   };
 
   const handleSendMessage = async () => {
@@ -196,9 +200,16 @@ const ChatbotWidget = () => {
     setAvatarMood('happy');
     if (messages.length === 0) {
       setTimeout(() => {
-        addMessage(`${getTimeGreeting()} Welcome to B-SPOT Technologies! 🎉 I'm your friendly AI assistant, and I'm thrilled to meet you! I'm here to make discovering our WiFi solutions fun and easy. What would you like to explore together?`);
+        addMessage(`SYSTEM_INITIALIZED... ${getTimeGreeting()} ${getRoboticGreeting()} 
+        
+SYSTEM_STATUS: [ONLINE] 🟢
+AI_PROTOCOLS: [ACTIVE] ⚡
+WIFI_EXPERTISE: [LOADED] 📡
+RESPONSE_MODE: [OPTIMIZED] 🤖
+
+AWAITING_USER_INPUT...`);
         setAvatarMood('neutral');
-      }, 500);
+      }, 800);
     }
   };
 
@@ -219,13 +230,13 @@ const ChatbotWidget = () => {
               size="sm"
             />
           </Button>
-          {/* Floating greeting tooltip */}
-          <div className="absolute bottom-full right-0 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-            <div className="bg-card/95 backdrop-blur-md border border-primary/30 rounded-lg px-3 py-2 text-sm text-foreground whitespace-nowrap shadow-lg">
-              Hi! Need help? 👋
-              <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-primary/30"></div>
-            </div>
-          </div>
+           {/* Floating greeting tooltip */}
+           <div className="absolute bottom-full right-0 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+             <div className="bg-card/95 backdrop-blur-md border border-primary/30 rounded-lg px-3 py-2 text-sm text-foreground whitespace-nowrap shadow-lg font-mono">
+               INIT_CHAT_PROTOCOL? 🤖
+               <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-primary/30"></div>
+             </div>
+           </div>
           {/* Notification badge */}
           <div className="absolute -top-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-green-400 rounded-full flex items-center justify-center animate-pulse shadow-md">
             <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-white rounded-full"></div>
@@ -249,13 +260,13 @@ const ChatbotWidget = () => {
                   {/* Online status indicator */}
                   <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 border-2 border-background rounded-full animate-pulse"></div>
                 </div>
-                <div className="flex flex-col">
-                  <CardTitle className="text-base font-semibold text-primary-foreground">B-SPOT Assistant 🤖</CardTitle>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
-                    <p className="text-xs text-primary-foreground/90 font-medium">Online • Ready to help! 💡</p>
-                  </div>
-                </div>
+                 <div className="flex flex-col">
+                   <CardTitle className="text-base font-semibold text-primary-foreground font-mono">B-SPOT AI v2.0 🤖</CardTitle>
+                   <div className="flex items-center space-x-2">
+                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
+                     <p className="text-xs text-primary-foreground/90 font-medium font-mono">SYS_STATUS: ONLINE • READY 🔧</p>
+                   </div>
+                 </div>
               </div>
               <div className="flex items-center space-x-2">
                 <Button
