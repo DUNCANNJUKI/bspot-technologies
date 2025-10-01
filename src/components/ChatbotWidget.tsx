@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Bot, Send, X, Minimize2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -20,6 +20,15 @@ const ChatbotWidget = () => {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [avatarMood, setAvatarMood] = useState<'neutral' | 'happy' | 'thinking' | 'error'>('neutral');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isTyping]);
 
   const getTimeGreeting = () => {
     const hour = new Date().getHours();
@@ -193,7 +202,16 @@ How may I assist you today?`);
 
           <CardContent className="flex flex-col h-full p-0">
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 space-y-4 bg-background/20 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 space-y-4 bg-gradient-to-b from-background/60 to-background/40 custom-scrollbar relative">
+              {/* Bouncing Company Logo Watermark */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
+                <img 
+                  src="/bspot-logo-new.png" 
+                  alt="B-SPOT Logo" 
+                  className="w-32 h-32 animate-bounce"
+                  style={{ animationDuration: '3s' }}
+                />
+              </div>
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -253,6 +271,9 @@ How may I assist you today?`);
                   </div>
                 </div>
               )}
+              
+              {/* Invisible div for auto-scroll */}
+              <div ref={messagesEndRef} />
             </div>
 
             {/* Input Area */}
