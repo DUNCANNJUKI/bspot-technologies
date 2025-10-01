@@ -4,10 +4,11 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 // https://vitejs.dev/config/
-export default defineConfig(async ({ mode }) => {
+export default defineConfig(async ({ mode, command }) => {
   const plugins = [react()];
   
-  if (mode === 'development') {
+  // Only load lovable-tagger in dev server, not during builds
+  if (mode === 'development' && command === 'serve') {
     try {
       const mod = await import('lovable-tagger');
       const componentTagger = (mod as any).componentTagger ?? (mod as any).default?.componentTagger;
