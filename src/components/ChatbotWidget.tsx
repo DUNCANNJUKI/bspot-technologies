@@ -12,6 +12,8 @@ interface Message {
   timestamp: Date;
 }
 
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+
 const ChatbotWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -21,13 +23,9 @@ const ChatbotWidget = () => {
 
   const getTimeGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "SYSTEM_GREETING.MORNING_PROTOCOL_ACTIVATED ☀️";
-    if (hour < 17) return "SYSTEM_GREETING.AFTERNOON_PROTOCOL_ACTIVATED 🌤️";
-    return "SYSTEM_GREETING.EVENING_PROTOCOL_ACTIVATED 🌙";
-  };
-
-  const getRoboticGreeting = () => {
-    return "Hi Our esteemed client, welcome to B-Spot technologies, How may I assist you today? 🤖";
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
   };
 
   const addMessage = (text: string, isUser: boolean = false) => {
@@ -40,138 +38,43 @@ const ChatbotWidget = () => {
     setMessages(prev => [...prev, message]);
   };
 
-  const botResponse = (userMessage: string) => {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    // Developer question responses
-    if (lowerMessage.includes("who developed") || 
-        lowerMessage.includes("who created") || 
-        lowerMessage.includes("who built") ||
-        lowerMessage.includes("who made")) {
-      return "I was lovingly crafted by Mr Bee from B-SPOT Technologies Labs! 🐝 He gave me the ability to help you with all your WiFi needs. Pretty cool, right?";
+  const callAI = async (userMessage: string): Promise<string> => {
+    try {
+      const conversationHistory = messages.map(msg => ({
+        role: msg.isUser ? "user" : "assistant",
+        content: msg.text
+      }));
+
+      const response = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          messages: [
+            ...conversationHistory,
+            { role: "user", content: userMessage }
+          ]
+        }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          return "I'm receiving too many requests right now. Please try again in a moment. For urgent matters, call us at +254-750-444-167! 📞";
+        }
+        if (response.status === 402) {
+          return "I'm temporarily unavailable. Please contact our support team directly at +254-750-444-167 or email info@bspot-tech.com for immediate assistance! 📧";
+        }
+        throw new Error("Failed to get response");
+      }
+
+      const data = await response.json();
+      return data.message || "I apologize, but I couldn't process that. Please call +254-750-444-167 for direct assistance!";
+    } catch (error) {
+      console.error("AI Error:", error);
+      return "I'm having trouble connecting right now. For immediate help, please call our 24/7 support line at +254-750-444-167! 📞";
     }
-    
-    // Services offered
-    if (lowerMessage.includes("service") || lowerMessage.includes("what do you do") || 
-        lowerMessage.includes("what services") || lowerMessage.includes("offerings")) {
-      return "B-SPOT Technologies offers premium WiFi solutions including: Business WiFi Solutions with enterprise-grade security, Event WiFi Services for conferences and festivals, Public Hotspot Management for hotels and restaurants, Professional Network Installation with site surveys, 24/7 Technical Support with remote monitoring, and WiFi Optimization for maximum efficiency. Which service interests you?";
-    }
-    
-    // Business WiFi Solutions
-    if (lowerMessage.includes("business wifi") || lowerMessage.includes("office wifi") || 
-        lowerMessage.includes("commercial wifi") || lowerMessage.includes("enterprise")) {
-      return "Our Business WiFi Solutions provide reliable internet connectivity for offices, retail stores, and commercial spaces. Features include 24/7 monitoring, scalable bandwidth, and enterprise-grade security. Perfect for businesses needing professional, secure connectivity.";
-    }
-    
-    // Event WiFi Services
-    if (lowerMessage.includes("event wifi") || lowerMessage.includes("conference wifi") || 
-        lowerMessage.includes("festival wifi") || lowerMessage.includes("temporary wifi")) {
-      return "Our Event WiFi Services offer temporary high-capacity WiFi solutions for conferences, festivals, and special events. We provide quick deployment, high user capacity support, and detailed event analytics. Ideal for any event needing reliable mass connectivity.";
-    }
-    
-    // Public Hotspot Management
-    if (lowerMessage.includes("hotspot") || lowerMessage.includes("hotel wifi") || 
-        lowerMessage.includes("restaurant wifi") || lowerMessage.includes("guest wifi")) {
-      return "Our Public Hotspot Management provides comprehensive WiFi solutions for hotels, restaurants, and public venues. Features include customizable guest portals, detailed usage analytics, and full brand customization to match your business identity.";
-    }
-    
-    // Network Installation
-    if (lowerMessage.includes("installation") || lowerMessage.includes("setup") || 
-        lowerMessage.includes("network install") || lowerMessage.includes("infrastructure")) {
-      return "Our Professional Network Installation service includes comprehensive site surveys, equipment provision, and expert configuration. We handle everything from planning to implementation, ensuring your WiFi infrastructure is perfectly tailored to your needs.";
-    }
-    
-    // Technical Support
-    if (lowerMessage.includes("support") || lowerMessage.includes("technical") || 
-        lowerMessage.includes("maintenance") || lowerMessage.includes("help")) {
-      return "We provide 24/7 Technical Support with round-the-clock assistance to ensure your network runs smoothly. Our support includes remote monitoring, rapid response times, and preventive maintenance. Call us anytime at +254-750-444-167!";
-    }
-    
-    // WiFi Optimization
-    if (lowerMessage.includes("optimization") || lowerMessage.includes("speed") || 
-        lowerMessage.includes("performance") || lowerMessage.includes("improve wifi")) {
-      return "Our WiFi Optimization service focuses on performance tuning of existing networks for maximum efficiency. We provide speed optimization, comprehensive coverage analysis, and detailed performance reports to ensure you get the best from your network.";
-    }
-    
-    // Coverage Areas
-    if (lowerMessage.includes("area") || lowerMessage.includes("location") || 
-        lowerMessage.includes("where") || lowerMessage.includes("coverage") || 
-        lowerMessage.includes("region")) {
-      return "B-SPOT Technologies currently serves multiple locations across Kenya: Nairobi (our capital excellence hub), Kikuyu (community-focused solutions), Meru (regional innovation center), and Regen (expanding network growth). We're continuously expanding our coverage to serve more communities with affordable, seamless internet connections.";
-    }
-    
-    // Nairobi specific
-    if (lowerMessage.includes("nairobi")) {
-      return "We provide comprehensive WiFi solutions throughout Nairobi, our capital excellence hub. As Kenya's business center, we offer enterprise-grade solutions for offices, commercial spaces, and events across the city.";
-    }
-    
-    // Kikuyu specific
-    if (lowerMessage.includes("kikuyu")) {
-      return "In Kikuyu, we focus on community-centered WiFi solutions, providing reliable internet connectivity that serves local businesses, educational institutions, and residential areas with our signature affordable and seamless approach.";
-    }
-    
-    // Meru specific
-    if (lowerMessage.includes("meru")) {
-      return "Meru represents our regional innovation center, where we deliver cutting-edge WiFi solutions adapted to the unique needs of the region, supporting both agricultural businesses and urban development with reliable connectivity.";
-    }
-    
-    // Regen specific
-    if (lowerMessage.includes("regen")) {
-      return "Regen is part of our expanding network growth strategy, where we're establishing new WiFi infrastructure and hotspot solutions to connect more communities with affordable, high-quality internet access.";
-    }
-    
-    // Contact information
-    if (lowerMessage.includes("contact") || lowerMessage.includes("phone") || 
-        lowerMessage.includes("call") || lowerMessage.includes("number")) {
-      return "You can reach B-SPOT Technologies at +254-750-444-167 - our 24/7 support line! We're also available via email at info@bspot-tech.com and support@bspot-tech.com. Our business hours are Mon-Fri: 8AM-6PM, with 24/7 emergency support available.";
-    }
-    
-    // About the company
-    if (lowerMessage.includes("about") || lowerMessage.includes("company") || 
-        lowerMessage.includes("bspot") || lowerMessage.includes("b-spot") || 
-        lowerMessage.includes("history")) {
-      return "B-SPOT Technologies is a visionary force in Kenya's connectivity landscape with 2 years of proven excellence. Our mission is connecting communities with affordable and seamless internet connections. We're powered by a certified engineering team using cutting-edge technology and proven methodologies to deliver network infrastructures that exceed industry standards.";
-    }
-    
-    // Mission and values
-    if (lowerMessage.includes("mission") || lowerMessage.includes("values") || 
-        lowerMessage.includes("vision") || lowerMessage.includes("goal")) {
-      return "Our mission at B-SPOT Technologies is connecting communities with affordable and seamless internet connections. We're built on four core values: Reliability (ensuring peak performance with minimal downtime), Innovation (using cutting-edge technology), Support (24/7 dedicated technical assistance), and Security (enterprise-grade security protocols). We strive for excellence in every connection we create.";
-    }
-    
-    // Pricing/Cost inquiries
-    if (lowerMessage.includes("price") || lowerMessage.includes("cost") || 
-        lowerMessage.includes("affordable") || lowerMessage.includes("quote")) {
-      return "We pride ourselves on providing affordable WiFi solutions tailored to your specific needs. Pricing varies based on coverage area, user capacity, and service requirements. For a personalized quote, please call us at +254-750-444-167 or email info@bspot-tech.com. Our team will assess your needs and provide competitive pricing.";
-    }
-    
-    // WiFi/Internet general questions
-    if (lowerMessage.includes("wifi") || lowerMessage.includes("internet") || 
-        lowerMessage.includes("connection") || lowerMessage.includes("network")) {
-      return "B-SPOT Technologies specializes in premium WiFi hotspot solutions, network infrastructure, and connectivity services across Kenya. We provide reliable, affordable, and seamless internet connections for businesses, events, and communities. How can we help improve your connectivity today?";
-    }
-    
-    // Greetings
-    if (lowerMessage.includes("hello") || lowerMessage.includes("hi") || 
-        lowerMessage.includes("hey") || lowerMessage.includes("good morning") || 
-        lowerMessage.includes("good afternoon") || lowerMessage.includes("good evening")) {
-      return `${getTimeGreeting()} HUMAN_INTERACTION_DETECTED... PROCESSING_GREETING... ${getRoboticGreeting()} My circuits are optimized to assist with B-SPOT Technologies WiFi solutions. AWAITING_COMMAND... 🔧`;
-    }
-    
-    // Emergency/Urgent support
-    if (lowerMessage.includes("emergency") || lowerMessage.includes("urgent") || 
-        lowerMessage.includes("down") || lowerMessage.includes("not working") || 
-        lowerMessage.includes("problem")) {
-      return "For urgent technical issues or emergencies, please call our 24/7 support line immediately at +254-750-444-167. Our technical team provides rapid response and remote monitoring to resolve issues quickly. We're here to help around the clock!";
-    }
-    
-    // Thank you responses
-    if (lowerMessage.includes("thank") || lowerMessage.includes("thanks")) {
-      return "Aww, you're so welcome! 😊 It makes me happy to help! B-SPOT Technologies is always here for you. Feel free to ask me anything else about our services, or give us a call at +254-750-444-167. I'm here whenever you need me!";
-    }
-    
-    // Default response
-    return "ERROR_404: QUERY_NOT_RECOGNIZED... ACCESSING_MAIN_DATABASE... 🤖 SYSTEM_MESSAGE: I am B-SPOT AI Protocol v2.0! My neural networks contain comprehensive data on WiFi solutions across [NAIROBI, KIKUYU, MERU, REGEN]. Available modules: [BUSINESS_WIFI], [EVENT_WIFI], [HOTSPOT_MANAGEMENT], [NETWORK_INSTALLATION], [24/7_SUPPORT], [OPTIMIZATION_SERVICES]. DIRECT_COMMUNICATION_CHANNEL: +254-750-444-167. Please specify your query parameters... 🔧";
   };
 
   const handleSendMessage = async () => {
@@ -183,16 +86,18 @@ const ChatbotWidget = () => {
     setIsTyping(true);
     setAvatarMood('thinking');
     
-    // Simulate typing delay
-    setTimeout(() => {
-      const response = botResponse(userMessage);
+    try {
+      const response = await callAI(userMessage);
       addMessage(response);
-      setIsTyping(false);
       setAvatarMood('happy');
-      
-      // Return to neutral after response
+    } catch (error) {
+      console.error("Error sending message:", error);
+      addMessage("I apologize for the inconvenience. Please call our 24/7 support at +254-750-444-167 for immediate assistance!");
+      setAvatarMood('error');
+    } finally {
+      setIsTyping(false);
       setTimeout(() => setAvatarMood('neutral'), 2000);
-    }, 1000);
+    }
   };
 
   const handleOpen = () => {
@@ -200,14 +105,11 @@ const ChatbotWidget = () => {
     setAvatarMood('happy');
     if (messages.length === 0) {
       setTimeout(() => {
-        addMessage(`SYSTEM_INITIALIZED... ${getTimeGreeting()} ${getRoboticGreeting()} 
-        
-SYSTEM_STATUS: [ONLINE] 🟢
-AI_PROTOCOLS: [ACTIVE] ⚡
-WIFI_EXPERTISE: [LOADED] 📡
-RESPONSE_MODE: [OPTIMIZED] 🤖
+        addMessage(`${getTimeGreeting()}! Welcome to B-SPOT Technologies! 👋
 
-AWAITING_USER_INPUT...`);
+I'm your AI assistant, here to help you with all your WiFi and connectivity needs. 
+
+How may I assist you today?`);
         setAvatarMood('neutral');
       }, 800);
     }
@@ -232,8 +134,8 @@ AWAITING_USER_INPUT...`);
           </Button>
            {/* Floating greeting tooltip */}
            <div className="absolute bottom-full right-0 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-             <div className="bg-card/95 backdrop-blur-md border border-primary/30 rounded-lg px-3 py-2 text-sm text-foreground whitespace-nowrap shadow-lg font-mono">
-               INIT_CHAT_PROTOCOL? 🤖
+             <div className="bg-card/95 backdrop-blur-md border border-primary/30 rounded-lg px-3 py-2 text-sm text-foreground whitespace-nowrap shadow-lg">
+               Need WiFi assistance? 💬
                <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-primary/30"></div>
              </div>
            </div>
@@ -261,10 +163,10 @@ AWAITING_USER_INPUT...`);
                   <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 border-2 border-background rounded-full animate-pulse"></div>
                 </div>
                  <div className="flex flex-col">
-                   <CardTitle className="text-base font-semibold text-primary-foreground font-mono">B-SPOT AI v2.0 🤖</CardTitle>
+                   <CardTitle className="text-base font-semibold text-primary-foreground">B-SPOT AI Assistant 🤖</CardTitle>
                    <div className="flex items-center space-x-2">
                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
-                     <p className="text-xs text-primary-foreground/90 font-medium font-mono">SYS_STATUS: ONLINE • READY 🔧</p>
+                     <p className="text-xs text-primary-foreground/90 font-medium">Online • Ready to Help 24/7</p>
                    </div>
                  </div>
               </div>
