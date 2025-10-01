@@ -12,10 +12,9 @@ interface Message {
   timestamp: Date;
 }
 
-// Construct the chat URL with proper fallback
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://rtgcrclgmvcmrjpvtpwm.supabase.co";
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0Z2NyY2xnbXZjbXJqcHZ0cHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NTU0NTEsImV4cCI6MjA3MDQzMTQ1MX0.JR45nTPTScLaObpXQM-VzQ50ODRJTzakrvPOA3HldCM";
-const CHAT_URL = `${SUPABASE_URL}/functions/v1/chat`;
+// Direct URL configuration (VITE_ env variables not supported)
+const CHAT_URL = "https://rtgcrclgmvcmrjpvtpwm.supabase.co/functions/v1/chat";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0Z2NyY2xnbXZjbXJqcHZ0cHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NTU0NTEsImV4cCI6MjA3MDQzMTQ1MX0.JR45nTPTScLaObpXQM-VzQ50ODRJTzakrvPOA3HldCM";
 
 const ChatbotWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
