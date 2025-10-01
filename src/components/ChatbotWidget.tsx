@@ -12,7 +12,10 @@ interface Message {
   timestamp: Date;
 }
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+// Construct the chat URL with proper fallback
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://rtgcrclgmvcmrjpvtpwm.supabase.co";
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0Z2NyY2xnbXZjbXJqcHZ0cHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NTU0NTEsImV4cCI6MjA3MDQzMTQ1MX0.JR45nTPTScLaObpXQM-VzQ50ODRJTzakrvPOA3HldCM";
+const CHAT_URL = `${SUPABASE_URL}/functions/v1/chat`;
 
 const ChatbotWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,11 +57,12 @@ const ChatbotWidget = () => {
         content: msg.text
       }));
 
+      console.log("Sending message to AI:", userMessage);
       const response = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
         },
         body: JSON.stringify({
           messages: [
@@ -67,6 +71,8 @@ const ChatbotWidget = () => {
           ]
         }),
       });
+
+      console.log("Response status:", response.status);
 
       if (!response.ok) {
         if (response.status === 429) {
