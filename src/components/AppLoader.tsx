@@ -20,7 +20,7 @@ const AppLoader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
       <div className="flex flex-col items-center space-y-4">
         <div className="relative">
           <img 
-            src="/lovable-uploads/b036e33e-4110-40c6-8b4e-b6fa6c3ec745.png" 
+            src="/lovable-uploads/b036e33e-96.webp" 
             alt="B-SPOT Technologies" 
             width="96"
             height="96"

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Wifi, Building, Calendar, Users, Settings, Headphones } from "lucide-react";
 import wifiConnectivity from "@/assets/wifi-connectivity.jpg";
-import accessPoint from "@/assets/access-point.jpg";
+import accessPoint from "@/assets/access-point.webp";
 
 const Services = () => {
   const services = [
