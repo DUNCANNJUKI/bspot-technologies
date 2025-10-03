@@ -1,12 +1,15 @@
 
+import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import ChatbotWidget from "@/components/ChatbotWidget";
 import { useSecurityHeaders } from "@/hooks/useSecurityHeaders";
+
+// Lazy load ChatbotWidget to reduce initial bundle size
+const ChatbotWidget = lazy(() => import("@/components/ChatbotWidget"));
 
 const Index = () => {
   useSecurityHeaders();
@@ -20,7 +23,9 @@ const Index = () => {
         <Contact />
       </main>
       <Footer />
-      <ChatbotWidget />
+      <Suspense fallback={null}>
+        <ChatbotWidget />
+      </Suspense>
     </div>
   );
 };
