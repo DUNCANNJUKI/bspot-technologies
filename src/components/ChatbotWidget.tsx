@@ -25,11 +25,19 @@ const ChatbotWidget = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Use requestAnimationFrame to avoid forced reflow
+    requestAnimationFrame(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Debounce scroll to prevent excessive calls during rapid updates
+    const timeoutId = setTimeout(() => {
+      scrollToBottom();
+    }, 50);
+    
+    return () => clearTimeout(timeoutId);
   }, [messages, isTyping]);
 
   const getTimeGreeting = () => {
