@@ -10,7 +10,7 @@ const Header = () => {
       {/* Animated Background Logo */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
         <img 
-          src="/bspot-bg-logo.webp" 
+          src="/bspot-bg-logo.png" 
           alt="" 
           width="384"
           height="384"
@@ -28,10 +28,11 @@ const Header = () => {
             <div className="relative">
               <div className="w-20 h-20 rounded-2xl bg-white/95 backdrop-blur-sm p-2 border border-primary/20 shadow-lg group-hover:shadow-primary/20 group-hover:shadow-2xl transition-all duration-700 group-hover:scale-105">
                 <img 
-                  src="/bspot-logo-new.webp" 
+                  src="/bspot-logo-new.png" 
                   alt="B-Spot Technologies" 
                   width="80"
                   height="80"
+                  fetchPriority="high"
                   className="w-full h-full object-contain drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-700" 
                 />
                 {/* Animated ring */}

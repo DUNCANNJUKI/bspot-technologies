@@ -14,6 +14,9 @@ const Hero = () => {
         style={{ backgroundImage: `url(${networkInfrastructure})` }}
       />
       
+      {/* Preload LCP image */}
+      <link rel="preload" as="image" href={networkInfrastructure} fetchPriority="high" />
+      
       {/* Professional Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-hero opacity-98" />
       
