@@ -2,7 +2,7 @@
 import { Button } from "./ui/button";
 import { ArrowRight, Wifi, Zap, Shield } from "lucide-react";
 import heroImage from "@/assets/hero-bg.jpg";
-import networkInfrastructure from "@/assets/network-infrastructure.jpg";
+import networkInfrastructure from "@/assets/network-infrastructure.webp";
 import AnimatedNetwork from "./AnimatedNetwork";
 
 const Hero = () => {
