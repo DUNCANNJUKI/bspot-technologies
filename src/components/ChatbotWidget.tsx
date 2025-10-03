@@ -57,6 +57,8 @@ const ChatbotWidget = () => {
       }));
 
       console.log("Sending message to AI:", userMessage);
+      console.log("Chat URL:", CHAT_URL);
+      
       const response = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
@@ -74,20 +76,31 @@ const ChatbotWidget = () => {
       console.log("Response status:", response.status);
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        console.error("API Error Response:", errorData);
+        
         if (response.status === 429) {
           return "I'm receiving too many requests right now. Please try again in a moment. For urgent matters, call us at +254-750-444-167! 📞";
         }
         if (response.status === 402) {
           return "I'm temporarily unavailable. Please contact our support team directly at +254-750-444-167 or email info@bspot-tech.com for immediate assistance! 📧";
         }
-        throw new Error("Failed to get response");
+        
+        // Return error message from backend if available
+        return errorData.error || "I encountered an issue. Please contact us at +254-750-444-167 for assistance! 📞";
       }
 
       const data = await response.json();
-      return data.message || "I apologize, but I couldn't process that. Please call +254-750-444-167 for direct assistance!";
+      console.log("AI Response:", data);
+      
+      if (data.message) {
+        return data.message;
+      }
+      
+      return "I apologize, but I couldn't generate a proper response. Please call +254-750-444-167 for direct assistance!";
     } catch (error) {
-      console.error("AI Error:", error);
-      return "I'm having trouble connecting right now. For immediate help, please call our 24/7 support line at +254-750-444-167! 📞";
+      console.error("AI Error Details:", error);
+      return "Please contact our support team at +254-750-444-167 for assistance! 📞";
     }
   };
 
@@ -106,7 +119,7 @@ const ChatbotWidget = () => {
       setAvatarMood('happy');
     } catch (error) {
       console.error("Error sending message:", error);
-      addMessage("I apologize for the inconvenience. Please call our 24/7 support at +254-750-444-167 for immediate assistance!");
+      addMessage("Please contact our support team at +254-750-444-167 for assistance! 📞");
       setAvatarMood('error');
     } finally {
       setIsTyping(false);
