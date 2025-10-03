@@ -34,7 +34,7 @@ const Footer = () => {
           <div className="lg:col-span-2 animate-fade-in">
             <div className="flex items-center space-x-4 mb-8">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-white/95 to-white/80 backdrop-blur-sm p-3 border border-primary/20 shadow-lg hover:shadow-primary/20 hover:shadow-2xl transition-all duration-500">
-                <img src="/bspot-logo-new.png" alt="B-Spot Technologies" className="w-full h-full object-contain drop-shadow-lg" />
+                <img src="/bspot-logo-new.webp" alt="B-Spot Technologies" width="64" height="64" loading="lazy" className="w-full h-full object-contain drop-shadow-lg" />
               </div>
               <div>
                 <div className="text-2xl font-black bg-gradient-to-r from-foreground via-primary to-cyan-400 bg-clip-text text-transparent tracking-tight leading-none">

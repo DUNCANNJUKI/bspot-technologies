@@ -232,8 +232,11 @@ How may I assist you today?`);
               {/* Bouncing Company Logo Watermark */}
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
                 <img 
-                  src="/bspot-logo-new.png" 
+                  src="/bspot-logo-new.webp" 
                   alt="B-SPOT Logo" 
+                  width="128"
+                  height="128"
+                  loading="lazy"
                   className="w-32 h-32 animate-bounce"
                   style={{ animationDuration: '3s' }}
                 />
