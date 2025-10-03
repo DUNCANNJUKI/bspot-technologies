@@ -26,26 +26,26 @@ const Header = () => {
           {/* Modern Logo with Animation */}
           <div className="flex items-center space-x-4 group cursor-pointer">
             <div className="relative">
-              <div className="w-24 h-24 rounded-2xl bg-white backdrop-blur-sm p-3 border-2 border-primary/30 shadow-xl group-hover:shadow-primary/40 group-hover:shadow-2xl transition-all duration-500 group-hover:scale-105">
+              <div className="w-24 h-24 rounded-2xl bg-white backdrop-blur-sm p-3 border-2 border-primary/30 shadow-xl group-hover:shadow-primary/30 group-hover:shadow-2xl transition-all duration-700 group-hover:scale-105">
                 <img 
                   src="/bspot-logo-128.webp" 
                   alt="B-Spot Technologies" 
                   width="128"
                   height="128"
                   fetchPriority="high"
-                  className="w-full h-full object-contain drop-shadow-2xl group-hover:drop-shadow-xl transition-all duration-500" 
+                  className="w-full h-full object-contain drop-shadow-2xl group-hover:drop-shadow-xl transition-all duration-700" 
                 />
                 {/* Animated ring */}
-                <div className="absolute inset-0 rounded-2xl border-2 border-primary/0 group-hover:border-primary/50 transition-all duration-500"></div>
+                <div className="absolute inset-0 rounded-2xl border-2 border-primary/0 group-hover:border-primary/40 transition-all duration-700"></div>
               </div>
               {/* Glow effect */}
-              <div className="absolute inset-0 rounded-2xl bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+              <div className="absolute inset-0 rounded-2xl bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
             </div>
             <div className="flex flex-col">
-              <div className="text-3xl font-black text-white tracking-tight leading-none">
+              <div className="text-3xl font-black bg-gradient-to-r from-white via-primary/90 to-secondary bg-clip-text text-transparent tracking-tight leading-none animate-pulse">
                 B-SPOT
               </div>
-              <div className="text-sm font-light text-primary/95 tracking-[0.2em] leading-none mt-1 group-hover:text-white transition-colors duration-500">
+              <div className="text-sm font-light text-primary/90 tracking-[0.2em] leading-none mt-1 group-hover:text-white transition-colors duration-500">
                 TECHNOLOGIES
               </div>
             </div>
