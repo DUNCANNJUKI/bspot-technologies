@@ -26,7 +26,7 @@ const Header = () => {
           {/* Modern Logo with Animation */}
           <div className="flex items-center space-x-4 group cursor-pointer">
             <div className="relative">
-              <div className="w-24 h-24 rounded-2xl bg-white backdrop-blur-sm p-3 border-2 border-primary/30 shadow-xl group-hover:shadow-primary/30 group-hover:shadow-2xl transition-all duration-700 group-hover:scale-105">
+              <div className="w-28 h-28 rounded-2xl bg-white p-4 border-2 border-primary/40 shadow-xl group-hover:shadow-primary/30 group-hover:shadow-2xl transition-all duration-700 group-hover:scale-105">
                 <img 
                   src="/bspot-logo-128.webp" 
                   alt="B-Spot Technologies" 
