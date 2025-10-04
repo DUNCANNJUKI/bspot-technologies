@@ -33,8 +33,21 @@ const Footer = () => {
           {/* Company Info - Enhanced */}
           <div className="lg:col-span-2 animate-fade-in">
             <div className="flex items-center space-x-4 mb-8">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-white/95 to-white/80 backdrop-blur-sm p-3 border border-primary/20 shadow-lg hover:shadow-primary/20 hover:shadow-2xl transition-all duration-500">
-                <img src="/bspot-logo-128.webp" alt="B-Spot Technologies" width="128" height="128" loading="lazy" className="w-full h-full object-contain drop-shadow-lg" />
+              <div className="relative group">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-2xl bg-white p-3 sm:p-3.5 lg:p-4 border-3 border-blue-500/60 shadow-2xl shadow-blue-500/20 hover:shadow-blue-500/40 hover:shadow-2xl transition-all duration-700 hover:scale-110 hover:border-cyan-400/80">
+                  <img 
+                    src="/bspot-logo-128.webp" 
+                    alt="B-Spot Technologies Logo" 
+                    width="128" 
+                    height="128" 
+                    loading="lazy" 
+                    className="w-full h-full object-contain filter brightness-110 contrast-125 drop-shadow-xl hover:brightness-125 transition-all duration-700" 
+                  />
+                  {/* Animated ring */}
+                  <div className="absolute inset-0 rounded-2xl border-2 border-cyan-400/0 group-hover:border-cyan-400/60 transition-all duration-700 animate-pulse"></div>
+                </div>
+                {/* Glow effect */}
+                <div className="absolute inset-0 rounded-2xl bg-blue-500/30 blur-2xl opacity-50 group-hover:opacity-100 transition-all duration-700"></div>
               </div>
               <div>
                 <div className="text-2xl font-black bg-gradient-to-r from-foreground via-primary to-cyan-400 bg-clip-text text-transparent tracking-tight leading-none">
