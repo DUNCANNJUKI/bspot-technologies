@@ -59,7 +59,11 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-muted-foreground mb-10 leading-relaxed max-w-lg text-base">
-              Empowering digital transformation through cutting-edge WiFi solutions and smart connectivity infrastructure for modern businesses and communities.
+              B-SPOT Technologies is Kenya's premier WiFi solutions provider, specializing in enterprise-grade connectivity infrastructure. 
+              With 2 years of proven excellence, we deliver cutting-edge network solutions across Nairobi, Kikuyu, Meru, and Regen. 
+              Our certified engineering team ensures 99.9% uptime, 24/7 technical support, and scalable solutions for businesses, 
+              events, and public spaces. From small businesses to large-scale deployments, we connect communities with affordable, 
+              seamless, and secure internet that powers digital transformation.
             </p>
             
             {/* Enhanced Contact Info */}

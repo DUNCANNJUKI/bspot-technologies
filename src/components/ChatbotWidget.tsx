@@ -183,11 +183,11 @@ How may I assist you today?`);
 
       {/* Chat Widget */}
       {isOpen && (
-        <Card className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-[calc(100vw-2rem)] max-w-sm md:w-96 h-[calc(100vh-8rem)] max-h-[520px] shadow-premium-shadow border border-primary/30 bg-card/95 backdrop-blur-md z-50 animate-scale-in rounded-2xl overflow-hidden">
-          <CardHeader className="pb-4 pt-4 px-6 bg-gradient-elegant border-b border-primary/20">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="relative">
+        <Card className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-[calc(100vw-2rem)] sm:w-[calc(100vw-3rem)] max-w-[400px] md:max-w-[420px] h-[calc(100vh-8rem)] sm:h-[calc(100vh-6rem)] max-h-[600px] shadow-premium-shadow border border-primary/30 bg-card/95 backdrop-blur-md z-50 animate-scale-in rounded-2xl overflow-hidden">
+          <CardHeader className="pb-3 pt-3 px-4 sm:px-5 md:px-6 bg-gradient-elegant border-b border-primary/20">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
+                <div className="relative flex-shrink-0">
                   <ChatbotAvatar 
                     isTyping={isTyping}
                     isSpeaking={false}
@@ -195,32 +195,32 @@ How may I assist you today?`);
                     size="sm"
                   />
                   {/* Online status indicator */}
-                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 border-2 border-background rounded-full animate-pulse"></div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-400 border-2 border-background rounded-full animate-pulse"></div>
                 </div>
-                 <div className="flex flex-col">
-                   <CardTitle className="text-base font-semibold text-primary-foreground">B-SPOT AI Assistant 🤖</CardTitle>
-                   <div className="flex items-center space-x-2">
-                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
-                     <p className="text-xs text-primary-foreground/90 font-medium">Online • Ready to Help 24/7</p>
+                 <div className="flex flex-col min-w-0 flex-1">
+                   <CardTitle className="text-sm sm:text-base font-semibold text-primary-foreground truncate">B-SPOT AI Assistant 🤖</CardTitle>
+                   <div className="flex items-center space-x-1.5 sm:space-x-2">
+                     <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full animate-pulse shadow-sm flex-shrink-0"></div>
+                     <p className="text-[10px] sm:text-xs text-primary-foreground/90 font-medium truncate">Online • Ready 24/7</p>
                    </div>
                  </div>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 flex-shrink-0">
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/15 rounded-md transition-all duration-200"
+                  className="w-7 h-7 sm:w-8 sm:h-8 text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/15 rounded-md transition-all duration-200"
                 >
-                  <Minimize2 className="w-4 h-4" />
+                  <Minimize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/15 rounded-md transition-all duration-200"
+                  className="w-7 h-7 sm:w-8 sm:h-8 text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/15 rounded-md transition-all duration-200"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </Button>
               </div>
             </div>
@@ -228,7 +228,7 @@ How may I assist you today?`);
 
           <CardContent className="flex flex-col h-full p-0">
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 space-y-4 bg-gradient-to-b from-background/60 to-background/40 custom-scrollbar relative">
+            <div className="flex-1 overflow-y-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4 space-y-3 sm:space-y-4 bg-gradient-to-b from-background/60 to-background/40 custom-scrollbar relative">
               {/* Bouncing Company Logo Watermark */}
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
                 <img 
@@ -237,18 +237,18 @@ How may I assist you today?`);
                   width="128"
                   height="128"
                   loading="lazy"
-                  className="w-32 h-32 animate-bounce"
+                  className="w-24 h-24 sm:w-32 sm:h-32 animate-bounce"
                   style={{ animationDuration: '3s' }}
                 />
               </div>
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} items-end space-x-3 animate-fade-in`}
+                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} items-end space-x-2 sm:space-x-3 animate-fade-in`}
                 >
                   {!message.isUser && (
                     <div className="flex-shrink-0 mb-2">
-                      <div className="w-8 h-8 rounded-full bg-gradient-elegant/20 border border-primary/30 flex items-center justify-center">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-elegant/20 border border-primary/30 flex items-center justify-center">
                         <ChatbotAvatar 
                           isTyping={false}
                           isSpeaking={false}
@@ -259,29 +259,29 @@ How may I assist you today?`);
                     </div>
                   )}
                   <div
-                    className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-md transition-all duration-200 hover:shadow-lg ${
+                    className={`max-w-[85%] sm:max-w-[80%] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-md transition-all duration-200 hover:shadow-lg ${
                       message.isUser
                         ? 'bg-gradient-elegant text-primary-foreground rounded-br-md font-medium ml-auto'
                         : 'bg-muted/90 text-foreground border border-border/30 rounded-bl-md backdrop-blur-sm'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap">{message.text}</p>
-                    <div className={`text-xs mt-2 opacity-60 ${message.isUser ? 'text-right' : 'text-left'}`}>
+                    <p className="whitespace-pre-wrap break-words">{message.text}</p>
+                    <div className={`text-[10px] sm:text-xs mt-1.5 sm:mt-2 opacity-60 ${message.isUser ? 'text-right' : 'text-left'}`}>
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                   {message.isUser && (
-                    <div className="flex-shrink-0 w-8 h-8 bg-gradient-elegant rounded-full flex items-center justify-center mb-2 shadow-md">
-                      <div className="w-3 h-3 bg-primary-foreground rounded-full"></div>
+                    <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 bg-gradient-elegant rounded-full flex items-center justify-center mb-2 shadow-md">
+                      <div className="w-2 h-2 sm:w-3 sm:h-3 bg-primary-foreground rounded-full"></div>
                     </div>
                   )}
                 </div>
               ))}
               
               {isTyping && (
-                <div className="flex justify-start items-end space-x-3 animate-fade-in">
+                <div className="flex justify-start items-end space-x-2 sm:space-x-3 animate-fade-in">
                   <div className="flex-shrink-0 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-gradient-elegant/20 border border-primary/30 flex items-center justify-center">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-elegant/20 border border-primary/30 flex items-center justify-center">
                       <ChatbotAvatar 
                         isTyping={true}
                         isSpeaking={false}
@@ -290,12 +290,12 @@ How may I assist you today?`);
                       />
                     </div>
                   </div>
-                  <div className="bg-muted/90 text-foreground px-4 py-3 rounded-2xl rounded-bl-md text-sm border border-border/30 backdrop-blur-sm shadow-md">
+                  <div className="bg-muted/90 text-foreground px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl rounded-bl-md text-xs sm:text-sm border border-border/30 backdrop-blur-sm shadow-md">
                     <div className="flex space-x-1 items-center">
-                      <span className="text-xs text-muted-foreground mr-2">AI is thinking</span>
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.1s]"></div>
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                      <span className="text-[10px] sm:text-xs text-muted-foreground mr-1.5 sm:mr-2">AI is thinking</span>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full animate-bounce"></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full animate-bounce [animation-delay:0.1s]"></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full animate-bounce [animation-delay:0.2s]"></div>
                     </div>
                   </div>
                 </div>
@@ -306,52 +306,52 @@ How may I assist you today?`);
             </div>
 
             {/* Input Area */}
-            <div className="p-4 md:p-6 border-t border-primary/20 bg-card/50 backdrop-blur-sm">
-              <div className="flex space-x-3 items-end">
-                <div className="flex-1">
+            <div className="p-3 sm:p-4 md:p-6 border-t border-primary/20 bg-card/50 backdrop-blur-sm">
+              <div className="flex space-x-2 sm:space-x-3 items-end">
+                <div className="flex-1 min-w-0">
                   <Input
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="Ask me anything about WiFi solutions! 😊"
-                    className="resize-none border-primary/30 bg-background/80 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-tech-glow/30 rounded-xl h-12"
+                    placeholder="Ask about WiFi solutions..."
+                    className="resize-none border-primary/30 bg-background/80 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-tech-glow/30 rounded-xl h-10 sm:h-11 md:h-12 text-xs sm:text-sm"
                     disabled={isTyping}
                   />
                 </div>
                 <Button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isTyping}
-                  className="w-12 h-12 rounded-xl bg-gradient-elegant hover:bg-gradient-elegant/90 text-primary-foreground shadow-card-shadow hover:shadow-tech-glow transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-xl bg-gradient-elegant hover:bg-gradient-elegant/90 text-primary-foreground shadow-card-shadow hover:shadow-tech-glow transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
                 >
-                  <Send className="w-5 h-5" />
+                  <Send className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5" />
                 </Button>
               </div>
               
               {/* Quick suggestion chips */}
-              <div className="flex flex-wrap gap-2 mt-4 opacity-90">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-3 sm:mt-4 opacity-90">
                 <button 
                   onClick={() => {setInputValue("What services do you offer?"); setTimeout(handleSendMessage, 100);}}
-                  className="text-xs px-3 py-2 bg-primary/15 text-primary rounded-full hover:bg-primary/25 transition-all duration-200 border border-primary/30 hover:shadow-md hover:scale-105"
+                  className="text-[10px] sm:text-xs px-2 sm:px-3 py-1.5 sm:py-2 bg-primary/15 text-primary rounded-full hover:bg-primary/25 transition-all duration-200 border border-primary/30 hover:shadow-md hover:scale-105"
                 >
-                  Our Services 🔧
+                  Services 🔧
                 </button>
                 <button 
                   onClick={() => {setInputValue("What areas do you cover?"); setTimeout(handleSendMessage, 100);}}
-                  className="text-xs px-3 py-2 bg-primary/15 text-primary rounded-full hover:bg-primary/25 transition-all duration-200 border border-primary/30 hover:shadow-md hover:scale-105"
+                  className="text-[10px] sm:text-xs px-2 sm:px-3 py-1.5 sm:py-2 bg-primary/15 text-primary rounded-full hover:bg-primary/25 transition-all duration-200 border border-primary/30 hover:shadow-md hover:scale-105"
                 >
-                  Coverage Areas 📍
+                  Coverage 📍
                 </button>
                 <button 
                   onClick={() => {setInputValue("Contact information"); setTimeout(handleSendMessage, 100);}}
-                  className="text-xs px-3 py-2 bg-primary/15 text-primary rounded-full hover:bg-primary/25 transition-all duration-200 border border-primary/30 hover:shadow-md hover:scale-105"
+                  className="text-[10px] sm:text-xs px-2 sm:px-3 py-1.5 sm:py-2 bg-primary/15 text-primary rounded-full hover:bg-primary/25 transition-all duration-200 border border-primary/30 hover:shadow-md hover:scale-105"
                 >
-                  Get in Touch 📞
+                  Contact 📞
                 </button>
               </div>
               
               {/* Friendly footer */}
-              <div className="text-center mt-3">
-                <p className="text-xs text-muted-foreground">
+              <div className="text-center mt-2 sm:mt-3">
+                <p className="text-[10px] sm:text-xs text-muted-foreground">
                   Powered by B-SPOT Technologies with ❤️
                 </p>
               </div>
