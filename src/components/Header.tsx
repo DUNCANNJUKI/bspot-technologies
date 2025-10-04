@@ -52,22 +52,30 @@ const Header = () => {
           </div>
 
           {/* Futuristic Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1">
-            {['Home', 'Services', 'About', 'Contact'].map((item, index) => (
+          <nav className="hidden lg:flex items-center space-x-2">
+            {[
+              { name: 'Home', gradient: 'from-blue-500 to-cyan-500' },
+              { name: 'Services', gradient: 'from-purple-500 to-pink-500' },
+              { name: 'About', gradient: 'from-green-500 to-emerald-500' },
+              { name: 'Contact', gradient: 'from-orange-500 to-red-500' }
+            ].map((item, index) => (
               <a 
-                key={item}
-                href={`#${item.toLowerCase()}`} 
-                className="relative px-6 py-3 text-sm font-medium text-white/80 hover:text-white transition-all duration-500 group overflow-hidden rounded-xl"
+                key={item.name}
+                href={`#${item.name.toLowerCase()}`} 
+                className="relative px-6 py-3 text-sm font-semibold text-white transition-all duration-500 group overflow-hidden rounded-xl border border-white/10 hover:border-white/30 hover:scale-105"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                {/* Hover background */}
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-full group-hover:translate-x-0"></div>
+                {/* Gradient background */}
+                <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-20 transition-all duration-500`}></div>
+                
+                {/* Shimmer effect */}
+                <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-10 group-hover:opacity-30 blur-sm transition-all duration-500`}></div>
                 
                 {/* Text */}
-                <span className="relative z-10 tracking-wide">{item}</span>
+                <span className="relative z-10 tracking-wide bg-gradient-to-r from-white to-white/80 bg-clip-text">{item.name}</span>
                 
-                {/* Underline effect */}
-                <div className="absolute bottom-1 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
+                {/* Animated underline */}
+                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${item.gradient} scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center rounded-full`}></div>
               </a>
             ))}
           </nav>
@@ -106,23 +114,31 @@ const Header = () => {
         {/* Sleek Mobile Menu */}
         <div className={`lg:hidden transition-all duration-500 ease-out ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
           <div className="py-6 px-2 bg-gradient-to-br from-background/95 via-background/90 to-background/95 backdrop-blur-xl rounded-2xl mt-4 border border-primary/10 shadow-2xl">
-            <nav className="flex flex-col space-y-2">
-              {['Home', 'Services', 'About', 'Contact'].map((item, index) => (
+            <nav className="flex flex-col space-y-3">
+              {[
+                { name: 'Home', gradient: 'from-blue-500 to-cyan-500', icon: '🏠' },
+                { name: 'Services', gradient: 'from-purple-500 to-pink-500', icon: '⚡' },
+                { name: 'About', gradient: 'from-green-500 to-emerald-500', icon: '📋' },
+                { name: 'Contact', gradient: 'from-orange-500 to-red-500', icon: '📞' }
+              ].map((item, index) => (
                 <a 
-                  key={item}
-                  href={`#${item.toLowerCase()}`} 
-                  className="relative px-6 py-4 text-white/90 hover:text-white font-medium transition-all duration-300 rounded-xl group overflow-hidden"
+                  key={item.name}
+                  href={`#${item.name.toLowerCase()}`} 
+                  className="relative px-6 py-4 text-white font-semibold transition-all duration-300 rounded-xl group overflow-hidden border border-white/10 hover:border-white/30 hover:scale-105"
                   style={{ animationDelay: `${index * 0.1}s` }}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {/* Background effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                  {/* Gradient background */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-10 group-hover:opacity-25 transition-all duration-300`}></div>
                   
-                  {/* Text */}
-                  <span className="relative z-10 tracking-wide">{item}</span>
+                  {/* Text with icon */}
+                  <span className="relative z-10 tracking-wide flex items-center gap-3">
+                    <span className="text-xl">{item.icon}</span>
+                    {item.name}
+                  </span>
                   
                   {/* Side accent */}
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-primary to-transparent scale-y-0 group-hover:scale-y-100 transition-transform duration-300"></div>
+                  <div className={`absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b ${item.gradient} scale-y-0 group-hover:scale-y-100 transition-transform duration-300 rounded-full`}></div>
                 </a>
               ))}
               
