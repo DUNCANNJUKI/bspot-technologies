@@ -26,20 +26,20 @@ const Header = () => {
           {/* Modern Logo with Animation */}
           <div className="flex items-center space-x-4 group cursor-pointer">
             <div className="relative">
-              <div className="w-28 h-28 rounded-2xl bg-white p-4 border-2 border-primary/40 shadow-xl group-hover:shadow-primary/30 group-hover:shadow-2xl transition-all duration-700 group-hover:scale-105">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-2xl bg-white p-2.5 sm:p-3 lg:p-4 border-3 border-blue-500/60 shadow-2xl shadow-blue-500/20 group-hover:shadow-blue-500/40 group-hover:shadow-2xl transition-all duration-700 group-hover:scale-110 group-hover:border-cyan-400/80">
                 <img 
                   src="/bspot-logo-128.webp" 
-                  alt="B-Spot Technologies" 
+                  alt="B-Spot Technologies Logo" 
                   width="128"
                   height="128"
                   fetchPriority="high"
-                  className="w-full h-full object-contain drop-shadow-2xl group-hover:drop-shadow-xl transition-all duration-700" 
+                  className="w-full h-full object-contain filter brightness-110 contrast-125 drop-shadow-xl group-hover:brightness-125 transition-all duration-700" 
                 />
                 {/* Animated ring */}
-                <div className="absolute inset-0 rounded-2xl border-2 border-primary/0 group-hover:border-primary/40 transition-all duration-700"></div>
+                <div className="absolute inset-0 rounded-2xl border-2 border-cyan-400/0 group-hover:border-cyan-400/60 transition-all duration-700 animate-pulse"></div>
               </div>
               {/* Glow effect */}
-              <div className="absolute inset-0 rounded-2xl bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+              <div className="absolute inset-0 rounded-2xl bg-blue-500/30 blur-2xl opacity-50 group-hover:opacity-100 transition-all duration-700"></div>
             </div>
             <div className="flex flex-col">
               <div className="text-3xl font-black bg-gradient-to-r from-white via-primary/90 to-secondary bg-clip-text text-transparent tracking-tight leading-none animate-pulse">
