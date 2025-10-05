@@ -1,4 +1,4 @@
-// @ts-ignore: Deno runtime will resolve this
+// @ts-nocheck
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
@@ -166,11 +166,17 @@ serve(async (req: Request) => {
 
   try {
     const { messages } = await req.json();
-    // @ts-ignore: Deno runtime will provide this
+    console.log("Received chat request with", messages?.length || 0, "messages");
+    
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    if (!LOVABLE_API_KEY) {
+      console.error("LOVABLE_API_KEY not found in environment");
+      throw new Error("LOVABLE_API_KEY is not configured");
+    }
 
+    console.log("Calling Lovable AI with model: google/gemini-2.5-flash");
+    
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -185,6 +191,8 @@ serve(async (req: Request) => {
         ],
       }),
     });
+    
+    console.log("Lovable AI response status:", response.status);
 
     if (!response.ok) {
       if (response.status === 429) {
@@ -217,6 +225,7 @@ serve(async (req: Request) => {
     }
 
     const data = await response.json();
+    console.log("AI response received successfully");
     const aiMessage = data.choices[0].message.content;
 
     return new Response(
