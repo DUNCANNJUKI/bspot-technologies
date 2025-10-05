@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import ChatbotAvatar from "./ChatbotAvatar";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   id: string;
@@ -11,10 +12,6 @@ interface Message {
   isUser: boolean;
   timestamp: Date;
 }
-
-// Direct URL configuration (VITE_ env variables not supported)
-const CHAT_URL = "https://rtgcrclgmvcmrjpvtpwm.supabase.co/functions/v1/chat";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0Z2NyY2xnbXZjbXJqcHZ0cHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NTU0NTEsImV4cCI6MjA3MDQzMTQ1MX0.JR45nTPTScLaObpXQM-VzQ50ODRJTzakrvPOA3HldCM";
 
 const ChatbotWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,43 +62,33 @@ const ChatbotWidget = () => {
       }));
 
       console.log("Sending message to AI:", userMessage);
-      console.log("Chat URL:", CHAT_URL);
       
-      const response = await fetch(CHAT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${SUPABASE_KEY}`,
-        },
-        body: JSON.stringify({
+      const { data, error } = await supabase.functions.invoke('chat', {
+        body: {
           messages: [
             ...conversationHistory,
             { role: "user", content: userMessage }
           ]
-        }),
+        }
       });
 
-      console.log("Response status:", response.status);
+      console.log("AI Response:", data);
+      console.log("AI Error:", error);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
-        console.error("API Error Response:", errorData);
+      if (error) {
+        console.error("API Error Response:", error);
         
-        if (response.status === 429) {
+        if (error.message?.includes('429') || error.message?.includes('rate limit')) {
           return "I'm receiving too many requests right now. Please try again in a moment. For urgent matters, call us at +254-750-444-167! 📞";
         }
-        if (response.status === 402) {
+        if (error.message?.includes('402') || error.message?.includes('payment')) {
           return "I'm temporarily unavailable. Please contact our support team directly at +254-750-444-167 or email info@bspot-tech.com for immediate assistance! 📧";
         }
         
-        // Return error message from backend if available
-        return errorData.error || "I encountered an issue. Please contact us at +254-750-444-167 for assistance! 📞";
+        return error.message || "I encountered an issue. Please contact us at +254-750-444-167 for assistance! 📞";
       }
 
-      const data = await response.json();
-      console.log("AI Response:", data);
-      
-      if (data.message) {
+      if (data?.message) {
         return data.message;
       }
       
