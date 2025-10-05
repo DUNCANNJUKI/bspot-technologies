@@ -32,7 +32,6 @@ const Header = () => {
                   alt="B-Spot Technologies Logo" 
                   width="128"
                   height="128"
-                  fetchPriority="high"
                   className="w-full h-full object-contain filter brightness-110 contrast-125 drop-shadow-xl group-hover:brightness-125 transition-all duration-700" 
                 />
                 {/* Animated ring */}

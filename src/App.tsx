@@ -15,14 +15,17 @@ const App = () => {
       <Toaster />
       <Sonner />
       <div className="w-full overflow-x-hidden">
-        {isLoading && <AppLoader onLoadComplete={() => setIsLoading(false)} />}
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        {isLoading ? (
+          <AppLoader onLoadComplete={() => setIsLoading(false)} />
+        ) : (
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        )}
       </div>
     </TooltipProvider>
   );
