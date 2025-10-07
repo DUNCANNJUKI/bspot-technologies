@@ -225,7 +225,27 @@ How may I assist you today?`);
 
           <CardContent className="flex flex-col h-full p-0">
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4 space-y-3 sm:space-y-4 bg-gradient-to-b from-background/60 to-background/40 custom-scrollbar relative">
+            <div className="flex-1 overflow-y-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4 space-y-3 sm:space-y-4 custom-scrollbar relative overflow-hidden">
+              {/* Fancy animated gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5 animate-pulse" style={{ animationDuration: '8s' }}></div>
+              
+              {/* Mesh grid pattern */}
+              <div className="absolute inset-0 opacity-10" style={{
+                backgroundImage: `linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px)`,
+                backgroundSize: '50px 50px'
+              }}></div>
+              
+              {/* Radial glow effects */}
+              <div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }}></div>
+              <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '1s' }}></div>
+              
+              {/* Animated particles */}
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary/30 rounded-full animate-ping" style={{ animationDuration: '4s' }}></div>
+                <div className="absolute top-3/4 right-1/3 w-1.5 h-1.5 bg-secondary/30 rounded-full animate-ping" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
+                <div className="absolute top-1/2 right-1/4 w-2.5 h-2.5 bg-primary/20 rounded-full animate-ping" style={{ animationDuration: '6s', animationDelay: '2s' }}></div>
+              </div>
+              
               {/* Bouncing Company Logo Watermark */}
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
                 <img 
