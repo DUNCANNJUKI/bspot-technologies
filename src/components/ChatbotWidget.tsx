@@ -63,30 +63,39 @@ const ChatbotWidget = () => {
 
       console.log("Sending message to AI:", userMessage);
       
-      const { data, error } = await supabase.functions.invoke('chat', {
-        body: {
+      // Call the public Edge Function directly to avoid auth header issues
+      const FUNCTION_URL = "https://rtgcrclgmvcmrjpvtpwm.supabase.co/functions/v1/chat";
+      const PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0Z2NyY2xnbXZjbXJqcHZ0cHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NTU0NTEsImV4cCI6MjA3MDQzMTQ1MX0.JR45nTPTScLaObpXQM-VzQ50ODRJTzakrvPOA3HldCM";
+
+      const resp = await fetch(FUNCTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Only the publishable apikey is required since the function is public (verify_jwt = false)
+          apikey: PUBLISHABLE_KEY,
+        },
+        body: JSON.stringify({
           messages: [
             ...conversationHistory,
             { role: "user", content: userMessage }
           ]
-        }
+        })
       });
 
-      console.log("AI Response:", data);
-      console.log("AI Error:", error);
-
-      if (error) {
-        console.error("API Error Response:", error);
-        
-        if (error.message?.includes('429') || error.message?.includes('rate limit')) {
+      if (!resp.ok) {
+        if (resp.status === 429) {
           return "I'm receiving too many requests right now. Please try again in a moment. For urgent matters, call us at +254-750-444-167! 📞";
         }
-        if (error.message?.includes('402') || error.message?.includes('payment')) {
+        if (resp.status === 402) {
           return "I'm temporarily unavailable. Please contact our support team directly at +254-750-444-167 or email info@bspot-tech.com for immediate assistance! 📧";
         }
-        
-        return error.message || "I encountered an issue. Please contact us at +254-750-444-167 for assistance! 📞";
+        const errorText = await resp.text();
+        console.error("Edge Function error:", resp.status, errorText);
+        throw new Error("Failed to call chat function");
       }
+
+      const data = await resp.json();
+      console.log("AI Response:", data);
 
       if (data?.message) {
         return data.message;
