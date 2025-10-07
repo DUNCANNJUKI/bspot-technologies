@@ -71,7 +71,8 @@ const ChatbotWidget = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Only the publishable apikey is required since the function is public (verify_jwt = false)
+          // Include both Authorization and apikey headers for Supabase compatibility
+          Authorization: `Bearer ${PUBLISHABLE_KEY}`,
           apikey: PUBLISHABLE_KEY,
         },
         body: JSON.stringify({
