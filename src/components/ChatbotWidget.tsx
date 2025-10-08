@@ -20,6 +20,7 @@ const ChatbotWidget = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [avatarMood, setAvatarMood] = useState<'neutral' | 'happy' | 'thinking' | 'error'>('neutral');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatWidgetRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     // Use requestAnimationFrame to avoid forced reflow
@@ -36,6 +37,23 @@ const ChatbotWidget = () => {
     
     return () => clearTimeout(timeoutId);
   }, [messages, isTyping]);
+
+  // Close chatbot when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isOpen && chatWidgetRef.current && !chatWidgetRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
 
   const getTimeGreeting = () => {
     const hour = new Date().getHours();
@@ -180,7 +198,7 @@ How may I assist you today?`);
 
       {/* Chat Widget */}
       {isOpen && (
-        <Card className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-[calc(100vw-2rem)] sm:w-[calc(100vw-3rem)] max-w-[400px] md:max-w-[420px] h-[calc(100vh-8rem)] sm:h-[calc(100vh-6rem)] max-h-[600px] shadow-premium-shadow border border-primary/30 bg-card/95 backdrop-blur-md z-50 animate-scale-in rounded-2xl overflow-hidden">
+        <Card ref={chatWidgetRef} className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-[calc(100vw-2rem)] sm:w-[calc(100vw-3rem)] max-w-[380px] md:max-w-[400px] h-[480px] sm:h-[500px] shadow-premium-shadow border border-primary/30 bg-card/95 backdrop-blur-md z-50 animate-scale-in rounded-2xl overflow-hidden">
           <CardHeader className="pb-3 pt-3 px-4 sm:px-5 md:px-6 bg-gradient-elegant border-b border-primary/20">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
