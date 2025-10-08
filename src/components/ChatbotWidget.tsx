@@ -5,6 +5,7 @@ import { Input } from "./ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import ChatbotAvatar from "./ChatbotAvatar";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface Message {
   id: string;
@@ -13,12 +14,17 @@ interface Message {
   timestamp: Date;
 }
 
+const MAX_MESSAGE_LENGTH = 1000;
+const MIN_MESSAGE_INTERVAL = 2000; // 2 seconds between messages
+
 const ChatbotWidget = () => {
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [avatarMood, setAvatarMood] = useState<'neutral' | 'happy' | 'thinking' | 'error'>('neutral');
+  const [lastMessageTime, setLastMessageTime] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatWidgetRef = useRef<HTMLDivElement>(null);
 
@@ -122,17 +128,50 @@ const ChatbotWidget = () => {
     }
   };
 
+  const sanitizeInput = (input: string): string => {
+    return input
+      .replace(/[<>]/g, '') // Remove potential HTML tags
+      .slice(0, MAX_MESSAGE_LENGTH)
+      .trim();
+  };
+
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+    const trimmedInput = inputValue.trim();
     
-    const userMessage = inputValue;
-    addMessage(userMessage, true);
+    if (!trimmedInput || isTyping) return;
+    
+    // Rate limiting check
+    const now = Date.now();
+    if (now - lastMessageTime < MIN_MESSAGE_INTERVAL) {
+      toast({
+        title: "Please wait",
+        description: "You're sending messages too quickly. Please wait a moment.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Validate message length
+    if (trimmedInput.length > MAX_MESSAGE_LENGTH) {
+      toast({
+        title: "Message too long",
+        description: `Please keep your message under ${MAX_MESSAGE_LENGTH} characters.`,
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Sanitize input
+    const sanitizedMessage = sanitizeInput(trimmedInput);
+    
+    addMessage(sanitizedMessage, true);
     setInputValue("");
     setIsTyping(true);
     setAvatarMood('thinking');
+    setLastMessageTime(now);
     
     try {
-      const response = await callAI(userMessage);
+      const response = await callAI(sanitizedMessage);
       addMessage(response);
       setAvatarMood('happy');
     } catch (error) {
@@ -346,15 +385,19 @@ How may I assist you today?`);
             {/* Input Area */}
             <div className="p-3 sm:p-4 md:p-6 border-t border-primary/20 bg-card/50 backdrop-blur-sm">
               <div className="flex space-x-2 sm:space-x-3 items-end">
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 relative">
                   <Input
                     value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
+                    onChange={(e) => setInputValue(e.target.value.slice(0, MAX_MESSAGE_LENGTH))}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                     placeholder="Ask about WiFi solutions..."
-                    className="resize-none border-primary/30 bg-background/80 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-tech-glow/30 rounded-xl h-10 sm:h-11 md:h-12 text-xs sm:text-sm"
+                    className="resize-none border-primary/30 bg-background/80 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-tech-glow/30 rounded-xl h-10 sm:h-11 md:h-12 text-xs sm:text-sm pr-16"
                     disabled={isTyping}
+                    maxLength={MAX_MESSAGE_LENGTH}
                   />
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">
+                    {inputValue.length}/{MAX_MESSAGE_LENGTH}
+                  </span>
                 </div>
                 <Button
                   onClick={handleSendMessage}

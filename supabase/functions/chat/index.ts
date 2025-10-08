@@ -1,6 +1,7 @@
 // @ts-nocheck
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { checkRateLimit } from "./rate-limiter.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -214,6 +215,37 @@ serve(async (req: Request) => {
   }
 
   try {
+    // Rate limiting based on IP address
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0] || 
+                     req.headers.get('x-real-ip') || 
+                     'unknown';
+    
+    const rateLimitResult = checkRateLimit(clientIp, {
+      maxRequests: 10, // 10 requests
+      windowMs: 60000  // per minute
+    });
+
+    if (!rateLimitResult.allowed) {
+      const resetInSeconds = Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000);
+      console.log(`Rate limit exceeded for IP: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ 
+          error: `Rate limit exceeded. Please try again in ${resetInSeconds} seconds.` 
+        }), 
+        {
+          status: 429,
+          headers: { 
+            ...corsHeaders, 
+            "Content-Type": "application/json",
+            "X-RateLimit-Limit": "10",
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": rateLimitResult.resetTime.toString(),
+            "Retry-After": resetInSeconds.toString()
+          },
+        }
+      );
+    }
+
     const { messages } = await req.json();
     console.log("Received chat request with", messages?.length || 0, "messages");
     
@@ -280,7 +312,13 @@ serve(async (req: Request) => {
     return new Response(
       JSON.stringify({ message: aiMessage }), 
       {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { 
+          ...corsHeaders, 
+          "Content-Type": "application/json",
+          "X-RateLimit-Limit": "10",
+          "X-RateLimit-Remaining": rateLimitResult.remaining.toString(),
+          "X-RateLimit-Reset": rateLimitResult.resetTime.toString()
+        },
       }
     );
   } catch (error) {

@@ -6,13 +6,11 @@ import Services from "@/components/Services";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import { useSecurityHeaders } from "@/hooks/useSecurityHeaders";
 
 // Lazy load ChatbotWidget to reduce initial bundle size
 const ChatbotWidget = lazy(() => import("@/components/ChatbotWidget"));
 
 const Index = () => {
-  useSecurityHeaders();
   return (
     <div className="min-h-screen bg-background font-tech w-full overflow-x-hidden">
       <Header />
