@@ -81,49 +81,44 @@ const ChatbotWidget = () => {
 
       console.log("Sending message to AI:", userMessage);
       
-      // Call the public Edge Function directly to avoid auth header issues
-      const FUNCTION_URL = "https://rtgcrclgmvcmrjpvtpwm.supabase.co/functions/v1/chat";
-      const PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0Z2NyY2xnbXZjbXJqcHZ0cHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NTU0NTEsImV4cCI6MjA3MDQzMTQ1MX0.JR45nTPTScLaObpXQM-VzQ50ODRJTzakrvPOA3HldCM";
-
-      const resp = await fetch(FUNCTION_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Include both Authorization and apikey headers for Supabase compatibility
-          Authorization: `Bearer ${PUBLISHABLE_KEY}`,
-          apikey: PUBLISHABLE_KEY,
-        },
-        body: JSON.stringify({
+      const { data, error } = await supabase.functions.invoke('chat', {
+        body: {
           messages: [
             ...conversationHistory,
             { role: "user", content: userMessage }
           ]
-        })
+        }
       });
 
-      if (!resp.ok) {
-        if (resp.status === 429) {
-          return "I'm receiving too many requests right now. Please try again in a moment. For urgent matters, call us at +254-750-444-167! 📞";
-        }
-        if (resp.status === 402) {
-          return "I'm temporarily unavailable. Please contact our support team directly at +254-750-444-167 or email info@bspot-tech.com for immediate assistance! 📧";
-        }
-        const errorText = await resp.text();
-        console.error("Edge Function error:", resp.status, errorText);
-        throw new Error("Failed to call chat function");
+      if (error) {
+        console.error("Edge Function error:", error);
+        throw error;
       }
 
-      const data = await resp.json();
+      if (!data) {
+        throw new Error("No response from AI");
+      }
+
       console.log("AI Response:", data);
 
-      if (data?.message) {
+      if (data.error) {
+        if (data.error.includes("Rate limit")) {
+          return "I'm receiving too many requests right now. Please try again in a moment. For urgent matters, call us at +254-750-444-167! 📞";
+        }
+        if (data.error.includes("Payment required") || data.error.includes("Service temporarily unavailable")) {
+          return "I'm temporarily unavailable. Please contact our support team directly at +254-750-444-167 or email info@bspot-tech.com for immediate assistance! 📧";
+        }
+        throw new Error(data.error);
+      }
+
+      if (data.message) {
         return data.message;
       }
       
       return "I apologize, but I couldn't generate a proper response. Please call +254-750-444-167 for direct assistance!";
     } catch (error) {
       console.error("AI Error Details:", error);
-      return "Please contact our support team at +254-750-444-167 for assistance! 📞";
+      return "I apologize for the inconvenience. Please contact our support team at +254-750-444-167 for assistance! 📞";
     }
   };
 
@@ -244,24 +239,27 @@ How may I assist you today?`);
           <CardContent className="flex flex-col h-full p-0">
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4 space-y-3 sm:space-y-4 custom-scrollbar relative overflow-hidden">
-              {/* Fancy animated gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5 animate-pulse" style={{ animationDuration: '8s' }}></div>
+              {/* Animated gradient background with vibrant colors */}
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-background to-cyan-500/5 animate-pulse" style={{ animationDuration: '8s' }}></div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/3 via-transparent to-blue-500/3 animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }}></div>
               
-              {/* Mesh grid pattern */}
-              <div className="absolute inset-0 opacity-10" style={{
-                backgroundImage: `linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px)`,
+              {/* Colorful mesh grid pattern */}
+              <div className="absolute inset-0 opacity-[0.15]" style={{
+                backgroundImage: `linear-gradient(hsl(var(--primary) / 0.15) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.15) 1px, transparent 1px)`,
                 backgroundSize: '50px 50px'
               }}></div>
               
-              {/* Radial glow effects */}
-              <div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }}></div>
-              <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '1s' }}></div>
+              {/* Vibrant radial glow effects */}
+              <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary/15 to-violet-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }}></div>
+              <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-cyan-500/15 to-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '1s' }}></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-pink-500/8 to-blue-500/8 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '9s', animationDelay: '3s' }}></div>
               
-              {/* Animated particles */}
+              {/* Animated colorful particles */}
               <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary/30 rounded-full animate-ping" style={{ animationDuration: '4s' }}></div>
-                <div className="absolute top-3/4 right-1/3 w-1.5 h-1.5 bg-secondary/30 rounded-full animate-ping" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
-                <div className="absolute top-1/2 right-1/4 w-2.5 h-2.5 bg-primary/20 rounded-full animate-ping" style={{ animationDuration: '6s', animationDelay: '2s' }}></div>
+                <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary/40 rounded-full animate-ping" style={{ animationDuration: '4s' }}></div>
+                <div className="absolute top-3/4 right-1/3 w-1.5 h-1.5 bg-cyan-500/40 rounded-full animate-ping" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
+                <div className="absolute top-1/2 right-1/4 w-2.5 h-2.5 bg-violet-500/30 rounded-full animate-ping" style={{ animationDuration: '6s', animationDelay: '2s' }}></div>
+                <div className="absolute top-1/3 right-1/2 w-2 h-2 bg-pink-500/35 rounded-full animate-ping" style={{ animationDuration: '5.5s', animationDelay: '1.5s' }}></div>
               </div>
               
               {/* Bouncing Company Logo Watermark */}
@@ -294,20 +292,24 @@ How may I assist you today?`);
                     </div>
                   )}
                   <div
-                    className={`max-w-[85%] sm:max-w-[80%] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-md transition-all duration-200 hover:shadow-lg ${
+                    className={`max-w-[85%] sm:max-w-[80%] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-lg transition-all duration-200 hover:shadow-xl relative overflow-hidden ${
                       message.isUser
-                        ? 'bg-gradient-elegant text-primary-foreground rounded-br-md font-medium ml-auto'
-                        : 'bg-muted/90 text-foreground border border-border/30 rounded-bl-md backdrop-blur-sm'
+                        ? 'bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground rounded-br-md font-medium ml-auto border border-primary/20'
+                        : 'bg-gradient-to-br from-card via-muted/50 to-muted/80 text-foreground border-2 border-primary/20 rounded-bl-md backdrop-blur-sm'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap break-words">{message.text}</p>
-                    <div className={`text-[10px] sm:text-xs mt-1.5 sm:mt-2 opacity-60 ${message.isUser ? 'text-right' : 'text-left'}`}>
+                    {!message.isUser && (
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-primary/5 rounded-full blur-xl"></div>
+                    )}
+                    <p className="whitespace-pre-wrap break-words relative z-10">{message.text}</p>
+                    <div className={`text-[10px] sm:text-xs mt-1.5 sm:mt-2 opacity-70 relative z-10 font-semibold ${message.isUser ? 'text-right text-primary-foreground/90' : 'text-left text-primary'}`}>
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                   {message.isUser && (
-                    <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 bg-gradient-elegant rounded-full flex items-center justify-center mb-2 shadow-md">
-                      <div className="w-2 h-2 sm:w-3 sm:h-3 bg-primary-foreground rounded-full"></div>
+                    <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-full flex items-center justify-center mb-2 shadow-lg border-2 border-primary/30 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-white/10 rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 sm:w-3 sm:h-3 bg-primary-foreground rounded-full relative z-10"></div>
                     </div>
                   )}
                 </div>
@@ -325,12 +327,13 @@ How may I assist you today?`);
                       />
                     </div>
                   </div>
-                  <div className="bg-muted/90 text-foreground px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl rounded-bl-md text-xs sm:text-sm border border-border/30 backdrop-blur-sm shadow-md">
-                    <div className="flex space-x-1 items-center">
-                      <span className="text-[10px] sm:text-xs text-muted-foreground mr-1.5 sm:mr-2">AI is thinking</span>
-                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full animate-bounce"></div>
-                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full animate-bounce [animation-delay:0.1s]"></div>
-                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                  <div className="bg-gradient-to-r from-muted/95 via-muted/90 to-card/90 text-foreground px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl rounded-bl-md text-xs sm:text-sm border-2 border-primary/30 backdrop-blur-sm shadow-lg relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-primary/10 rounded-full blur-2xl animate-pulse"></div>
+                    <div className="flex space-x-1 items-center relative z-10">
+                      <span className="text-[10px] sm:text-xs text-primary font-semibold mr-1.5 sm:mr-2">AI is thinking</span>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-primary to-violet-500 rounded-full animate-bounce"></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full animate-bounce [animation-delay:0.1s]"></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-cyan-500 to-primary rounded-full animate-bounce [animation-delay:0.2s]"></div>
                     </div>
                   </div>
                 </div>
