@@ -1,9 +1,18 @@
 import { Button } from "./ui/button";
-import { Menu, X, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { Menu, X, ChevronDown, Clock } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 w-full z-50 backdrop-blur-xl bg-gradient-to-r from-background/80 via-background/70 to-background/80 border-b border-primary/10 shadow-2xl overflow-hidden">
@@ -78,6 +87,14 @@ const Header = () => {
               </a>
             ))}
           </nav>
+
+          {/* Digital Clock */}
+          <div className="hidden lg:flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-primary/10 to-secondary/10 backdrop-blur-sm border border-primary/20">
+            <Clock className="w-4 h-4 text-primary animate-pulse" />
+            <span className="text-sm font-semibold text-white tracking-wide">
+              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            </span>
+          </div>
 
           {/* Modern CTA Button */}
           <div className="hidden lg:flex items-center space-x-4">
