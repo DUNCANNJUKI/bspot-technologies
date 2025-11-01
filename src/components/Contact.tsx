@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Facebook, Youtube } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
@@ -208,6 +208,51 @@ Message: ${sanitizedData.message}`;
                 </Card>
               ))}
             </div>
+            
+            {/* Social Media Section */}
+            <Card className="luxury-card hover-lift group mt-8" style={{ animationDelay: '0.4s' }}>
+              <CardContent className="p-6 sm:p-8">
+                <h4 className="text-xl font-bold mb-6 elegant-text">Follow Us</h4>
+                <div className="flex items-center justify-start space-x-6">
+                  <a 
+                    href="https://www.facebook.com/share/17CUFWVonm/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group/icon"
+                  >
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-600/20 to-blue-500/10 flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:from-blue-600/40 group-hover/icon:to-blue-500/30 transition-all duration-300 border border-blue-500/30 shadow-lg">
+                      <Facebook className="w-7 h-7 text-blue-500 group-hover/icon:text-blue-400 transition-colors" />
+                    </div>
+                  </a>
+                  <a 
+                    href="https://youtube.com/@beeent001?si=pU8Pv6dL_F2VvG6y" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group/icon"
+                  >
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-600/20 to-red-500/10 flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:from-red-600/40 group-hover/icon:to-red-500/30 transition-all duration-300 border border-red-500/30 shadow-lg">
+                      <Youtube className="w-7 h-7 text-red-500 group-hover/icon:text-red-400 transition-colors" />
+                    </div>
+                  </a>
+                  <a 
+                    href="https://x.com/ent_bee?t=QUDS0XTLVz-3R1wjJO_E-w&s=09" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group/icon"
+                  >
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-slate-700/20 to-slate-600/10 flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:from-slate-700/40 group-hover/icon:to-slate-600/30 transition-all duration-300 border border-slate-500/30 shadow-lg">
+                      <svg 
+                        className="w-7 h-7 text-slate-400 group-hover/icon:text-slate-300 transition-colors" 
+                        viewBox="0 0 24 24" 
+                        fill="currentColor"
+                      >
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                    </div>
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Professional Contact Form */}

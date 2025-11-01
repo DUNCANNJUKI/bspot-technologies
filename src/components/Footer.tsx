@@ -1,4 +1,4 @@
-import { Wifi, Phone, Mail, MapPin, Radio, Rss } from "lucide-react";
+import { Wifi, Phone, Mail, MapPin, Radio, Rss, Facebook, Youtube } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -93,6 +93,49 @@ const Footer = () => {
                 <div>
                   <span className="text-foreground font-semibold block">Nairobi, Kenya</span>
                   <span className="text-muted-foreground text-sm">Nationwide Coverage</span>
+                </div>
+              </div>
+              
+              {/* Social Media Links */}
+              <div className="pt-4">
+                <h4 className="text-foreground font-bold mb-4 text-lg">Connect With Us</h4>
+                <div className="flex items-center space-x-4">
+                  <a 
+                    href="https://www.facebook.com/share/17CUFWVonm/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600/20 to-blue-500/10 flex items-center justify-center group-hover:scale-110 group-hover:from-blue-600/40 group-hover:to-blue-500/30 transition-all duration-300 border border-blue-500/30">
+                      <Facebook className="w-5 h-5 text-blue-500 group-hover:text-blue-400 transition-colors" />
+                    </div>
+                  </a>
+                  <a 
+                    href="https://youtube.com/@beeent001?si=pU8Pv6dL_F2VvG6y" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-600/20 to-red-500/10 flex items-center justify-center group-hover:scale-110 group-hover:from-red-600/40 group-hover:to-red-500/30 transition-all duration-300 border border-red-500/30">
+                      <Youtube className="w-5 h-5 text-red-500 group-hover:text-red-400 transition-colors" />
+                    </div>
+                  </a>
+                  <a 
+                    href="https://x.com/ent_bee?t=QUDS0XTLVz-3R1wjJO_E-w&s=09" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-700/20 to-slate-600/10 flex items-center justify-center group-hover:scale-110 group-hover:from-slate-700/40 group-hover:to-slate-600/30 transition-all duration-300 border border-slate-500/30">
+                      <svg 
+                        className="w-5 h-5 text-slate-400 group-hover:text-slate-300 transition-colors" 
+                        viewBox="0 0 24 24" 
+                        fill="currentColor"
+                      >
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                    </div>
+                  </a>
                 </div>
               </div>
             </div>
