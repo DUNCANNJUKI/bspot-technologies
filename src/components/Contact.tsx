@@ -215,7 +215,7 @@ Message: ${sanitizedData.message}`;
                 <h4 className="text-xl font-bold mb-6 elegant-text">Follow Us</h4>
                 <div className="flex items-center justify-start space-x-6">
                   <a 
-                    href="https://www.facebook.com/share/17CUFWVonm/" 
+                    href="https://www.facebook.com/people/B-Spot-Technologies/61574108452350/?rdid=DTgk4hdhIKNRQlaM&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F17CUFWVonm%2F" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="group/icon"

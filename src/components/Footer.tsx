@@ -101,7 +101,7 @@ const Footer = () => {
                 <h4 className="text-foreground font-bold mb-4 text-lg">Connect With Us</h4>
                 <div className="flex items-center space-x-4">
                   <a 
-                    href="https://www.facebook.com/share/17CUFWVonm/" 
+                    href="https://www.facebook.com/people/B-Spot-Technologies/61574108452350/?rdid=DTgk4hdhIKNRQlaM&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F17CUFWVonm%2F" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="group"
