@@ -105,9 +105,11 @@ const Footer = () => {
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="group"
+                    aria-label="Follow us on Facebook"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600/20 to-blue-500/10 flex items-center justify-center group-hover:scale-110 group-hover:from-blue-600/40 group-hover:to-blue-500/30 transition-all duration-300 border border-blue-500/30">
-                      <Facebook className="w-5 h-5 text-blue-500 group-hover:text-blue-400 transition-colors" />
+                    <div className="relative w-12 h-12 rounded-xl bg-[#1877F2] flex items-center justify-center group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-[#1877F2]/50 transition-all duration-300 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <Facebook className="w-6 h-6 text-white relative z-10" fill="white" />
                     </div>
                   </a>
                   <a 
@@ -115,9 +117,11 @@ const Footer = () => {
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="group"
+                    aria-label="Subscribe on YouTube"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-600/20 to-red-500/10 flex items-center justify-center group-hover:scale-110 group-hover:from-red-600/40 group-hover:to-red-500/30 transition-all duration-300 border border-red-500/30">
-                      <Youtube className="w-5 h-5 text-red-500 group-hover:text-red-400 transition-colors" />
+                    <div className="relative w-12 h-12 rounded-xl bg-[#FF0000] flex items-center justify-center group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-[#FF0000]/50 transition-all duration-300 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <Youtube className="w-6 h-6 text-white relative z-10" fill="white" />
                     </div>
                   </a>
                   <a 
@@ -125,10 +129,12 @@ const Footer = () => {
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="group"
+                    aria-label="Follow us on X"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-700/20 to-slate-600/10 flex items-center justify-center group-hover:scale-110 group-hover:from-slate-700/40 group-hover:to-slate-600/30 transition-all duration-300 border border-slate-500/30">
+                    <div className="relative w-12 h-12 rounded-xl bg-[#000000] dark:bg-[#FFFFFF] flex items-center justify-center group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-slate-500/50 transition-all duration-300 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/20 dark:from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <svg 
-                        className="w-5 h-5 text-slate-400 group-hover:text-slate-300 transition-colors" 
+                        className="w-5 h-5 text-white dark:text-black relative z-10" 
                         viewBox="0 0 24 24" 
                         fill="currentColor"
                       >

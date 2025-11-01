@@ -219,9 +219,12 @@ Message: ${sanitizedData.message}`;
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="group/icon"
+                    aria-label="Follow us on Facebook"
                   >
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-600/20 to-blue-500/10 flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:from-blue-600/40 group-hover/icon:to-blue-500/30 transition-all duration-300 border border-blue-500/30 shadow-lg">
-                      <Facebook className="w-7 h-7 text-blue-500 group-hover/icon:text-blue-400 transition-colors" />
+                    <div className="relative w-16 h-16 rounded-2xl bg-[#1877F2] flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:shadow-2xl group-hover/icon:shadow-[#1877F2]/60 transition-all duration-300 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                      <Facebook className="w-8 h-8 text-white relative z-10" fill="white" />
+                      <div className="absolute inset-0 rounded-2xl border-2 border-white/0 group-hover/icon:border-white/30 transition-all duration-300"></div>
                     </div>
                   </a>
                   <a 
@@ -229,9 +232,12 @@ Message: ${sanitizedData.message}`;
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="group/icon"
+                    aria-label="Subscribe on YouTube"
                   >
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-600/20 to-red-500/10 flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:from-red-600/40 group-hover/icon:to-red-500/30 transition-all duration-300 border border-red-500/30 shadow-lg">
-                      <Youtube className="w-7 h-7 text-red-500 group-hover/icon:text-red-400 transition-colors" />
+                    <div className="relative w-16 h-16 rounded-2xl bg-[#FF0000] flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:shadow-2xl group-hover/icon:shadow-[#FF0000]/60 transition-all duration-300 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                      <Youtube className="w-8 h-8 text-white relative z-10" fill="white" />
+                      <div className="absolute inset-0 rounded-2xl border-2 border-white/0 group-hover/icon:border-white/30 transition-all duration-300"></div>
                     </div>
                   </a>
                   <a 
@@ -239,15 +245,18 @@ Message: ${sanitizedData.message}`;
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="group/icon"
+                    aria-label="Follow us on X"
                   >
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-slate-700/20 to-slate-600/10 flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:from-slate-700/40 group-hover/icon:to-slate-600/30 transition-all duration-300 border border-slate-500/30 shadow-lg">
+                    <div className="relative w-16 h-16 rounded-2xl bg-[#000000] dark:bg-[#FFFFFF] flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:shadow-2xl group-hover/icon:shadow-slate-500/60 transition-all duration-300 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/30 dark:from-black/30 to-transparent opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
                       <svg 
-                        className="w-7 h-7 text-slate-400 group-hover/icon:text-slate-300 transition-colors" 
+                        className="w-7 h-7 text-white dark:text-black relative z-10" 
                         viewBox="0 0 24 24" 
                         fill="currentColor"
                       >
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                       </svg>
+                      <div className="absolute inset-0 rounded-2xl border-2 border-white/0 dark:border-black/0 group-hover/icon:border-white/30 dark:group-hover/icon:border-black/30 transition-all duration-300"></div>
                     </div>
                   </a>
                 </div>
