@@ -16,6 +16,7 @@ interface Message {
 
 const MAX_MESSAGE_LENGTH = 1000;
 const MIN_MESSAGE_INTERVAL = 2000; // 2 seconds between messages
+const SUMMARY_LENGTH = 200; // Characters to show before truncating
 
 const ChatbotWidget = () => {
   const { toast } = useToast();
@@ -25,6 +26,7 @@ const ChatbotWidget = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [avatarMood, setAvatarMood] = useState<'neutral' | 'happy' | 'thinking' | 'error'>('neutral');
   const [lastMessageTime, setLastMessageTime] = useState(0);
+  const [expandedMessages, setExpandedMessages] = useState<Set<string>>(new Set());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatWidgetRef = useRef<HTMLDivElement>(null);
 
@@ -133,6 +135,29 @@ const ChatbotWidget = () => {
       .replace(/[<>]/g, '') // Remove potential HTML tags
       .slice(0, MAX_MESSAGE_LENGTH)
       .trim();
+  };
+
+  const toggleMessageExpansion = (messageId: string) => {
+    setExpandedMessages(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(messageId)) {
+        newSet.delete(messageId);
+      } else {
+        newSet.add(messageId);
+      }
+      return newSet;
+    });
+  };
+
+  const getDisplayText = (message: Message) => {
+    const isExpanded = expandedMessages.has(message.id);
+    if (message.text.length <= SUMMARY_LENGTH) {
+      return message.text;
+    }
+    if (isExpanded) {
+      return message.text;
+    }
+    return message.text.slice(0, SUMMARY_LENGTH) + '...';
   };
 
   const handleSendMessage = async () => {
@@ -330,19 +355,31 @@ How may I assist you today?`);
                       </div>
                     </div>
                   )}
-                  <div
-                    className={`max-w-[85%] sm:max-w-[80%] px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-lg transition-all duration-200 hover:shadow-xl relative overflow-hidden ${
-                      message.isUser
-                        ? 'bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground rounded-br-md font-medium ml-auto border border-primary/20'
-                        : 'bg-gradient-to-br from-card via-muted/50 to-muted/80 text-foreground border-2 border-primary/20 rounded-bl-md backdrop-blur-sm'
-                    }`}
-                  >
-                    {!message.isUser && (
-                      <div className="absolute top-0 right-0 w-16 h-16 bg-primary/5 rounded-full blur-xl"></div>
-                    )}
-                    <p className="whitespace-pre-wrap break-words relative z-10">{message.text}</p>
-                    <div className={`text-[10px] sm:text-xs mt-1.5 sm:mt-2 opacity-70 relative z-10 font-semibold ${message.isUser ? 'text-right text-primary-foreground/90' : 'text-left text-primary'}`}>
-                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  <div className="flex flex-col max-w-[85%] sm:max-w-[80%]">
+                    <div
+                      className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl text-[10px] sm:text-[11px] leading-snug shadow-lg transition-all duration-200 hover:shadow-xl relative overflow-hidden ${
+                        message.isUser
+                          ? 'bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground rounded-br-md font-medium ml-auto border border-primary/20'
+                          : 'bg-gradient-to-br from-card via-muted/50 to-muted/80 text-foreground border-2 border-primary/20 rounded-bl-md backdrop-blur-sm'
+                      }`}
+                    >
+                      {!message.isUser && (
+                        <div className="absolute top-0 right-0 w-16 h-16 bg-primary/5 rounded-full blur-xl"></div>
+                      )}
+                      <p className="whitespace-pre-wrap break-words relative z-10">{getDisplayText(message)}</p>
+                      {message.text.length > SUMMARY_LENGTH && (
+                        <button
+                          onClick={() => toggleMessageExpansion(message.id)}
+                          className={`text-[9px] sm:text-[10px] font-semibold mt-1 relative z-10 hover:underline ${
+                            message.isUser ? 'text-primary-foreground/80' : 'text-primary'
+                          }`}
+                        >
+                          {expandedMessages.has(message.id) ? '▲ Show less' : '▼ Read more'}
+                        </button>
+                      )}
+                      <div className={`text-[9px] sm:text-[10px] mt-1 opacity-70 relative z-10 font-semibold ${message.isUser ? 'text-right text-primary-foreground/90' : 'text-left text-primary'}`}>
+                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </div>
                     </div>
                   </div>
                   {message.isUser && (
@@ -366,10 +403,10 @@ How may I assist you today?`);
                       />
                     </div>
                   </div>
-                  <div className="bg-gradient-to-r from-muted/95 via-muted/90 to-card/90 text-foreground px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl rounded-bl-md text-xs sm:text-sm border-2 border-primary/30 backdrop-blur-sm shadow-lg relative overflow-hidden">
+                  <div className="bg-gradient-to-r from-muted/95 via-muted/90 to-card/90 text-foreground px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl rounded-bl-md text-[10px] sm:text-[11px] border-2 border-primary/30 backdrop-blur-sm shadow-lg relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-20 h-20 bg-primary/10 rounded-full blur-2xl animate-pulse"></div>
                     <div className="flex space-x-1 items-center relative z-10">
-                      <span className="text-[10px] sm:text-xs text-primary font-semibold mr-1.5 sm:mr-2">AI is thinking</span>
+                      <span className="text-[9px] sm:text-[10px] text-primary font-semibold mr-1.5 sm:mr-2">AI is thinking</span>
                       <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-primary to-violet-500 rounded-full animate-bounce"></div>
                       <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full animate-bounce [animation-delay:0.1s]"></div>
                       <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-cyan-500 to-primary rounded-full animate-bounce [animation-delay:0.2s]"></div>
