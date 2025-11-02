@@ -114,7 +114,7 @@ const ChatbotWidget = () => {
           return "I'm receiving too many requests right now. Please try again in a moment. For urgent matters, call us at +254-750-444-167! 📞";
         }
         if (data.error.includes("Payment required") || data.error.includes("Service temporarily unavailable")) {
-          return "I'm temporarily unavailable. Please contact our support team directly at +254-750-444-167 or email info@bspot-tech.com for immediate assistance! 📧";
+          return "I'm temporarily unavailable. Please contact our support team directly at +254-750-444-167 or email bspottechnologies@gmail.com for immediate assistance! 📧";
         }
         throw new Error(data.error);
       }
@@ -258,7 +258,7 @@ How may I assist you today?`);
       {/* Chat Widget */}
       {isOpen && (
         <Card ref={chatWidgetRef} className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-[calc(100vw-2rem)] sm:w-[calc(100vw-3rem)] max-w-[380px] md:max-w-[400px] h-[480px] sm:h-[500px] shadow-premium-shadow border border-primary/30 bg-card/95 backdrop-blur-md z-50 animate-scale-in rounded-2xl overflow-hidden">
-          <CardHeader className="pb-3 pt-3 px-4 sm:px-5 md:px-6 bg-gradient-elegant border-b border-primary/20">
+          <CardHeader className="pb-3 pt-3 px-4 sm:px-5 md:px-6 bg-gradient-to-r from-primary via-primary/95 to-primary/90 border-b border-primary/30 shadow-lg">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
                 <div className="relative flex-shrink-0">
@@ -269,13 +269,13 @@ How may I assist you today?`);
                     size="sm"
                   />
                   {/* Online status indicator */}
-                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-400 border-2 border-background rounded-full animate-pulse"></div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-400 border-2 border-white rounded-full animate-pulse shadow-md"></div>
                 </div>
                  <div className="flex flex-col min-w-0 flex-1">
-                   <CardTitle className="text-sm sm:text-base font-semibold text-primary-foreground truncate">B-SPOT AI Assistant 🤖</CardTitle>
+                   <CardTitle className="text-sm sm:text-base font-bold text-white truncate drop-shadow-sm">B-SPOT AI Assistant 🤖</CardTitle>
                    <div className="flex items-center space-x-1.5 sm:space-x-2">
                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full animate-pulse shadow-sm flex-shrink-0"></div>
-                     <p className="text-[10px] sm:text-xs text-primary-foreground/90 font-medium truncate">Online • Ready 24/7</p>
+                     <p className="text-[10px] sm:text-xs text-white/95 font-medium truncate drop-shadow-sm">Online • Ready 24/7</p>
                    </div>
                  </div>
               </div>
@@ -284,7 +284,7 @@ How may I assist you today?`);
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsOpen(false)}
-                  className="w-7 h-7 sm:w-8 sm:h-8 text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/15 rounded-md transition-all duration-200"
+                  className="w-7 h-7 sm:w-8 sm:h-8 text-white/90 hover:text-white hover:bg-white/20 rounded-md transition-all duration-200"
                 >
                   <Minimize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </Button>
@@ -292,7 +292,7 @@ How may I assist you today?`);
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsOpen(false)}
-                  className="w-7 h-7 sm:w-8 sm:h-8 text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/15 rounded-md transition-all duration-200"
+                  className="w-7 h-7 sm:w-8 sm:h-8 text-white/90 hover:text-white hover:bg-white/20 rounded-md transition-all duration-200"
                 >
                   <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </Button>

@@ -82,7 +82,7 @@ const Footer = () => {
                   <Mail className="w-5 h-5 text-primary group-hover:text-blue-400 transition-colors" />
                 </div>
                 <div>
-                  <span className="text-foreground font-semibold block">info@bspot-tech.com</span>
+                  <span className="text-foreground font-semibold block">bspottechnologies@gmail.com</span>
                   <span className="text-muted-foreground text-sm">Business Inquiries</span>
                 </div>
               </div>

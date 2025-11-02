@@ -57,7 +57,7 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email",
-      details: ["info@bspot-tech.com", "support@bspot-tech.com"],
+      details: ["bspottechnologies@gmail.com"],
       description: "Send us your inquiries"
     },
     {
