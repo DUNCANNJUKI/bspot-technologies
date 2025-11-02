@@ -19,10 +19,6 @@ const getTimeGreeting = () => {
 
 const getCurrentDateTime = () => {
   const now = new Date();
-  // East Africa Time is UTC+3
-  const eatOffset = 3 * 60; // minutes
-  const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
-  const eatTime = new Date(utcTime + (eatOffset * 60000));
   
   const options: Intl.DateTimeFormatOptions = {
     weekday: 'long',
@@ -35,7 +31,7 @@ const getCurrentDateTime = () => {
     timeZone: 'Africa/Nairobi'
   };
   
-  return eatTime.toLocaleString('en-US', options);
+  return now.toLocaleString('en-US', options);
 };
 
 const getCurrentSystemPrompt = () => {
