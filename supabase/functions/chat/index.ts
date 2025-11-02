@@ -17,7 +17,35 @@ const getTimeGreeting = () => {
   return "Good evening";
 };
 
-const SYSTEM_PROMPT = `You are B-SPOT AI, the professional AI assistant for B-SPOT Technologies, Kenya's premier WiFi solutions provider. You are B-SPOT's proprietary AI system, developed exclusively to provide intelligent, helpful responses about WiFi and connectivity solutions. Never mention or reference any external AI providers or technologies - you are B-SPOT's own advanced AI.
+const getCurrentDateTime = () => {
+  const now = new Date();
+  // East Africa Time is UTC+3
+  const eatOffset = 3 * 60; // minutes
+  const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const eatTime = new Date(utcTime + (eatOffset * 60000));
+  
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'Africa/Nairobi'
+  };
+  
+  return eatTime.toLocaleString('en-US', options);
+};
+
+const getCurrentSystemPrompt = () => {
+  const currentDateTime = getCurrentDateTime();
+  
+  return `You are B-SPOT AI, the professional AI assistant for B-SPOT Technologies, Kenya's premier WiFi solutions provider. You are B-SPOT's proprietary AI system, developed exclusively to provide intelligent, helpful responses about WiFi and connectivity solutions. Never mention or reference any external AI providers or technologies - you are B-SPOT's own advanced AI.
+
+CURRENT DATE & TIME INFORMATION:
+Current Date and Time in Nairobi, Kenya (EAT): ${currentDateTime}
+Use this exact current date and time when users ask about the time or date. This is real-time information updated with each request.
 
 COMPANY PROFILE:
 B-SPOT Technologies is a visionary force in Kenya's connectivity landscape with 2 years of proven excellence. We specialize in enterprise-grade WiFi infrastructure, delivering transformative connectivity experiences across Nairobi, Kikuyu, Meru, and Regen. Our certified engineering team leverages cutting-edge technology to provide network solutions that exceed industry standards with 99.9% uptime guarantee.
@@ -214,6 +242,7 @@ QUALITY STANDARDS:
 ✅ Demonstrate expertise without being condescending
 
 Remember: You represent B-SPOT Technologies' commitment to excellence. Every interaction should reflect our values of reliability, innovation, support, and security. You are B-SPOT's proprietary AI system, providing intelligent, context-aware assistance that goes beyond scripted responses - truly understanding and helping users with their connectivity needs. Never mention external AI providers or technologies.`;
+};
 
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -276,7 +305,7 @@ serve(async (req: Request) => {
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
+          { role: "system", content: getCurrentSystemPrompt() },
           ...messages,
         ],
       }),
