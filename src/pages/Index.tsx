@@ -2,12 +2,12 @@
 import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import Services from "@/components/Services";
-import About from "@/components/About";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
 
-// Lazy load ChatbotWidget to reduce initial bundle size
+// Lazy load components to reduce initial bundle size and improve performance
+const Services = lazy(() => import("@/components/Services"));
+const About = lazy(() => import("@/components/About"));
+const Contact = lazy(() => import("@/components/Contact"));
+const Footer = lazy(() => import("@/components/Footer"));
 const ChatbotWidget = lazy(() => import("@/components/ChatbotWidget"));
 
 const Index = () => {
@@ -16,11 +16,13 @@ const Index = () => {
       <Header />
       <main className="pt-20 w-full overflow-x-hidden">
         <Hero />
-        <Services />
-        <About />
-        <Contact />
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+          <Services />
+          <About />
+          <Contact />
+          <Footer />
+        </Suspense>
       </main>
-      <Footer />
       <Suspense fallback={null}>
         <ChatbotWidget />
       </Suspense>

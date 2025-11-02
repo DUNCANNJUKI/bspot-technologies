@@ -8,14 +8,11 @@ import AnimatedNetwork from "./AnimatedNetwork";
 const Hero = () => {
   return (
     <section id="home" className="min-h-screen flex items-center relative overflow-hidden">
-      {/* Background Image */}
+      {/* Background Image with lazy loading */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15 animate-fade-in"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15"
         style={{ backgroundImage: `url(${networkInfrastructure})` }}
       />
-      
-      {/* Preload LCP image */}
-      <link rel="preload" as="image" href={networkInfrastructure} fetchPriority="high" />
       
       {/* Professional Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-hero opacity-98" />
@@ -23,10 +20,9 @@ const Hero = () => {
       {/* Animated Network Visualization */}
       <AnimatedNetwork />
       
-      {/* Refined Geometric Elements */}
-      <div className="absolute top-20 left-10 w-24 h-24 border border-primary/15 rounded-full animate-float opacity-40" />
-      <div className="absolute top-40 right-20 w-20 h-20 bg-gradient-elegant rounded-lg opacity-15 animate-float" style={{ animationDelay: '1s' }} />
-      <div className="absolute bottom-20 left-20 w-16 h-16 border-2 border-primary/20 rotate-45 opacity-30 animate-float" style={{ animationDelay: '2s' }} />
+      {/* Simplified Geometric Elements - Reduced for performance */}
+      <div className="absolute top-20 left-10 w-24 h-24 border border-primary/15 rounded-full opacity-40 hidden md:block" />
+      <div className="absolute bottom-20 left-20 w-16 h-16 border-2 border-primary/20 rotate-45 opacity-30 hidden lg:block" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-5xl mx-auto text-center">

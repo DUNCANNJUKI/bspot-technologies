@@ -88,11 +88,11 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Digital Clock - Now visible on all devices */}
+          {/* Digital Clock - 24hr Format */}
           <div className="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-green-500/20 backdrop-blur-sm border-2 border-emerald-400/40 shadow-lg shadow-emerald-500/20">
             <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 animate-pulse" />
             <span className="text-xs sm:text-sm font-bold text-emerald-400 tracking-wider drop-shadow-glow">
-              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
             </span>
           </div>
 

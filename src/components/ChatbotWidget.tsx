@@ -378,7 +378,7 @@ How may I assist you today?`);
                         </button>
                       )}
                       <div className={`text-[9px] sm:text-[10px] mt-1 opacity-70 relative z-10 font-semibold ${message.isUser ? 'text-right text-primary-foreground/90' : 'text-left text-primary'}`}>
-                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
                       </div>
                     </div>
                   </div>

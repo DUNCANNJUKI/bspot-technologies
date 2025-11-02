@@ -8,7 +8,7 @@ const AppLoader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
     const timer = setTimeout(() => {
       setIsLoading(false);
       onLoadComplete();
-    }, 2000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [onLoadComplete]);
