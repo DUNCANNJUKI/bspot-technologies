@@ -1,10 +1,12 @@
 import { Button } from "./ui/button";
-import { Menu, X, ChevronDown, Clock } from "lucide-react";
+import { Menu, X, ChevronDown, Clock, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTheme } from "./ThemeProvider";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -96,6 +98,17 @@ const Header = () => {
             </span>
           </div>
 
+          {/* Theme Toggle Button */}
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="hidden lg:flex w-11 h-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-110 group relative overflow-hidden"
+            aria-label="Toggle theme"
+          >
+            <Sun className="w-5 h-5 text-primary absolute transition-all duration-500 rotate-0 scale-100 dark:-rotate-90 dark:scale-0" />
+            <Moon className="w-5 h-5 text-primary absolute transition-all duration-500 rotate-90 scale-0 dark:rotate-0 dark:scale-100" />
+            <div className="absolute inset-0 rounded-xl bg-primary/10 scale-0 group-hover:scale-100 transition-transform duration-300"></div>
+          </button>
+
           {/* Modern CTA Button */}
           <div className="hidden lg:flex items-center space-x-4">
             <Button 
@@ -159,7 +172,7 @@ const Header = () => {
               ))}
               
               {/* Mobile CTA */}
-              <div className="pt-4 px-4">
+              <div className="pt-4 px-4 space-y-3">
                 <Button 
                   asChild 
                   className="w-full bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-700 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-cyan-400/50 hover:shadow-xl transition-all duration-500 hover:scale-105 border border-cyan-400/30"
@@ -168,6 +181,19 @@ const Header = () => {
                     Get Started
                   </a>
                 </Button>
+                
+                {/* Mobile Theme Toggle */}
+                <button
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 group relative overflow-hidden text-white font-semibold"
+                >
+                  <Sun className="w-5 h-5 text-primary transition-all duration-500 rotate-0 scale-100 dark:-rotate-90 dark:scale-0" />
+                  <Moon className="w-5 h-5 text-primary transition-all duration-500 rotate-90 scale-0 dark:rotate-0 dark:scale-100" />
+                  <span className="relative z-10">
+                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
               </div>
             </nav>
           </div>
