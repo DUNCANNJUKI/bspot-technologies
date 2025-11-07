@@ -1,6 +1,8 @@
 import { Wifi, Phone, Mail, MapPin, Radio, Rss, Facebook, Youtube } from "lucide-react";
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+  
   return (
     <footer className="relative bg-gradient-to-br from-background via-background/95 to-primary/5 border-t border-primary/20 overflow-hidden">
       {/* Animated WiFi Hotspot Signs Background */}
@@ -27,9 +29,9 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         {/* Enhanced Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-14 lg:mb-16">
           {/* Company Info - Enhanced */}
           <div className="lg:col-span-2 animate-fade-in">
             <div className="flex items-center space-x-4 mb-8">
@@ -98,8 +100,8 @@ const Footer = () => {
               
               {/* Social Media Links */}
               <div className="pt-4">
-                <h4 className="text-foreground font-bold mb-4 text-lg">Connect With Us</h4>
-                <div className="flex items-center space-x-4">
+                <h4 className="text-foreground font-bold mb-4 text-base sm:text-lg">Connect With Us</h4>
+                <div className="flex items-center space-x-3 sm:space-x-4">
                   <a 
                     href="https://www.facebook.com/people/B-Spot-Technologies/61574108452350/?rdid=DTgk4hdhIKNRQlaM&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F17CUFWVonm%2F" 
                     target="_blank" 
@@ -201,7 +203,7 @@ const Footer = () => {
           <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
             <div className="text-center lg:text-left">
               <p className="text-muted-foreground font-medium mb-2">
-                © 2024 B-SPOT TECHNOLOGIES. All rights reserved.
+                © {currentYear} B-SPOT TECHNOLOGIES. All rights reserved.
               </p>
               <p className="text-sm text-muted-foreground/80">
                 Pioneering the future of connectivity solutions
@@ -209,15 +211,15 @@ const Footer = () => {
             </div>
             
             {/* Tech Status Indicator */}
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-3 bg-gradient-to-r from-emerald-500/10 to-green-500/10 px-6 py-3 rounded-full border border-emerald-500/20">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+              <div className="flex items-center space-x-3 bg-gradient-to-r from-emerald-500/10 to-green-500/10 px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-emerald-500/20">
                 <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse shadow-lg shadow-emerald-400/50"></div>
-                <span className="text-sm font-medium text-emerald-400">Network Status: Online</span>
+                <span className="text-xs sm:text-sm font-medium text-emerald-400 whitespace-nowrap">Network Status: Online</span>
               </div>
               
               <div className="flex items-center space-x-2">
-                <Wifi className="w-5 h-5 text-primary animate-pulse" />
-                <span className="text-sm font-medium text-muted-foreground">99.9% Uptime</span>
+                <Wifi className="w-4 h-4 sm:w-5 sm:h-5 text-primary animate-pulse" />
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground whitespace-nowrap">99.9% Uptime</span>
               </div>
             </div>
           </div>
