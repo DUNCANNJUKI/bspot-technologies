@@ -44,7 +44,7 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-20 sm:py-24 bg-gradient-secondary relative overflow-hidden">
+    <section id="services" className="py-20 sm:py-24 bg-gradient-secondary relative overflow-hidden animate-fade-in">
       {/* Professional Background Elements */}
       <div 
         className="absolute top-0 right-0 w-1/3 h-full bg-cover bg-center opacity-6 animate-fade-in"
