@@ -6,6 +6,7 @@ import { Textarea } from "./ui/textarea";
 import { Phone, Mail, MapPin, Clock, Facebook, Youtube } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const contactSchema = z.object({
   firstName: z.string()
@@ -110,23 +111,23 @@ const Contact = () => {
         message: sanitizeInput(validatedData.message)
       };
 
-      // Create WhatsApp message
-      const whatsappMessage = `New Contact Form Submission:
-      
-Name: ${sanitizedData.firstName} ${sanitizedData.lastName}
-Email: ${sanitizedData.email}
-Phone: ${sanitizedData.phone}
-Service: ${sanitizedData.service}
-Message: ${sanitizedData.message}`;
+      console.log("Sending email via edge function:", sanitizedData);
 
-      // Open WhatsApp with pre-filled message
-      const whatsappUrl = `https://wa.me/254750444167?text=${encodeURIComponent(whatsappMessage)}`;
-      window.open(whatsappUrl, '_blank');
+      // Send email via edge function
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: sanitizedData,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      console.log("Email sent successfully:", data);
 
       // Show success message
       toast({
         title: "Message sent!",
-        description: "Opening WhatsApp to send your message to our team.",
+        description: "We've received your message and will get back to you soon.",
       });
 
       // Reset form
@@ -156,9 +157,10 @@ Message: ${sanitizedData.message}`;
           variant: "destructive"
         });
       } else {
+        console.error("Error sending email:", error);
         toast({
           title: "Error",
-          description: "Something went wrong. Please try again.",
+          description: "Failed to send message. Please try again or contact us directly.",
           variant: "destructive"
         });
       }

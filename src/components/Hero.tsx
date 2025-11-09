@@ -1,24 +1,60 @@
-
 import { Button } from "./ui/button";
 import { ArrowRight, Wifi, Zap, Shield } from "lucide-react";
 import heroImage from "@/assets/hero-bg.jpg";
 import networkInfrastructure from "@/assets/network-infrastructure.webp";
+import kenyanFiber from "@/assets/kenyan-tech-fiber.jpg";
+import kenyanClimbing from "@/assets/kenyan-tech-climbing.jpg";
+import kenyanAccessPoint from "@/assets/kenyan-tech-access-point.jpg";
 import AnimatedNetwork from "./AnimatedNetwork";
+import VisitorCounter from "./VisitorCounter";
 
 const Hero = () => {
   return (
     <section id="home" className="min-h-screen flex items-center relative overflow-hidden">
-      {/* Background Image with lazy loading */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15"
-        style={{ backgroundImage: `url(${networkInfrastructure})` }}
-      />
+      {/* Animated Background Images - Kenyan Technicians */}
+      <div className="absolute inset-0 opacity-10">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat animate-fade-in"
+          style={{ 
+            backgroundImage: `url(${kenyanFiber})`,
+            animationDelay: '0s',
+            animationDuration: '15s',
+            animationIterationCount: 'infinite',
+            animationDirection: 'alternate'
+          }}
+        />
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat animate-fade-in"
+          style={{ 
+            backgroundImage: `url(${kenyanClimbing})`,
+            animationDelay: '5s',
+            animationDuration: '15s',
+            animationIterationCount: 'infinite',
+            animationDirection: 'alternate'
+          }}
+        />
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat animate-fade-in"
+          style={{ 
+            backgroundImage: `url(${kenyanAccessPoint})`,
+            animationDelay: '10s',
+            animationDuration: '15s',
+            animationIterationCount: 'infinite',
+            animationDirection: 'alternate'
+          }}
+        />
+      </div>
       
       {/* Professional Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-hero opacity-98" />
       
       {/* Animated Network Visualization */}
       <AnimatedNetwork />
+      
+      {/* Visitor Counter - Top Right */}
+      <div className="absolute top-24 right-6 z-20 animate-slide-in-right">
+        <VisitorCounter />
+      </div>
       
       {/* Simplified Geometric Elements - Reduced for performance */}
       <div className="absolute top-20 left-10 w-24 h-24 border border-primary/15 rounded-full opacity-40 hidden md:block" />
