@@ -6,6 +6,7 @@ import { useTheme } from "./ThemeProvider";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [activeSection, setActiveSection] = useState("home");
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -14,6 +15,38 @@ const Header = () => {
     }, 1000);
 
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -60% 0px",
+      threshold: 0
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.id || "home";
+          setActiveSection(sectionId);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // Observe all sections
+    const sections = document.querySelectorAll('section[id], main > div:first-child');
+    sections.forEach((section, index) => {
+      if (!section.id && index === 0) {
+        section.id = "home";
+      }
+      observer.observe(section);
+    });
+
+    return () => {
+      sections.forEach((section) => observer.unobserve(section));
+    };
   }, []);
 
   return (
@@ -68,26 +101,39 @@ const Header = () => {
               { name: 'Services', gradient: 'from-purple-500 to-pink-500' },
               { name: 'About', gradient: 'from-green-500 to-emerald-500' },
               { name: 'Contact', gradient: 'from-orange-500 to-red-500' }
-            ].map((item, index) => (
-              <a 
-                key={item.name}
-                href={`#${item.name.toLowerCase()}`} 
-                className="relative px-6 py-3 text-sm font-semibold text-white transition-all duration-500 group overflow-hidden rounded-xl border border-white/10 hover:border-white/30 hover:scale-105"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {/* Gradient background */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-20 transition-all duration-500`}></div>
-                
-                {/* Shimmer effect */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-10 group-hover:opacity-30 blur-sm transition-all duration-500`}></div>
-                
-                {/* Text */}
-                <span className="relative z-10 tracking-wide bg-gradient-to-r from-white to-white/80 bg-clip-text">{item.name}</span>
-                
-                {/* Animated underline */}
-                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${item.gradient} scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center rounded-full`}></div>
-              </a>
-            ))}
+            ].map((item, index) => {
+              const isActive = activeSection === item.name.toLowerCase();
+              return (
+                <a 
+                  key={item.name}
+                  href={`#${item.name.toLowerCase()}`} 
+                  className={`relative px-6 py-3 text-sm font-semibold text-white transition-all duration-500 group overflow-hidden rounded-xl border hover:scale-105 ${
+                    isActive 
+                      ? 'border-white/40 scale-105' 
+                      : 'border-white/10 hover:border-white/30'
+                  }`}
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  {/* Gradient background */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} transition-all duration-500 ${
+                    isActive ? 'opacity-30' : 'opacity-0 group-hover:opacity-20'
+                  }`}></div>
+                  
+                  {/* Shimmer effect */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} blur-sm transition-all duration-500 ${
+                    isActive ? 'opacity-40' : 'opacity-10 group-hover:opacity-30'
+                  }`}></div>
+                  
+                  {/* Text */}
+                  <span className="relative z-10 tracking-wide bg-gradient-to-r from-white to-white/80 bg-clip-text">{item.name}</span>
+                  
+                  {/* Animated underline */}
+                  <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${item.gradient} transition-transform duration-500 origin-center rounded-full ${
+                    isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  }`}></div>
+                </a>
+              );
+            })}
           </nav>
 
           {/* Digital Clock - 24hr Format */}
@@ -149,27 +195,38 @@ const Header = () => {
                 { name: 'Services', gradient: 'from-purple-500 to-pink-500', icon: '⚡' },
                 { name: 'About', gradient: 'from-green-500 to-emerald-500', icon: '📋' },
                 { name: 'Contact', gradient: 'from-orange-500 to-red-500', icon: '📞' }
-              ].map((item, index) => (
-                <a 
-                  key={item.name}
-                  href={`#${item.name.toLowerCase()}`} 
-                  className="relative px-6 py-4 text-white font-semibold transition-all duration-300 rounded-xl group overflow-hidden border border-white/10 hover:border-white/30 hover:scale-105"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {/* Gradient background */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-10 group-hover:opacity-25 transition-all duration-300`}></div>
-                  
-                  {/* Text with icon */}
-                  <span className="relative z-10 tracking-wide flex items-center gap-3">
-                    <span className="text-xl">{item.icon}</span>
-                    {item.name}
-                  </span>
-                  
-                  {/* Side accent */}
-                  <div className={`absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b ${item.gradient} scale-y-0 group-hover:scale-y-100 transition-transform duration-300 rounded-full`}></div>
-                </a>
-              ))}
+              ].map((item, index) => {
+                const isActive = activeSection === item.name.toLowerCase();
+                return (
+                  <a 
+                    key={item.name}
+                    href={`#${item.name.toLowerCase()}`} 
+                    className={`relative px-6 py-4 text-white font-semibold transition-all duration-300 rounded-xl group overflow-hidden border hover:scale-105 ${
+                      isActive 
+                        ? 'border-white/40 scale-105' 
+                        : 'border-white/10 hover:border-white/30'
+                    }`}
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {/* Gradient background */}
+                    <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} transition-all duration-300 ${
+                      isActive ? 'opacity-30' : 'opacity-10 group-hover:opacity-25'
+                    }`}></div>
+                    
+                    {/* Text with icon */}
+                    <span className="relative z-10 tracking-wide flex items-center gap-3">
+                      <span className="text-xl">{item.icon}</span>
+                      {item.name}
+                    </span>
+                    
+                    {/* Side accent */}
+                    <div className={`absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b ${item.gradient} transition-transform duration-300 rounded-full ${
+                      isActive ? 'scale-y-100' : 'scale-y-0 group-hover:scale-y-100'
+                    }`}></div>
+                  </a>
+                );
+              })}
               
               {/* Mobile CTA */}
               <div className="pt-4 px-4 space-y-3">
