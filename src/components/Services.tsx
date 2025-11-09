@@ -75,8 +75,11 @@ const Services = () => {
           {services.map((service, index) => (
             <Card 
               key={index} 
-              className="luxury-card hover:shadow-elegant-shadow transition-all duration-500 hover-lift animate-slide-up group"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="luxury-card hover:shadow-elegant-shadow transition-all duration-500 hover-lift opacity-0 animate-fade-in group"
+              style={{ 
+                animationDelay: `${index * 0.15}s`,
+                animationFillMode: 'forwards'
+              }}
             >
               <CardHeader className="pb-4 sm:pb-6">
                 <div className="w-16 h-16 sm:w-18 sm:h-18 bg-gradient-elegant rounded-xl flex items-center justify-center mb-4 sm:mb-6 shadow-tech-glow group-hover:scale-110 transition-all duration-500">
