@@ -62,11 +62,10 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-muted-foreground mb-10 leading-relaxed max-w-lg text-base">
-              B-SPOT Technologies is Kenya's premier WiFi solutions provider, specializing in enterprise-grade connectivity infrastructure. 
-              With 2 years of proven excellence, we deliver cutting-edge network solutions across Nairobi, Kikuyu, Meru, and Regen. 
-              Our certified engineering team ensures 99.9% uptime, 24/7 technical support, and scalable solutions for businesses, 
-              events, and public spaces. From small businesses to large-scale deployments, we connect communities with affordable, 
-              seamless, and secure internet that powers digital transformation.
+              Bspot Technologies is Kenya's premier internet solutions provider, specializing in affordable and reliable connectivity. 
+              We deliver high-quality internet for homes, businesses, schools, and communities across Nairobi, Kikuyu, Meru, and Regen. 
+              Our mission is to make internet access simple, affordable, and dependable for all, empowering digital transformation 
+              with seamless connectivity, excellent support, and flexible solutions tailored to your needs.
             </p>
             
             {/* Enhanced Contact Info */}
@@ -157,12 +156,12 @@ const Footer = () => {
             </h3>
             <ul className="space-y-4">
               {[
-                "Enterprise WiFi Solutions",
-                "Event Connectivity Services", 
-                "Network Infrastructure",
-                "Smart Home Integration",
-                "IoT Connectivity Solutions",
-                "Cloud Network Management"
+                "Home Internet (Hotspot & PPPoE)",
+                "Business Internet Solutions", 
+                "Open-Air Market Hotspots",
+                "Schools & Learning Centers",
+                "Network Installation",
+                "24/7 Technical Support"
               ].map((service, index) => (
                 <li key={service} className="group">
                   <a href="#services" className="flex items-center space-x-3 text-muted-foreground hover:text-primary transition-all duration-300 font-medium group">

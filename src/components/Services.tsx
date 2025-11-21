@@ -6,22 +6,28 @@ import accessPoint from "@/assets/access-point.webp";
 const Services = () => {
   const services = [
     {
-      icon: Building,
-      title: "Business WiFi Solutions",
-      description: "Reliable internet connectivity for offices, retail stores, and commercial spaces with enterprise-grade security.",
-      features: ["24/7 monitoring", "Scalable bandwidth", "Enterprise security"]
+      icon: Wifi,
+      title: "Home Internet",
+      description: "Enjoy stable, high-speed internet for all your daily needs with Hotspot & PPPoE connection options.",
+      features: ["Streaming & gaming", "Online classes", "24/7 support"]
     },
     {
-      icon: Calendar,
-      title: "Event WiFi Services",
-      description: "Temporary high-capacity WiFi solutions for conferences, festivals, and special events.",
-      features: ["Quick deployment", "High user capacity", "Event analytics"]
+      icon: Building,
+      title: "Business Internet Solutions",
+      description: "Reliable high-capacity connections with dedicated support for small, medium, and large businesses.",
+      features: ["Dedicated support", "High-capacity", "Flexible packages"]
     },
     {
       icon: Users,
-      title: "Public Hotspot Management",
-      description: "Comprehensive WiFi solutions for hotels, restaurants, and public venues.",
-      features: ["Guest portal", "Usage analytics", "Brand customization"]
+      title: "Open-Air Market Hotspots",
+      description: "Wide-area Wi-Fi coverage for vendors and customers in busy open-air markets.",
+      features: ["Wide coverage", "Instant access", "Affordable rates"]
+    },
+    {
+      icon: Calendar,
+      title: "Schools & Learning Centers",
+      description: "Free or subsidized school Wi-Fi with secure network access for students and teachers.",
+      features: ["Secure access", "High coverage", "Technical support"]
     },
     {
       icon: Settings,
@@ -34,12 +40,6 @@ const Services = () => {
       title: "24/7 Technical Support",
       description: "Round-the-clock technical assistance to ensure your network runs smoothly.",
       features: ["Remote monitoring", "Rapid response", "Preventive maintenance"]
-    },
-    {
-      icon: Wifi,
-      title: "WiFi Optimization",
-      description: "Performance tuning and optimization of existing WiFi networks for maximum efficiency.",
-      features: ["Speed optimization", "Coverage analysis", "Performance reports"]
     }
   ];
 
@@ -62,12 +62,12 @@ const Services = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16 sm:mb-20 animate-scale-in">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 sm:mb-8 text-foreground leading-tight">
-            Our <span className="elegant-text">Premium Services</span>
+            Our <span className="elegant-text">Services</span>
           </h2>
           <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            Professional solutions that deliver exceptional connectivity experiences with 
-            <span className="text-primary font-semibold"> enterprise precision</span> and 
-            <span className="text-primary font-semibold"> unwavering reliability</span>.
+            From homes to businesses, schools to markets—we deliver 
+            <span className="text-primary font-semibold"> fast, affordable, and reliable</span> internet solutions 
+            that keep you connected.
           </p>
         </div>
 
