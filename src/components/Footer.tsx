@@ -183,9 +183,9 @@ const Footer = () => {
                 { name: "Home", href: "#home" },
                 { name: "About Us", href: "#about" },
                 { name: "Our Services", href: "#services" },
+                { name: "FAQ", href: "#faq" },
                 { name: "Contact", href: "#contact" },
-                { name: "Support Portal", href: "#support" },
-                { name: "Network Status", href: "#status" }
+                { name: "Support", href: "#contact" }
               ].map((link, index) => (
                 <li key={link.name} className="group">
                   <a href={link.href} className="flex items-center space-x-3 text-muted-foreground hover:text-primary transition-all duration-300 font-medium group">
