@@ -4,20 +4,20 @@ const About = () => {
 
   const values = [
     {
-      title: "Reliability",
-      description: "We ensure your WiFi network operates at peak performance with minimal downtime."
+      title: "Affordable Packages",
+      description: "Pricing designed for every household, business, and community."
     },
     {
-      title: "Innovation",
-      description: "Using cutting-edge technology to deliver the best WiFi solutions in the industry."
+      title: "Reliable Connectivity",
+      description: "Consistent speeds and uptime you can trust."
     },
     {
-      title: "Support",
-      description: "Our dedicated team provides round-the-clock technical support and maintenance."
+      title: "Quick Installation",
+      description: "Fast setup with minimal downtime."
     },
     {
-      title: "Security",
-      description: "Enterprise-grade security protocols to protect your network and user data."
+      title: "Excellent Customer Support",
+      description: "Friendly support staff always ready to assist."
     }
   ];
 
@@ -32,22 +32,23 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16 sm:mb-20 animate-scale-in">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 sm:mb-8 text-foreground leading-tight">
-            About <span className="elegant-text">B-SPOT TECHNOLOGIES</span>
+            Who <span className="elegant-text">We Are</span>
           </h2>
           <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            A visionary force in Kenya's connectivity landscape, delivering 
-            <span className="text-primary font-semibold"> transformative WiFi experiences</span> across 
-            Nairobi, Kikuyu, Meru, and Regen with <span className="text-primary font-semibold">two years of proven excellence</span>.
+            At Bspot Technologies, we provide high-quality internet solutions designed to keep you connected—whether at home, at work, in school, or in public spaces.
+          </p>
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mt-4">
+            We believe <span className="text-primary font-semibold">reliable internet should be simple, accessible, and affordable</span> for everyone.
           </p>
         </div>
 
         {/* Professional Company Overview */}
         <div className="text-center mb-16 sm:mb-20 animate-slide-up" style={{ animationDelay: '0.2s' }}>
           <div className="max-w-5xl mx-auto">
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 text-foreground">Expanding Across Kenya</h3>
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 text-foreground">Serving Communities Across Kenya</h3>
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-10 sm:mb-12 leading-relaxed">
-              In just two years, B-SPOT TECHNOLOGIES has carved a distinctive path in Kenya's connectivity sector, 
-              establishing premium network solutions that define industry standards across multiple regions.
+              Bspot Technologies delivers trusted connectivity solutions across multiple regions, 
+              empowering homes, businesses, schools, and communities with seamless internet access.
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               <div className="luxury-card rounded-xl p-4 sm:p-6 lg:p-8 hover-lift animate-scale-in group" style={{ animationDelay: '0.4s' }}>
@@ -80,18 +81,14 @@ const About = () => {
             <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8 text-foreground">Our Mission</h3>
             <div className="space-y-4 sm:space-y-6">
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed">
-                <span className="text-primary font-semibold">Connecting communities with affordable and seamless internet connections</span>
-              </p>
-              <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed">
-                Our certified engineering team leverages 
-                <span className="text-primary font-semibold"> cutting-edge technology</span> and 
-                <span className="text-primary font-semibold"> proven methodologies</span> to deliver 
-                network infrastructures that exceed industry standards.
+                <span className="text-primary font-semibold">To make internet access simple, affordable, and dependable for all communities</span>, 
+                empowering homes, businesses, and learning environments with seamless connectivity.
               </p>
             </div>
           </div>
 
           <div className="grid gap-4 sm:gap-6 lg:gap-8">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-foreground">Why Choose Bspot Technologies?</h3>
             {values.map((value, index) => (
               <Card 
                 key={index} 
@@ -105,6 +102,16 @@ const About = () => {
                 </CardContent>
               </Card>
             ))}
+            <Card 
+              className="luxury-card hover-lift animate-slide-up group" 
+              style={{ animationDelay: `${1 + values.length * 0.1}s` }}
+            >
+              <CardContent className="p-4 sm:p-6 lg:p-8">
+                <h4 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 elegant-text">Flexible Options</h4>
+                <p className="text-muted-foreground text-sm sm:text-base lg:text-lg leading-relaxed">Hotspot, PPPoE, wide-area Wi-Fi, and community solutions—whatever you need, we deliver.</p>
+                <div className="w-full h-0.5 sm:h-1 bg-gradient-elegant rounded-full mt-4 sm:mt-6 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

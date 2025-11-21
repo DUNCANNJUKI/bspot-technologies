@@ -68,9 +68,7 @@ const Hero = () => {
           
           {/* Professional Subtitle */}
           <p className="text-lg sm:text-xl md:text-2xl text-white/80 mb-16 max-w-4xl mx-auto leading-relaxed animate-slide-up font-medium" style={{ animationDelay: '0.3s' }}>
-            Connecting communities with affordable and seamless internet connections through 
-            <span className="text-secondary font-semibold"> enterprise-grade reliability</span> and 
-            <span className="text-secondary font-semibold"> innovative solutions</span>.
+            Fast • Affordable • Reliable Internet Solutions for Homes, Businesses & Communities
           </p>
 
           {/* Professional Feature Icons */}
