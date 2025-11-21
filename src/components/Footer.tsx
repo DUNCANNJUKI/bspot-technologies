@@ -1,4 +1,5 @@
 import { Wifi, Phone, Mail, MapPin, Radio, Rss, Facebook, Youtube } from "lucide-react";
+import VisitorCounter from "./VisitorCounter";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -200,7 +201,7 @@ const Footer = () => {
 
         {/* Enhanced Bottom Bar */}
         <div className="border-t border-gradient-to-r from-transparent via-primary/20 to-transparent pt-10 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-          <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
+          <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0 mb-8">
             <div className="text-center lg:text-left">
               <p className="text-muted-foreground font-medium mb-2">
                 © {currentYear} B-SPOT TECHNOLOGIES. All rights reserved.
@@ -222,6 +223,11 @@ const Footer = () => {
                 <span className="text-xs sm:text-sm font-medium text-muted-foreground whitespace-nowrap">99.9% Uptime</span>
               </div>
             </div>
+          </div>
+          
+          {/* Visitor Counter */}
+          <div className="flex justify-center pt-6 border-t border-primary/10">
+            <VisitorCounter />
           </div>
         </div>
       </div>

@@ -6,7 +6,6 @@ import kenyanFiber from "@/assets/kenyan-tech-fiber.jpg";
 import kenyanClimbing from "@/assets/kenyan-tech-climbing.jpg";
 import kenyanAccessPoint from "@/assets/kenyan-tech-access-point.jpg";
 import AnimatedNetwork from "./AnimatedNetwork";
-import VisitorCounter from "./VisitorCounter";
 
 const Hero = () => {
   return (
@@ -50,11 +49,6 @@ const Hero = () => {
       
       {/* Animated Network Visualization */}
       <AnimatedNetwork />
-      
-      {/* Visitor Counter - Top Right */}
-      <div className="absolute top-24 right-6 z-20 animate-slide-in-right">
-        <VisitorCounter />
-      </div>
       
       {/* Simplified Geometric Elements - Reduced for performance */}
       <div className="absolute top-20 left-10 w-24 h-24 border border-primary/15 rounded-full opacity-40 hidden md:block" />
