@@ -100,6 +100,7 @@ const Header = () => {
               { name: 'Home', gradient: 'from-blue-500 to-cyan-500' },
               { name: 'Services', gradient: 'from-purple-500 to-pink-500' },
               { name: 'About', gradient: 'from-green-500 to-emerald-500' },
+              { name: 'FAQ', gradient: 'from-yellow-500 to-orange-500' },
               { name: 'Contact', gradient: 'from-orange-500 to-red-500' }
             ].map((item, index) => {
               const isActive = activeSection === item.name.toLowerCase();
@@ -194,6 +195,7 @@ const Header = () => {
                 { name: 'Home', gradient: 'from-blue-500 to-cyan-500', icon: '🏠' },
                 { name: 'Services', gradient: 'from-purple-500 to-pink-500', icon: '⚡' },
                 { name: 'About', gradient: 'from-green-500 to-emerald-500', icon: '📋' },
+                { name: 'FAQ', gradient: 'from-yellow-500 to-orange-500', icon: '❓' },
                 { name: 'Contact', gradient: 'from-orange-500 to-red-500', icon: '📞' }
               ].map((item, index) => {
                 const isActive = activeSection === item.name.toLowerCase();
