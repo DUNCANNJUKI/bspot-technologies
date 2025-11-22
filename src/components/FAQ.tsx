@@ -116,13 +116,13 @@ const FAQ = () => {
       
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16 sm:mb-20 animate-scale-in">
-          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-elegant mb-6 shadow-tech-glow">
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-primary mb-6 shadow-tech-glow">
             <HelpCircle className="w-8 h-8 sm:w-10 sm:h-10 text-primary-foreground" />
           </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold mb-6 sm:mb-8 text-foreground leading-tight">
-            Frequently Asked <span className="elegant-text">Questions</span>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold mb-6 sm:mb-8 leading-tight">
+            Frequently Asked <span className="bg-gradient-primary bg-clip-text text-transparent">Questions</span>
           </h2>
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-foreground/70 max-w-3xl mx-auto leading-relaxed">
             Find answers to common questions about our services, installation, payments, and technical support.
           </p>
         </div>
@@ -133,8 +133,8 @@ const FAQ = () => {
             className="mb-12 sm:mb-16 animate-fade-in"
             style={{ animationDelay: `${categoryIndex * 0.2}s` }}
           >
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold mb-6 sm:mb-8 text-foreground flex items-center">
-              <span className="w-2 h-8 sm:h-10 bg-gradient-elegant rounded-full mr-4"></span>
+            <h3 className="text-2xl sm:text-3xl font-display font-bold mb-6 sm:mb-8 text-foreground flex items-center">
+              <span className="w-2 h-8 sm:h-10 bg-gradient-primary rounded-full mr-4"></span>
               {category.category}
             </h3>
             
@@ -143,7 +143,7 @@ const FAQ = () => {
                 <AccordionItem 
                   key={faqIndex} 
                   value={`${categoryIndex}-${faqIndex}`}
-                  className="luxury-card border-none rounded-xl overflow-hidden hover-lift"
+                  className="luxury-card border-primary/20 rounded-xl overflow-hidden hover:-translate-y-1 transition-all duration-300"
                 >
                   <AccordionTrigger className="px-6 py-4 text-left hover:no-underline group">
                     <span className="text-base sm:text-lg font-semibold text-foreground pr-4 group-hover:text-primary transition-colors">
@@ -151,7 +151,7 @@ const FAQ = () => {
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 pb-6">
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                    <p className="text-sm sm:text-base text-foreground/70 leading-relaxed">
                       {faq.a}
                     </p>
                   </AccordionContent>
@@ -163,17 +163,17 @@ const FAQ = () => {
 
         {/* Contact CTA */}
         <div className="mt-16 sm:mt-20 text-center animate-fade-in" style={{ animationDelay: '0.8s' }}>
-          <div className="luxury-card rounded-2xl p-8 sm:p-12">
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold mb-4 text-foreground">
+          <div className="luxury-card border-primary/20 rounded-2xl p-8 sm:p-12">
+            <h3 className="text-2xl sm:text-3xl font-display font-bold mb-4 text-foreground">
               Still Have Questions?
             </h3>
-            <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-foreground/70 mb-6 sm:mb-8 max-w-2xl mx-auto">
               Our friendly support team is here to help you 24/7. Reach out anytime!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="tel:+254750444167" 
-                className="inline-flex items-center justify-center px-8 py-4 bg-gradient-elegant text-primary-foreground font-semibold rounded-xl shadow-tech-glow hover:scale-105 transition-all duration-300"
+                className="inline-flex items-center justify-center px-8 py-4 bg-gradient-primary text-primary-foreground font-semibold rounded-xl shadow-tech-glow hover:scale-105 transition-all duration-300"
               >
                 Call Us: +254-750-444-167
               </a>
