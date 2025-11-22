@@ -44,30 +44,32 @@ const Hero = () => {
         />
       </div>
       
-      {/* Professional Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-hero opacity-98" />
+      {/* Dynamic Tech Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-hero opacity-95" />
+      <div className="absolute inset-0" style={{ background: 'var(--gradient-mesh)', opacity: 0.4 }} />
       
       {/* Animated Network Visualization */}
       <AnimatedNetwork />
       
-      {/* Simplified Geometric Elements - Reduced for performance */}
-      <div className="absolute top-20 left-10 w-24 h-24 border border-primary/15 rounded-full opacity-40 hidden md:block" />
-      <div className="absolute bottom-20 left-20 w-16 h-16 border-2 border-primary/20 rotate-45 opacity-30 hidden lg:block" />
+      {/* Dynamic Geometric Elements */}
+      <div className="absolute top-20 left-10 w-32 h-32 border-2 border-primary/30 rounded-full opacity-60 hidden md:block animate-pulse" style={{ boxShadow: 'var(--tech-glow)' }} />
+      <div className="absolute bottom-20 left-20 w-24 h-24 border-2 border-secondary/40 rotate-45 opacity-50 hidden lg:block animate-spin" style={{ animationDuration: '20s' }} />
+      <div className="absolute top-40 right-20 w-20 h-20 border-2 border-accent/40 rounded-lg opacity-50 hidden xl:block animate-bounce" style={{ animationDuration: '3s' }} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-5xl mx-auto text-center">
-          {/* Technology-Empowered Main Heading */}
+          {/* Bold Tech Heading */}
           <div className="mb-12 animate-scale-in matrix-effect">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 tech-title leading-none tracking-tight digital-flicker">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold mb-6 tech-title leading-none tracking-tight digital-flicker">
               B-SPOT
             </h1>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tech-subtitle tracking-widest">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-light tech-subtitle tracking-widest">
               TECHNOLOGIES
             </h2>
           </div>
           
-          {/* Professional Subtitle */}
-          <p className="text-lg sm:text-xl md:text-2xl text-white/80 mb-16 max-w-4xl mx-auto leading-relaxed animate-slide-up font-medium" style={{ animationDelay: '0.3s' }}>
+          {/* Bold Tech Subtitle */}
+          <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-16 max-w-4xl mx-auto leading-relaxed animate-slide-up font-semibold tracking-wide" style={{ animationDelay: '0.3s', textShadow: '0 0 20px rgba(0,255,255,0.3)' }}>
             Fast • Affordable • Reliable Internet Solutions for Homes, Businesses & Communities
           </p>
 
