@@ -115,7 +115,7 @@ All colors MUST be HSL.
 @layer components {
   /* Premium Animation utilities */
   .hover-scale {
-    @apply transition-all duration-300 hover:scale-105 hover:shadow-elegant-shadow;
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-card-shadow;
   }
   
   .hover-lift {
@@ -149,15 +149,15 @@ All colors MUST be HSL.
   }
   
   .logo-container {
-    @apply bg-gradient-elegant border border-primary/25 shadow-tech-glow backdrop-blur-sm;
+    @apply bg-gradient-primary border border-primary/25 shadow-tech-glow backdrop-blur-sm;
   }
   
   .premium-button {
-    @apply bg-gradient-elegant text-primary-foreground font-semibold shadow-elegant-shadow hover:shadow-tech-glow transition-all duration-300 hover:scale-[1.02];
+    @apply bg-gradient-primary text-primary-foreground font-semibold shadow-card-shadow hover:shadow-tech-glow transition-all duration-300 hover:scale-[1.02];
   }
   
   .elegant-text {
-    @apply bg-gradient-elegant bg-clip-text text-transparent font-serif;
+    @apply bg-gradient-primary bg-clip-text text-transparent font-display;
   }
 
   /* Chatbot Avatar specific utilities */
