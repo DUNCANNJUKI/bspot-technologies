@@ -12,7 +12,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         'sans': ['Inter', 'system-ui', 'sans-serif'],
-        'serif': ['Playfair Display', 'Georgia', 'serif'],
+        'display': ['Rajdhani', 'Inter', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -72,6 +72,7 @@ const config: Config = {
         'gradient-hero': 'var(--gradient-hero)',
         'gradient-card': 'var(--gradient-card)',
         'gradient-elegant': 'var(--gradient-elegant)',
+        'gradient-mesh': 'var(--gradient-mesh)',
       },
       boxShadow: {
         'tech-glow': 'var(--tech-glow)',
