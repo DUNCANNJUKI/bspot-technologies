@@ -93,6 +93,19 @@ const config: Config = {
         'avatar-glow': 'avatarGlow 2s ease-in-out infinite alternate',
         'circuit-flow': 'circuitFlow 3s linear infinite',
         'swing': 'swing 6s ease-in-out infinite',
+        'spin-slow': 'spin 4s linear infinite',
+        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        'text-shimmer': 'textShimmer 3s linear infinite',
+      },
+      keyframes: {
+        pulseGlow: {
+          '0%, 100%': { boxShadow: '0 0 5px hsl(var(--primary) / 0.3), 0 0 10px hsl(var(--primary) / 0.2)' },
+          '50%': { boxShadow: '0 0 15px hsl(var(--primary) / 0.5), 0 0 25px hsl(var(--primary) / 0.3)' },
+        },
+        textShimmer: {
+          '0%': { backgroundPosition: '200% center' },
+          '100%': { backgroundPosition: '-200% center' },
+        },
       },
     },
   },
