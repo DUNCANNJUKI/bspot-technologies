@@ -66,36 +66,34 @@ const Header = () => {
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Modern Logo with Animation */}
-          <div className="flex items-center space-x-4 group cursor-pointer">
+          <div className="flex items-center space-x-2 sm:space-x-3 group cursor-pointer flex-shrink-0">
             <div className="relative">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-2xl bg-white p-2.5 sm:p-3 lg:p-4 border-3 border-blue-500/60 shadow-2xl shadow-blue-500/20 group-hover:shadow-blue-500/40 group-hover:shadow-2xl transition-all duration-700 group-hover:scale-110 group-hover:border-cyan-400/80">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl bg-white p-1.5 sm:p-2 border-2 border-primary/40 shadow-lg shadow-primary/20 group-hover:shadow-primary/40 transition-all duration-500 group-hover:scale-105 group-hover:border-primary/60">
                 <img 
                   src="/bspot-logo-128.webp" 
                   alt="B-Spot Technologies Logo" 
                   width="128"
                   height="128"
-                  className="w-full h-full object-contain filter brightness-110 contrast-125 drop-shadow-xl group-hover:brightness-125 transition-all duration-700" 
+                  className="w-full h-full object-contain filter brightness-110 contrast-125 drop-shadow-md group-hover:brightness-125 transition-all duration-500" 
                 />
-                {/* Animated ring */}
-                <div className="absolute inset-0 rounded-2xl border-2 border-cyan-400/0 group-hover:border-cyan-400/60 transition-all duration-700 animate-pulse"></div>
               </div>
               {/* Glow effect */}
-              <div className="absolute inset-0 rounded-2xl bg-blue-500/30 blur-2xl opacity-50 group-hover:opacity-100 transition-all duration-700"></div>
+              <div className="absolute inset-0 rounded-xl bg-primary/20 blur-xl opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
             </div>
             <div className="flex flex-col">
-              <div className="text-3xl font-black bg-gradient-to-r from-white via-primary/90 to-secondary bg-clip-text text-transparent tracking-tight leading-none animate-pulse">
+              <div className="text-lg sm:text-xl lg:text-2xl font-black bg-gradient-to-r from-foreground via-primary to-secondary bg-clip-text text-transparent tracking-tight leading-none">
                 B-SPOT
               </div>
-              <div className="text-sm font-light text-primary/90 tracking-[0.2em] leading-none mt-1 group-hover:text-white transition-colors duration-500">
+              <div className="text-[9px] sm:text-[10px] lg:text-xs font-medium text-foreground/70 tracking-[0.15em] leading-none mt-0.5">
                 TECHNOLOGIES
               </div>
             </div>
           </div>
 
           {/* Futuristic Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-2">
+          <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2">
             {[
               { name: 'Home', gradient: 'from-blue-500 to-cyan-500' },
               { name: 'Services', gradient: 'from-purple-500 to-pink-500' },
@@ -108,28 +106,23 @@ const Header = () => {
                 <a 
                   key={item.name}
                   href={`#${item.name.toLowerCase()}`} 
-                  className={`relative px-6 py-3 text-sm font-semibold text-white transition-all duration-500 group overflow-hidden rounded-xl border hover:scale-105 ${
+                  className={`relative px-4 xl:px-5 py-2 text-sm font-semibold text-foreground transition-all duration-300 group overflow-hidden rounded-lg border hover:scale-105 ${
                     isActive 
-                      ? 'border-white/40 scale-105' 
-                      : 'border-white/10 hover:border-white/30'
+                      ? 'border-primary/40 bg-primary/10' 
+                      : 'border-transparent hover:border-primary/20 hover:bg-primary/5'
                   }`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  {/* Gradient background */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} transition-all duration-500 ${
-                    isActive ? 'opacity-30' : 'opacity-0 group-hover:opacity-20'
-                  }`}></div>
-                  
-                  {/* Shimmer effect */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} blur-sm transition-all duration-500 ${
-                    isActive ? 'opacity-40' : 'opacity-10 group-hover:opacity-30'
+                  {/* Gradient background on hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} transition-all duration-300 ${
+                    isActive ? 'opacity-20' : 'opacity-0 group-hover:opacity-10'
                   }`}></div>
                   
                   {/* Text */}
-                  <span className="relative z-10 tracking-wide bg-gradient-to-r from-white to-white/80 bg-clip-text">{item.name}</span>
+                  <span className="relative z-10 tracking-wide">{item.name}</span>
                   
                   {/* Animated underline */}
-                  <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${item.gradient} transition-transform duration-500 origin-center rounded-full ${
+                  <div className={`absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-to-r ${item.gradient} transition-transform duration-300 origin-center rounded-full ${
                     isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
                   }`}></div>
                 </a>
@@ -137,122 +130,91 @@ const Header = () => {
             })}
           </nav>
 
-          {/* Digital Clock - 24hr Format */}
-          <div className="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-green-500/20 backdrop-blur-sm border-2 border-emerald-400/40 shadow-lg shadow-emerald-500/20">
-            <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 animate-pulse" />
-            <span className="text-xs sm:text-sm font-bold text-emerald-400 tracking-wider drop-shadow-glow">
-              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
-            </span>
-          </div>
+          {/* Right side controls */}
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* Digital Clock - Hidden on small screens */}
+            <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-primary/10 backdrop-blur-sm border border-primary/20">
+              <Clock className="w-4 h-4 text-primary" />
+              <span className="text-xs font-semibold text-foreground/80 tracking-wider font-mono">
+                {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
+              </span>
+            </div>
 
-          {/* Theme Toggle Button */}
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="hidden lg:flex w-11 h-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-110 group relative overflow-hidden"
-            aria-label="Toggle theme"
-          >
-            <Sun className="w-5 h-5 text-primary absolute transition-all duration-500 rotate-0 scale-100 dark:-rotate-90 dark:scale-0" />
-            <Moon className="w-5 h-5 text-primary absolute transition-all duration-500 rotate-90 scale-0 dark:rotate-0 dark:scale-100" />
-            <div className="absolute inset-0 rounded-xl bg-primary/10 scale-0 group-hover:scale-100 transition-transform duration-300"></div>
-          </button>
+            {/* Theme Toggle - Hidden on small screens */}
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="hidden md:flex w-9 h-9 lg:w-10 lg:h-10 items-center justify-center rounded-lg bg-primary/10 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 group"
+              aria-label="Toggle theme"
+            >
+              <Sun className="w-4 h-4 lg:w-5 lg:h-5 text-foreground absolute transition-all duration-300 rotate-0 scale-100 dark:-rotate-90 dark:scale-0" />
+              <Moon className="w-4 h-4 lg:w-5 lg:h-5 text-foreground absolute transition-all duration-300 rotate-90 scale-0 dark:rotate-0 dark:scale-100" />
+            </button>
 
-          {/* Modern CTA Button */}
-          <div className="hidden lg:flex items-center space-x-4">
+            {/* CTA Button - Desktop only */}
             <Button 
               asChild 
-              className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-700 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-cyan-400/50 hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-cyan-400/30 hover:border-cyan-300/50"
+              className="hidden lg:flex bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground font-semibold px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
             >
-              <a href="#contact" className="flex items-center space-x-2 group">
-                <span className="relative z-10 tracking-wide">Get Started</span>
-                <ChevronDown className="w-4 h-4 rotate-270 transition-transform duration-300 group-hover:translate-x-1 group-hover:rotate-[225deg]" />
-                {/* Tech glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 to-blue-500/20 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
-                {/* Pulse ring */}
-                <div className="absolute inset-0 rounded-xl border-2 border-cyan-400/0 group-hover:border-cyan-400/50 animate-pulse"></div>
+              <a href="#contact" className="flex items-center space-x-1.5">
+                <span>Get Started</span>
+                <ChevronDown className="w-4 h-4 rotate-[-90deg]" />
               </a>
             </Button>
-          </div>
 
-          {/* Ultra-modern Mobile Menu Button */}
-          <button
-            className="lg:hidden relative w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/5 backdrop-blur-sm border border-primary/20 flex items-center justify-center group transition-all duration-300 hover:scale-105 hover:bg-primary/10"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <div className="relative w-6 h-6">
-              <Menu className={`absolute inset-0 w-6 h-6 text-white transition-all duration-300 ${isMenuOpen ? 'opacity-0 rotate-180' : 'opacity-100 rotate-0'}`} />
-              <X className={`absolute inset-0 w-6 h-6 text-white transition-all duration-300 ${isMenuOpen ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-180'}`} />
-            </div>
-            {/* Pulse effect */}
-            <div className="absolute inset-0 rounded-xl bg-primary/20 scale-0 group-hover:scale-100 transition-transform duration-300"></div>
-          </button>
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden relative w-10 h-10 rounded-lg bg-primary/10 backdrop-blur-sm border border-primary/20 flex items-center justify-center group transition-all duration-300 hover:bg-primary/20"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <div className="relative w-5 h-5">
+                <Menu className={`absolute inset-0 w-5 h-5 text-foreground transition-all duration-300 ${isMenuOpen ? 'opacity-0 rotate-180' : 'opacity-100 rotate-0'}`} />
+                <X className={`absolute inset-0 w-5 h-5 text-foreground transition-all duration-300 ${isMenuOpen ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-180'}`} />
+              </div>
+            </button>
+          </div>
         </div>
 
-        {/* Sleek Mobile Menu */}
-        <div className={`lg:hidden transition-all duration-500 ease-out ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
-          <div className="py-6 px-2 bg-gradient-to-br from-background/95 via-background/90 to-background/95 backdrop-blur-xl rounded-2xl mt-4 border border-primary/10 shadow-2xl">
-            <nav className="flex flex-col space-y-3">
+        {/* Mobile Menu */}
+        <div className={`lg:hidden transition-all duration-300 ease-out ${isMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
+          <div className="py-4 px-2 bg-background/95 backdrop-blur-xl rounded-xl mt-2 border border-primary/10 shadow-lg">
+            <nav className="flex flex-col space-y-1">
               {[
-                { name: 'Home', gradient: 'from-blue-500 to-cyan-500', icon: '🏠' },
-                { name: 'Services', gradient: 'from-purple-500 to-pink-500', icon: '⚡' },
-                { name: 'About', gradient: 'from-green-500 to-emerald-500', icon: '📋' },
-                { name: 'FAQ', gradient: 'from-yellow-500 to-orange-500', icon: '❓' },
-                { name: 'Contact', gradient: 'from-orange-500 to-red-500', icon: '📞' }
-              ].map((item, index) => {
+                { name: 'Home', gradient: 'from-blue-500 to-cyan-500' },
+                { name: 'Services', gradient: 'from-purple-500 to-pink-500' },
+                { name: 'About', gradient: 'from-green-500 to-emerald-500' },
+                { name: 'FAQ', gradient: 'from-yellow-500 to-orange-500' },
+                { name: 'Contact', gradient: 'from-orange-500 to-red-500' }
+              ].map((item) => {
                 const isActive = activeSection === item.name.toLowerCase();
                 return (
                   <a 
                     key={item.name}
                     href={`#${item.name.toLowerCase()}`} 
-                    className={`relative px-6 py-4 text-white font-semibold transition-all duration-300 rounded-xl group overflow-hidden border hover:scale-105 ${
+                    className={`relative px-4 py-3 text-foreground font-medium transition-all duration-200 rounded-lg ${
                       isActive 
-                        ? 'border-white/40 scale-105' 
-                        : 'border-white/10 hover:border-white/30'
+                        ? 'bg-primary/10' 
+                        : 'hover:bg-primary/5'
                     }`}
-                    style={{ animationDelay: `${index * 0.1}s` }}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {/* Gradient background */}
-                    <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} transition-all duration-300 ${
-                      isActive ? 'opacity-30' : 'opacity-10 group-hover:opacity-25'
+                    <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} rounded-lg transition-opacity duration-200 ${
+                      isActive ? 'opacity-10' : 'opacity-0'
                     }`}></div>
-                    
-                    {/* Text with icon */}
-                    <span className="relative z-10 tracking-wide flex items-center gap-3">
-                      <span className="text-xl">{item.icon}</span>
-                      {item.name}
-                    </span>
-                    
-                    {/* Side accent */}
-                    <div className={`absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b ${item.gradient} transition-transform duration-300 rounded-full ${
-                      isActive ? 'scale-y-100' : 'scale-y-0 group-hover:scale-y-100'
-                    }`}></div>
+                    <span className="relative z-10">{item.name}</span>
                   </a>
                 );
               })}
               
               {/* Mobile CTA */}
-              <div className="pt-4 px-4 space-y-3">
+              <div className="pt-3 px-2">
                 <Button 
                   asChild 
-                  className="w-full bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-700 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-cyan-400/50 hover:shadow-xl transition-all duration-500 hover:scale-105 border border-cyan-400/30"
+                  className="w-full bg-gradient-to-r from-primary to-secondary text-primary-foreground font-semibold py-3 rounded-lg"
                 >
-                  <a href="#contact" onClick={() => setIsMenuOpen(false)} className="tracking-wide">
+                  <a href="#contact" onClick={() => setIsMenuOpen(false)}>
                     Get Started
                   </a>
                 </Button>
-                
-                {/* Mobile Theme Toggle */}
-                <button
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 group relative overflow-hidden text-white font-semibold"
-                >
-                  <Sun className="w-5 h-5 text-primary transition-all duration-500 rotate-0 scale-100 dark:-rotate-90 dark:scale-0" />
-                  <Moon className="w-5 h-5 text-primary transition-all duration-500 rotate-90 scale-0 dark:rotate-0 dark:scale-100" />
-                  <span className="relative z-10">
-                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </button>
               </div>
             </nav>
           </div>
