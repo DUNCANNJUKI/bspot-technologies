@@ -22,7 +22,7 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="py-20 sm:py-24 bg-background relative overflow-hidden">
+    <div className="py-20 sm:py-24 bg-background relative overflow-hidden">
       {/* Tech Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-20 w-40 h-40 border-2 border-primary rounded-full animate-pulse" style={{ boxShadow: 'var(--tech-glow)' }} />
@@ -122,7 +122,7 @@ const About = () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

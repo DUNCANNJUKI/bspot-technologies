@@ -107,7 +107,7 @@ const FAQ = () => {
   ];
 
   return (
-    <section id="faq" className="py-20 sm:py-24 bg-background relative overflow-hidden">
+    <div className="py-20 sm:py-24 bg-background relative overflow-hidden">
       {/* Elegant Background Elements */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-32 left-16 w-64 h-64 border-2 border-primary rounded-full animate-float" />
@@ -187,7 +187,7 @@ const FAQ = () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

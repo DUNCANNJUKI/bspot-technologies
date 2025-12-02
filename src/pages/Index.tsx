@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ServicesSkeleton from "@/components/ServicesSkeleton";
+import { AnimatedSection } from "@/components/AnimatedSection";
 
 // Lazy load components to reduce initial bundle size and improve performance
 const Services = lazy(() => import("@/components/Services"));
@@ -19,12 +20,20 @@ const Index = () => {
       <main className="pt-20 w-full overflow-x-hidden">
         <Hero />
         <Suspense fallback={<ServicesSkeleton />}>
-          <Services />
+          <AnimatedSection id="services">
+            <Services />
+          </AnimatedSection>
         </Suspense>
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
-          <About />
-          <FAQ />
-          <Contact />
+          <AnimatedSection id="about">
+            <About />
+          </AnimatedSection>
+          <AnimatedSection id="faq">
+            <FAQ />
+          </AnimatedSection>
+          <AnimatedSection id="contact">
+            <Contact />
+          </AnimatedSection>
           <Footer />
         </Suspense>
       </main>
