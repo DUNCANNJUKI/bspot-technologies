@@ -133,9 +133,9 @@ const Header = () => {
           {/* Right side controls */}
           <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Digital Clock - Hidden on small screens */}
-            <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-primary/10 backdrop-blur-sm border border-primary/20">
-              <Clock className="w-4 h-4 text-primary" />
-              <span className="text-xs font-semibold text-foreground/80 tracking-wider font-mono">
+            <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 backdrop-blur-sm border border-primary/30 shadow-lg shadow-primary/10 animate-pulse-glow">
+              <Clock className="w-4 h-4 text-primary animate-spin-slow" />
+              <span className="text-sm font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent tracking-wider font-mono tabular-nums animate-text-shimmer bg-[length:200%_auto]">
                 {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
               </span>
             </div>
