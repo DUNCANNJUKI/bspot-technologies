@@ -170,7 +170,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 sm:py-24 bg-background relative overflow-hidden">
+    <div className="py-20 sm:py-24 bg-background relative overflow-hidden">
       {/* Tech Background Elements */}
       <div className="absolute top-20 left-10 w-24 h-24 border-2 border-primary/20 rounded-full animate-pulse opacity-30" />
       <div className="absolute bottom-20 right-10 w-20 h-20 bg-primary/10 rounded-xl rotate-45 animate-float" style={{ animationDelay: '1s' }} />
@@ -369,7 +369,7 @@ const Contact = () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
