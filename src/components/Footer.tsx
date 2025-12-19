@@ -1,32 +1,52 @@
 import { Wifi, Phone, Mail, MapPin, Radio, Rss, Facebook, Youtube } from "lucide-react";
 import VisitorCounter from "./VisitorCounter";
+import techClimbingMast from "@/assets/tech-climbing-mast.jpg";
+import techCables from "@/assets/tech-cables.jpg";
+import dataCenter from "@/assets/data-center.jpg";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   
   return (
     <footer className="relative bg-gradient-to-br from-background via-background/95 to-primary/5 border-t border-primary/20 overflow-hidden">
-      {/* Animated WiFi Hotspot Signs Background */}
+      {/* Animated Tech Images Background */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* WiFi Signal 1 */}
-        <div className="absolute top-10 left-10 opacity-10">
-          <Wifi className="w-16 h-16 text-primary animate-[wifi-swing-1_8s_ease-in-out_infinite]" />
+        {/* Tech climbing mast */}
+        <div className="absolute top-8 right-8 w-32 h-32 lg:w-48 lg:h-48 rounded-2xl overflow-hidden opacity-20 hover:opacity-40 transition-opacity duration-500">
+          <img 
+            src={techClimbingMast} 
+            alt="Technician climbing network mast" 
+            className="w-full h-full object-cover animate-[float_8s_ease-in-out_infinite]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
         </div>
-        {/* WiFi Signal 2 */}
-        <div className="absolute top-20 right-20 opacity-15">
-          <Radio className="w-12 h-12 text-cyan-400 animate-[wifi-swing-2_6s_ease-in-out_infinite_0.5s]" />
+        
+        {/* Tech with cables */}
+        <div className="absolute bottom-32 left-8 w-28 h-28 lg:w-40 lg:h-40 rounded-2xl overflow-hidden opacity-20 hover:opacity-40 transition-opacity duration-500">
+          <img 
+            src={techCables} 
+            alt="Technician organizing network cables" 
+            className="w-full h-full object-cover animate-[float_6s_ease-in-out_infinite_1s]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
         </div>
-        {/* WiFi Signal 3 */}
-        <div className="absolute bottom-32 left-1/4 opacity-8">
-          <Rss className="w-20 h-20 text-blue-400 animate-[wifi-swing-3_10s_ease-in-out_infinite_1s]" />
+        
+        {/* Data center */}
+        <div className="absolute top-1/2 right-1/4 w-36 h-36 lg:w-52 lg:h-52 rounded-2xl overflow-hidden opacity-15 hover:opacity-35 transition-opacity duration-500 hidden lg:block">
+          <img 
+            src={dataCenter} 
+            alt="Modern data center" 
+            className="w-full h-full object-cover animate-[float_10s_ease-in-out_infinite_2s]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
         </div>
-        {/* WiFi Signal 4 */}
-        <div className="absolute top-1/2 right-10 opacity-12">
-          <Wifi className="w-14 h-14 text-purple-400 animate-[wifi-swing-1_7s_ease-in-out_infinite_1.5s]" />
+
+        {/* WiFi Signal decorations */}
+        <div className="absolute top-20 left-1/3 opacity-10">
+          <Wifi className="w-12 h-12 text-primary animate-pulse" />
         </div>
-        {/* WiFi Signal 5 */}
-        <div className="absolute bottom-20 right-1/3 opacity-10">
-          <Radio className="w-18 h-18 text-emerald-400 animate-[wifi-swing-2_9s_ease-in-out_infinite_2s]" />
+        <div className="absolute bottom-20 right-20 opacity-10">
+          <Radio className="w-10 h-10 text-cyan-400 animate-pulse" />
         </div>
       </div>
 
@@ -98,10 +118,10 @@ const Footer = () => {
                 </div>
               </div>
               
-              {/* Social Media Links */}
-              <div className="pt-4">
-                <h4 className="text-foreground font-bold mb-4 text-base sm:text-lg">Connect With Us</h4>
-                <div className="flex items-center space-x-3 sm:space-x-4">
+              {/* Social Media Links - Better Aligned */}
+              <div className="pt-6">
+                <h4 className="text-foreground font-bold mb-4 text-base sm:text-lg">Follow Us</h4>
+                <div className="flex items-center gap-4">
                   <a 
                     href="https://www.facebook.com/people/B-Spot-Technologies/61574108452350/?rdid=DTgk4hdhIKNRQlaM&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F17CUFWVonm%2F" 
                     target="_blank" 
@@ -109,9 +129,9 @@ const Footer = () => {
                     className="group"
                     aria-label="Follow us on Facebook"
                   >
-                    <div className="relative w-12 h-12 rounded-xl bg-[#1877F2] flex items-center justify-center group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-[#1877F2]/50 transition-all duration-300 overflow-hidden">
+                    <div className="relative w-11 h-11 rounded-xl bg-[#1877F2] flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-[#1877F2]/40 transition-all duration-300 overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <Facebook className="w-6 h-6 text-white relative z-10" fill="white" />
+                      <Facebook className="w-5 h-5 text-white relative z-10" fill="white" />
                     </div>
                   </a>
                   <a 
@@ -121,9 +141,9 @@ const Footer = () => {
                     className="group"
                     aria-label="Subscribe on YouTube"
                   >
-                    <div className="relative w-12 h-12 rounded-xl bg-[#FF0000] flex items-center justify-center group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-[#FF0000]/50 transition-all duration-300 overflow-hidden">
+                    <div className="relative w-11 h-11 rounded-xl bg-[#FF0000] flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-[#FF0000]/40 transition-all duration-300 overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <Youtube className="w-6 h-6 text-white relative z-10" fill="white" />
+                      <Youtube className="w-5 h-5 text-white relative z-10" fill="white" />
                     </div>
                   </a>
                   <a 
@@ -133,10 +153,10 @@ const Footer = () => {
                     className="group"
                     aria-label="Follow us on X"
                   >
-                    <div className="relative w-12 h-12 rounded-xl bg-[#000000] dark:bg-[#FFFFFF] flex items-center justify-center group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-slate-500/50 transition-all duration-300 overflow-hidden">
+                    <div className="relative w-11 h-11 rounded-xl bg-[#000000] dark:bg-[#FFFFFF] flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-slate-500/40 transition-all duration-300 overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-white/20 dark:from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <svg 
-                        className="w-5 h-5 text-white dark:text-black relative z-10" 
+                        className="w-4 h-4 text-white dark:text-black relative z-10" 
                         viewBox="0 0 24 24" 
                         fill="currentColor"
                       >
