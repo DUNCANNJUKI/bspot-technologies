@@ -5,6 +5,7 @@ interface WeatherData {
   temperature: number;
   weatherCode: number;
   isDay: boolean;
+  locationName: string;
 }
 
 const getWeatherIcon = (code: number, isDay: boolean) => {
@@ -38,19 +39,34 @@ export function WeatherWidget() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchWeather = async (lat: number, lon: number) => {
+    const fetchLocationName = async (lat: number, lon: number): Promise<string> => {
       try {
         const response = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&timezone=auto`
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10`
         );
-        
-        if (!response.ok) throw new Error('Weather fetch failed');
-        
+        if (!response.ok) return 'Unknown';
         const data = await response.json();
+        return data.address?.city || data.address?.town || data.address?.county || data.address?.state || 'Unknown';
+      } catch {
+        return 'Unknown';
+      }
+    };
+
+    const fetchWeather = async (lat: number, lon: number) => {
+      try {
+        const [weatherResponse, locationName] = await Promise.all([
+          fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&timezone=auto`),
+          fetchLocationName(lat, lon)
+        ]);
+        
+        if (!weatherResponse.ok) throw new Error('Weather fetch failed');
+        
+        const data = await weatherResponse.json();
         setWeather({
           temperature: Math.round(data.current.temperature_2m),
           weatherCode: data.current.weather_code,
           isDay: data.current.is_day === 1,
+          locationName,
         });
         setLoading(false);
       } catch (err) {
@@ -105,12 +121,15 @@ export function WeatherWidget() {
       <div className="transition-transform duration-300 group-hover:scale-125">
         {getWeatherIcon(weather.weatherCode, weather.isDay)}
       </div>
-      <div className="flex items-center space-x-1">
+      <div className="flex items-center space-x-1.5">
         <span className="text-sm font-bold bg-gradient-to-r from-secondary via-primary to-secondary bg-clip-text text-transparent tabular-nums">
           {weather.temperature}°C
         </span>
         <span className="text-xs text-muted-foreground hidden lg:inline">
           {getWeatherDescription(weather.weatherCode)}
+        </span>
+        <span className="text-xs text-primary/70 hidden xl:inline border-l border-secondary/30 pl-1.5">
+          {weather.locationName}
         </span>
       </div>
     </div>
