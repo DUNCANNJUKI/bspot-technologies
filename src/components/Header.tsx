@@ -2,6 +2,7 @@ import { Button } from "./ui/button";
 import { Menu, X, ChevronDown, Clock, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "./ThemeProvider";
+import { WeatherWidget } from "./WeatherWidget";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -132,6 +133,9 @@ const Header = () => {
 
           {/* Right side controls */}
           <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* Weather Widget - Hidden on small screens */}
+            <WeatherWidget />
+
             {/* Digital Clock - Hidden on small screens */}
             <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 backdrop-blur-sm border border-primary/30 shadow-lg shadow-primary/10 animate-pulse-glow">
               <Clock className="w-4 h-4 text-primary animate-spin-slow" />
