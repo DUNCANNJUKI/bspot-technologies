@@ -98,6 +98,10 @@ const config: Config = {
         'text-shimmer': 'textShimmer 3s linear infinite',
       },
       keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0) scale(1)', opacity: '0.2' },
+          '50%': { transform: 'translateY(-10px) scale(1.02)', opacity: '0.3' },
+        },
         pulseGlow: {
           '0%, 100%': { boxShadow: '0 0 5px hsl(var(--primary) / 0.3), 0 0 10px hsl(var(--primary) / 0.2)' },
           '50%': { boxShadow: '0 0 15px hsl(var(--primary) / 0.5), 0 0 25px hsl(var(--primary) / 0.3)' },
