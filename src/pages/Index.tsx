@@ -8,6 +8,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 // Lazy load components to reduce initial bundle size and improve performance
 const Services = lazy(() => import("@/components/Services"));
 const About = lazy(() => import("@/components/About"));
+const Testimonials = lazy(() => import("@/components/Testimonials"));
 const FAQ = lazy(() => import("@/components/FAQ"));
 const Contact = lazy(() => import("@/components/Contact"));
 const Footer = lazy(() => import("@/components/Footer"));
@@ -27,6 +28,9 @@ const Index = () => {
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
           <AnimatedSection id="about">
             <About />
+          </AnimatedSection>
+          <AnimatedSection id="testimonials">
+            <Testimonials />
           </AnimatedSection>
           <AnimatedSection id="faq">
             <FAQ />
