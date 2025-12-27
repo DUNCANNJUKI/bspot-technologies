@@ -1,6 +1,13 @@
 import { Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface Testimonial {
   id: number;
@@ -17,7 +24,7 @@ const testimonials: Testimonial[] = [
     id: 1,
     name: "James Mwangi",
     role: "IT Director",
-    company: "Safaricom PLC",
+    company: "Nairobi Tech Solutions",
     content: "Bspot Networks transformed our connectivity infrastructure. Their fiber installation was seamless, and the uptime has been exceptional. Highly recommend their services!",
     rating: 5,
   },
@@ -25,7 +32,7 @@ const testimonials: Testimonial[] = [
     id: 2,
     name: "Aisha Ochieng",
     role: "Operations Manager",
-    company: "Kenya Airways",
+    company: "Mombasa Logistics Ltd",
     content: "The team's expertise in network solutions is unmatched. They delivered our enterprise WiFi project ahead of schedule with outstanding quality.",
     rating: 5,
   },
@@ -33,7 +40,7 @@ const testimonials: Testimonial[] = [
     id: 3,
     name: "David Kimani",
     role: "CEO",
-    company: "TechHub Nairobi",
+    company: "Kisumu Business Hub",
     content: "Reliable, professional, and innovative. Bspot Networks has been our trusted partner for all networking needs. Their support team is always responsive.",
     rating: 5,
   },
@@ -41,7 +48,7 @@ const testimonials: Testimonial[] = [
     id: 4,
     name: "Grace Wanjiku",
     role: "Facility Manager",
-    company: "Kenyatta Hospital",
+    company: "Eldoret Medical Center",
     content: "Critical infrastructure requires reliable connectivity. Bspot delivered exactly that - robust network solutions that our medical facility depends on daily.",
     rating: 4,
   },
@@ -49,7 +56,7 @@ const testimonials: Testimonial[] = [
     id: 5,
     name: "Michael Otieno",
     role: "CTO",
-    company: "M-Pesa Foundation",
+    company: "Nakuru Digital Agency",
     content: "From consultation to implementation, the Bspot team demonstrated exceptional professionalism. Our data center connectivity has never been better.",
     rating: 5,
   },
@@ -57,7 +64,7 @@ const testimonials: Testimonial[] = [
     id: 6,
     name: "Sarah Njeri",
     role: "Branch Manager",
-    company: "Equity Bank",
+    company: "Thika Coffee Exporters",
     content: "Outstanding service! The network infrastructure they installed has significantly improved our branch operations and customer experience.",
     rating: 5,
   },
@@ -87,7 +94,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
     .join("");
 
   return (
-    <Card className="bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+    <Card className="bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 h-full">
       <CardContent className="p-6">
         <div className="flex items-start gap-4 mb-4">
           <Avatar className="h-12 w-12 border-2 border-primary/20">
@@ -124,7 +131,32 @@ export default function Testimonials() {
             Trusted by leading organizations across Kenya for reliable network solutions
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        {/* Mobile Carousel */}
+        <div className="md:hidden">
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-2">
+              {testimonials.map((testimonial) => (
+                <CarouselItem key={testimonial.id} className="pl-2 basis-[85%]">
+                  <TestimonialCard testimonial={testimonial} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="flex justify-center gap-4 mt-6">
+              <CarouselPrevious className="static translate-y-0" />
+              <CarouselNext className="static translate-y-0" />
+            </div>
+          </Carousel>
+        </div>
+
+        {/* Desktop Grid */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((testimonial) => (
             <TestimonialCard key={testimonial.id} testimonial={testimonial} />
           ))}
