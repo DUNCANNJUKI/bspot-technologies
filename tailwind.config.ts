@@ -96,6 +96,7 @@ const config: Config = {
         'spin-slow': 'spin 4s linear infinite',
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
         'text-shimmer': 'textShimmer 3s linear infinite',
+        'blink': 'blink 1s ease-in-out infinite',
       },
       keyframes: {
         float: {
@@ -109,6 +110,10 @@ const config: Config = {
         textShimmer: {
           '0%': { backgroundPosition: '200% center' },
           '100%': { backgroundPosition: '-200% center' },
+        },
+        blink: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.3' },
         },
       },
     },

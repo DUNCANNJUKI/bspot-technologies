@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ServicesSkeleton from "@/components/ServicesSkeleton";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { NetworkDecor } from "@/components/NetworkDecor";
 
 // Lazy load components to reduce initial bundle size and improve performance
 const Services = lazy(() => import("@/components/Services"));
@@ -18,6 +19,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background font-sans w-full overflow-x-hidden">
       <Header />
+      {/* Network equipment decorations on sides */}
+      <NetworkDecor position="both" showAd={true} />
       <main className="pt-20 w-full overflow-x-hidden">
         <Hero />
         <Suspense fallback={<ServicesSkeleton />}>
