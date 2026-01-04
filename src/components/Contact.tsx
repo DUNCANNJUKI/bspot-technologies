@@ -3,10 +3,12 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { Phone, Mail, MapPin, Clock, Facebook, Youtube } from "lucide-react";
+import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { SocialLinks } from "./SocialLinks";
+import { FloatingTechIcons } from "./FloatingTechIcons";
 
 const contactSchema = z.object({
   firstName: z.string()
@@ -52,26 +54,26 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Phone",
-      details: ["+254-750-444-167", "24/7 Support Line"],
-      description: "Call us for immediate assistance"
+      details: ["+254-750-444-167"],
+      description: "24/7 Support Line"
     },
     {
       icon: Mail,
       title: "Email",
       details: ["bspottechnologies@gmail.com"],
-      description: "Send us your inquiries"
+      description: "Business Inquiries"
     },
     {
       icon: MapPin,
       title: "Service Area",
-      details: ["Nairobi Area Coverage", "Nationwide Solutions"],
-      description: "We serve multiple locations"
+      details: ["Nairobi, Kikuyu, Meru, Regen"],
+      description: "Nationwide Coverage"
     },
     {
       icon: Clock,
       title: "Business Hours",
-      details: ["Mon-Fri: 8AM-6PM", "24/7 Emergency Support"],
-      description: "When you can reach us"
+      details: ["Mon-Fri: 8AM-6PM"],
+      description: "24/7 Emergency Support"
     }
   ];
 
@@ -170,40 +172,39 @@ const Contact = () => {
   };
 
   return (
-    <div className="py-20 sm:py-24 bg-background relative overflow-hidden">
-      {/* Tech Background Elements */}
-      <div className="absolute top-20 left-10 w-24 h-24 border-2 border-primary/20 rounded-full animate-pulse opacity-30" />
-      <div className="absolute bottom-20 right-10 w-20 h-20 bg-primary/10 rounded-xl rotate-45 animate-float" style={{ animationDelay: '1s' }} />
+    <div className="py-16 sm:py-20 lg:py-24 bg-background relative overflow-hidden">
+      {/* Floating Tech Icons Background */}
+      <FloatingTechIcons variant="dense" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16 sm:mb-20 animate-scale-in">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 sm:mb-8 leading-tight">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-12 sm:mb-16 animate-scale-in">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
             Get In <span className="bg-gradient-primary bg-clip-text text-transparent">Touch</span>
           </h2>
-          <p className="text-lg sm:text-xl md:text-2xl text-foreground/70 max-w-4xl mx-auto leading-relaxed">
-            Transform your connectivity vision into reality. Let's craft a 
-            <span className="text-primary font-bold"> bespoke solution</span> that elevates your digital experience.
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+            Ready to transform your connectivity? Let's craft a solution tailored to your needs.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
-          {/* Professional Contact Information */}
-          <div className="animate-slide-up">
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 sm:mb-10 bg-gradient-secondary bg-clip-text text-transparent">Connect With Excellence</h3>
-            <div className="grid gap-6 sm:gap-8">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* Contact Information */}
+          <div className="space-y-6 animate-slide-up">
+            <h3 className="text-xl sm:text-2xl font-bold mb-6 bg-gradient-secondary bg-clip-text text-transparent">
+              Connect With Us
+            </h3>
+            
+            <div className="grid gap-4">
               {contactInfo.map((info, index) => (
-                <Card key={index} className="luxury-card hover:-translate-y-2 transition-all duration-500 group border-primary/20" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <CardContent className="p-6 sm:p-8">
-                    <div className="flex items-start space-x-4 sm:space-x-6">
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-primary rounded-xl flex items-center justify-center shadow-tech-glow group-hover:scale-110 transition-all duration-500 flex-shrink-0">
-                        <info.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground" />
+                <Card key={index} className="bg-card/50 backdrop-blur-sm border-border/50 hover:-translate-y-1 transition-all duration-300">
+                  <CardContent className="p-4 sm:p-5">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-11 h-11 bg-gradient-primary rounded-xl flex items-center justify-center flex-shrink-0">
+                        <info.icon className="w-5 h-5 text-primary-foreground" />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 bg-gradient-primary bg-clip-text text-transparent">{info.title}</h4>
-                        {info.details.map((detail, idx) => (
-                          <p key={idx} className="text-primary font-bold text-base sm:text-lg mb-1 break-words">{detail}</p>
-                        ))}
-                        <p className="text-muted-foreground mt-2 font-medium text-sm sm:text-base">{info.description}</p>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="text-sm font-semibold text-foreground mb-0.5">{info.title}</h4>
+                        <p className="text-primary font-medium text-sm truncate">{info.details[0]}</p>
+                        <p className="text-muted-foreground text-xs">{info.description}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -211,125 +212,81 @@ const Contact = () => {
               ))}
             </div>
             
-            {/* Social Media Section */}
-            <Card className="luxury-card hover:-translate-y-2 transition-all duration-500 group border-primary/20 mt-8" style={{ animationDelay: '0.4s' }}>
-              <CardContent className="p-6 sm:p-8">
-                <h4 className="text-xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">Follow Us</h4>
-                <div className="flex items-center justify-start space-x-6">
-                  <a 
-                    href="https://www.facebook.com/people/B-Spot-Technologies/61574108452350/?rdid=DTgk4hdhIKNRQlaM&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F17CUFWVonm%2F" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="group/icon"
-                    aria-label="Follow us on Facebook"
-                  >
-                    <div className="relative w-16 h-16 rounded-2xl bg-[#1877F2] flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:shadow-2xl group-hover/icon:shadow-[#1877F2]/60 transition-all duration-300 overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
-                      <Facebook className="w-8 h-8 text-white relative z-10" fill="white" />
-                      <div className="absolute inset-0 rounded-2xl border-2 border-white/0 group-hover/icon:border-white/30 transition-all duration-300"></div>
-                    </div>
-                  </a>
-                  <a 
-                    href="https://youtube.com/@beeent001?si=pU8Pv6dL_F2VvG6y" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="group/icon"
-                    aria-label="Subscribe on YouTube"
-                  >
-                    <div className="relative w-16 h-16 rounded-2xl bg-[#FF0000] flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:shadow-2xl group-hover/icon:shadow-[#FF0000]/60 transition-all duration-300 overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
-                      <Youtube className="w-8 h-8 text-white relative z-10" fill="white" />
-                      <div className="absolute inset-0 rounded-2xl border-2 border-white/0 group-hover/icon:border-white/30 transition-all duration-300"></div>
-                    </div>
-                  </a>
-                  <a 
-                    href="https://x.com/ent_bee?t=QUDS0XTLVz-3R1wjJO_E-w&s=09" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="group/icon"
-                    aria-label="Follow us on X"
-                  >
-                    <div className="relative w-16 h-16 rounded-2xl bg-[#000000] dark:bg-[#FFFFFF] flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:shadow-2xl group-hover/icon:shadow-slate-500/60 transition-all duration-300 overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/30 dark:from-black/30 to-transparent opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
-                      <svg 
-                        className="w-7 h-7 text-white dark:text-black relative z-10" 
-                        viewBox="0 0 24 24" 
-                        fill="currentColor"
-                      >
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                      </svg>
-                      <div className="absolute inset-0 rounded-2xl border-2 border-white/0 dark:border-black/0 group-hover/icon:border-white/30 dark:group-hover/icon:border-black/30 transition-all duration-300"></div>
-                    </div>
-                  </a>
-                </div>
+            {/* Social Media - Single instance */}
+            <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+              <CardContent className="p-5">
+                <h4 className="text-sm font-semibold text-foreground mb-4">Follow Us</h4>
+                <SocialLinks size="lg" />
               </CardContent>
             </Card>
           </div>
 
-          {/* Professional Contact Form */}
-          <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
-            <Card className="luxury-card shadow-card-shadow border-primary/20">
-              <CardHeader className="pb-6 sm:pb-8">
-                <CardTitle className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">Send Us a Message</CardTitle>
-                <p className="text-muted-foreground text-base sm:text-lg mt-2">Let's discuss your connectivity vision</p>
+          {/* Contact Form */}
+          <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            <Card className="bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl sm:text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                  Send Us a Message
+                </CardTitle>
+                <p className="text-muted-foreground text-sm mt-1">We'll get back to you within 24 hours</p>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-semibold text-foreground mb-2 sm:mb-3 block tracking-wide">First Name</label>
+                      <label className="text-xs font-medium text-foreground mb-1.5 block">First Name</label>
                       <Input 
                         placeholder="John" 
-                        className="glass-effect border-border/50 h-11 sm:h-12 text-base sm:text-lg rounded-lg"
+                        className="h-10 text-sm"
                         value={formData.firstName}
                         onChange={(e) => handleInputChange('firstName', e.target.value)}
                         maxLength={50}
                       />
-                      {errors.firstName && <p className="text-sm text-destructive mt-1">{errors.firstName}</p>}
+                      {errors.firstName && <p className="text-xs text-destructive mt-1">{errors.firstName}</p>}
                     </div>
                     <div>
-                      <label className="text-sm font-semibold text-foreground mb-2 sm:mb-3 block tracking-wide">Last Name</label>
+                      <label className="text-xs font-medium text-foreground mb-1.5 block">Last Name</label>
                       <Input 
                         placeholder="Doe" 
-                        className="glass-effect border-border/50 h-11 sm:h-12 text-base sm:text-lg rounded-lg"
+                        className="h-10 text-sm"
                         value={formData.lastName}
                         onChange={(e) => handleInputChange('lastName', e.target.value)}
                         maxLength={50}
                       />
-                      {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName}</p>}
+                      {errors.lastName && <p className="text-xs text-destructive mt-1">{errors.lastName}</p>}
                     </div>
                   </div>
                   
                   <div>
-                    <label className="text-sm font-semibold text-foreground mb-2 sm:mb-3 block tracking-wide">Email</label>
+                    <label className="text-xs font-medium text-foreground mb-1.5 block">Email</label>
                     <Input 
                       type="email" 
                       placeholder="john@example.com" 
-                      className="glass-effect border-border/50 h-11 sm:h-12 text-base sm:text-lg rounded-lg"
+                      className="h-10 text-sm"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
                       maxLength={255}
                     />
-                    {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
+                    {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
                   </div>
                   
                   <div>
-                    <label className="text-sm font-semibold text-foreground mb-2 sm:mb-3 block tracking-wide">Phone</label>
+                    <label className="text-xs font-medium text-foreground mb-1.5 block">Phone</label>
                     <Input 
                       type="tel" 
                       placeholder="+254-750-444-167" 
-                      className="glass-effect border-border/50 h-11 sm:h-12 text-base sm:text-lg rounded-lg"
+                      className="h-10 text-sm"
                       value={formData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
                       maxLength={20}
                     />
-                    {errors.phone && <p className="text-sm text-destructive mt-1">{errors.phone}</p>}
+                    {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
                   </div>
                   
                   <div>
-                    <label className="text-sm font-semibold text-foreground mb-2 sm:mb-3 block tracking-wide">Service Needed</label>
+                    <label className="text-xs font-medium text-foreground mb-1.5 block">Service Needed</label>
                     <select 
-                      className="w-full p-3 sm:p-4 border border-border/50 rounded-lg glass-effect text-foreground text-base sm:text-lg h-11 sm:h-12 bg-background"
+                      className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground text-sm h-10"
                       value={formData.service}
                       onChange={(e) => handleInputChange('service', e.target.value)}
                     >
@@ -339,26 +296,26 @@ const Contact = () => {
                       <option>Technical Support</option>
                       <option>Other</option>
                     </select>
-                    {errors.service && <p className="text-sm text-destructive mt-1">{errors.service}</p>}
+                    {errors.service && <p className="text-xs text-destructive mt-1">{errors.service}</p>}
                   </div>
                   
                   <div>
-                    <label className="text-sm font-semibold text-foreground mb-2 sm:mb-3 block tracking-wide">
+                    <label className="text-xs font-medium text-foreground mb-1.5 block">
                       Message ({formData.message.length}/1000)
                     </label>
                     <Textarea 
                       placeholder="Tell us about your WiFi requirements..."
-                      className="glass-effect border-border/50 min-h-[120px] sm:min-h-[140px] text-base sm:text-lg rounded-lg resize-none"
+                      className="min-h-[100px] text-sm resize-none"
                       value={formData.message}
                       onChange={(e) => handleInputChange('message', e.target.value)}
                       maxLength={1000}
                     />
-                    {errors.message && <p className="text-sm text-destructive mt-1">{errors.message}</p>}
+                    {errors.message && <p className="text-xs text-destructive mt-1">{errors.message}</p>}
                   </div>
                   
                   <Button 
                     type="submit"
-                    className="w-full premium-button text-lg sm:text-xl py-6 sm:py-8 rounded-xl font-bold tracking-wide"
+                    className="w-full premium-button h-11 text-sm font-semibold"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Sending..." : "Send Message"}
