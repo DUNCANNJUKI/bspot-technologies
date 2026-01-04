@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 
-// Network equipment image URLs (placeholder images representing routers, access points, etc.)
+// Network equipment image URLs - routers, access points, switches, etc.
 const networkImages = [
-  "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=200&h=150&fit=crop", // Server rack
-  "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=200&h=150&fit=crop", // Network cables
-  "https://images.unsplash.com/photo-1606765962248-7a15d43e0f56?w=200&h=150&fit=crop", // Router
-  "https://images.unsplash.com/photo-1562408590-e32931084e23?w=200&h=150&fit=crop", // Data center
+  { url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=120&h=90&fit=crop", label: "Server Rack" },
+  { url: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=120&h=90&fit=crop", label: "Network Cables" },
+  { url: "https://images.unsplash.com/photo-1606765962248-7a15d43e0f56?w=120&h=90&fit=crop", label: "WiFi Router" },
+  { url: "https://images.unsplash.com/photo-1562408590-e32931084e23?w=120&h=90&fit=crop", label: "Data Center" },
+  { url: "https://images.unsplash.com/photo-1551703599-6b3e8379aa8c?w=120&h=90&fit=crop", label: "Network Switch" },
+  { url: "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=120&h=90&fit=crop", label: "Fiber Optics" },
+  { url: "https://images.unsplash.com/photo-1516044734145-07ca8eef8731?w=120&h=90&fit=crop", label: "Access Point" },
+  { url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=120&h=90&fit=crop", label: "Tech Hardware" },
 ];
 
 interface NetworkDecorProps {
@@ -20,59 +24,75 @@ export function NetworkDecor({ position = "both", showAd = true, className = "" 
   useEffect(() => {
     const interval = setInterval(() => {
       setAdVisible((prev) => !prev);
-    }, 800);
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const renderSide = (side: "left" | "right") => (
-    <div
-      className={`hidden xl:flex flex-col gap-4 fixed ${side === "left" ? "left-4" : "right-4"} top-1/2 -translate-y-1/2 z-10`}
-    >
-      {/* Network Equipment Images */}
-      <div className="flex flex-col gap-3">
-        {networkImages.slice(side === "left" ? 0 : 2, side === "left" ? 2 : 4).map((img, idx) => (
-          <div
-            key={idx}
-            className="relative group overflow-hidden rounded-lg border border-primary/20 shadow-lg hover:shadow-primary/20 transition-all duration-300"
-          >
-            <img
-              src={img}
-              alt={`Network equipment ${idx + 1}`}
-              className="w-24 h-18 object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </div>
-        ))}
-      </div>
+  const leftImages = networkImages.slice(0, 4);
+  const rightImages = networkImages.slice(4, 8);
 
-      {/* Advertise Here Banner */}
-      {showAd && (
-        <div
-          className={`mt-4 px-3 py-2 rounded-lg border-2 border-dashed transition-all duration-300 cursor-pointer hover:scale-105 ${
-            adVisible
-              ? "border-primary bg-primary/10 shadow-lg shadow-primary/20"
-              : "border-primary/40 bg-primary/5"
-          }`}
-        >
-          <p
-            className={`text-xs font-bold text-center transition-all duration-300 ${
-              adVisible ? "text-primary" : "text-primary/60"
-            }`}
-          >
-            📢 Advertise
-          </p>
-          <p
-            className={`text-[10px] text-center transition-all duration-300 ${
-              adVisible ? "text-primary" : "text-primary/60"
-            }`}
-          >
-            Here
-          </p>
+  const renderSide = (side: "left" | "right") => {
+    const images = side === "left" ? leftImages : rightImages;
+    
+    return (
+      <div
+        className={`hidden 2xl:flex flex-col gap-3 fixed ${
+          side === "left" ? "left-2" : "right-2"
+        } top-1/2 -translate-y-1/2 z-10 max-h-[80vh] overflow-y-auto scrollbar-hide`}
+      >
+        {/* Network Equipment Images */}
+        <div className="flex flex-col gap-2">
+          {images.map((img, idx) => (
+            <div
+              key={idx}
+              className="relative group overflow-hidden rounded-lg border border-border/30 bg-card/50 backdrop-blur-sm shadow-md hover:shadow-xl hover:shadow-primary/20 transition-all duration-500 hover:-translate-y-1 hover:border-primary/50"
+            >
+              <img
+                src={img.url}
+                alt={img.label}
+                className="w-20 h-14 object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
+                loading="lazy"
+              />
+              {/* Hover overlay with label */}
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-1">
+                <span className="text-[9px] font-medium text-primary-foreground truncate px-1">
+                  {img.label}
+                </span>
+              </div>
+              {/* Glow effect on hover */}
+              <div className="absolute inset-0 rounded-lg ring-2 ring-primary/0 group-hover:ring-primary/40 transition-all duration-300" />
+            </div>
+          ))}
         </div>
-      )}
-    </div>
-  );
+
+        {/* Advertise Here Banner */}
+        {showAd && (
+          <div
+            className={`mt-2 px-2 py-1.5 rounded-lg border-2 border-dashed transition-all duration-500 cursor-pointer hover:scale-105 hover:-translate-y-0.5 ${
+              adVisible
+                ? "border-primary bg-primary/15 shadow-lg shadow-primary/30"
+                : "border-muted-foreground/30 bg-muted/20"
+            }`}
+          >
+            <p
+              className={`text-[10px] font-bold text-center transition-all duration-300 ${
+                adVisible ? "text-primary scale-105" : "text-muted-foreground scale-100"
+              }`}
+            >
+              📢 Advertise
+            </p>
+            <p
+              className={`text-[8px] text-center transition-all duration-300 ${
+                adVisible ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              Here
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className={className}>
