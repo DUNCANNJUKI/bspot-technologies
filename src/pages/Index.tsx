@@ -1,10 +1,11 @@
 
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ServicesSkeleton from "@/components/ServicesSkeleton";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { NetworkDecor } from "@/components/NetworkDecor";
+import PageSkeleton from "@/components/PageSkeleton";
 
 // Lazy load components to reduce initial bundle size and improve performance
 const Services = lazy(() => import("@/components/Services"));
@@ -16,6 +17,17 @@ const Footer = lazy(() => import("@/components/Footer"));
 const ChatbotWidget = lazy(() => import("@/components/ChatbotWidget"));
 
 const Index = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Show skeleton for initial load
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <PageSkeleton />;
+  }
   return (
     <div className="min-h-screen bg-background font-sans w-full overflow-x-hidden">
       <Header />

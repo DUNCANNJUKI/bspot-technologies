@@ -163,6 +163,11 @@ All colors MUST be HSL.
     @apply transition-all duration-500 hover:-translate-y-3 hover:shadow-premium-shadow;
   }
   
+  /* Slow pulse for decor elements */
+  .animate-pulse-slow {
+    animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
   .animate-fade-in {
     animation: fade-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     opacity: 0;
@@ -438,6 +443,17 @@ All colors MUST be HSL.
   }
   100% {
     stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
   }
 }
 
