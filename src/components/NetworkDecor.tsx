@@ -12,6 +12,8 @@ const networkImages = [
   { url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=120&h=90&fit=crop", label: "Tech Hardware" },
 ];
 
+type Corner = "top-left" | "top-right" | "bottom-left" | "bottom-right";
+
 interface NetworkDecorProps {
   position?: "left" | "right" | "both";
   showAd?: boolean;
@@ -20,7 +22,51 @@ interface NetworkDecorProps {
 
 export function NetworkDecor({ position = "both", showAd = true, className = "" }: NetworkDecorProps) {
   const [adVisible, setAdVisible] = useState(true);
+  const [colorIndex, setColorIndex] = useState(0);
+  const [corners, setCorners] = useState<{ left: Corner; right: Corner }>({
+    left: "top-left",
+    right: "top-right",
+  });
 
+  const colors = [
+    "from-primary/20 to-secondary/20 border-primary/40",
+    "from-secondary/20 to-accent/20 border-secondary/40",
+    "from-accent/20 to-primary/20 border-accent/40",
+  ];
+
+  const glowColors = [
+    "shadow-primary/30",
+    "shadow-secondary/30",
+    "shadow-accent/30",
+  ];
+
+  // Cycle through colors
+  useEffect(() => {
+    const colorInterval = setInterval(() => {
+      setColorIndex((prev) => (prev + 1) % colors.length);
+    }, 3000);
+    return () => clearInterval(colorInterval);
+  }, []);
+
+  // Move around corners
+  useEffect(() => {
+    const cornerOrder: Corner[] = ["top-left", "top-right", "bottom-right", "bottom-left"];
+    let leftIndex = 0;
+    let rightIndex = 1;
+
+    const moveInterval = setInterval(() => {
+      leftIndex = (leftIndex + 1) % 4;
+      rightIndex = (rightIndex + 1) % 4;
+      setCorners({
+        left: cornerOrder[leftIndex],
+        right: cornerOrder[rightIndex],
+      });
+    }, 8000);
+
+    return () => clearInterval(moveInterval);
+  }, []);
+
+  // Blink ad
   useEffect(() => {
     const interval = setInterval(() => {
       setAdVisible((prev) => !prev);
@@ -28,24 +74,38 @@ export function NetworkDecor({ position = "both", showAd = true, className = "" 
     return () => clearInterval(interval);
   }, []);
 
+  const getCornerPosition = (corner: Corner) => {
+    switch (corner) {
+      case "top-left":
+        return "top-24 left-2";
+      case "top-right":
+        return "top-24 right-2";
+      case "bottom-left":
+        return "bottom-24 left-2";
+      case "bottom-right":
+        return "bottom-24 right-2";
+    }
+  };
+
   const leftImages = networkImages.slice(0, 4);
   const rightImages = networkImages.slice(4, 8);
 
   const renderSide = (side: "left" | "right") => {
     const images = side === "left" ? leftImages : rightImages;
-    
+    const corner = side === "left" ? corners.left : corners.right;
+    const positionClass = getCornerPosition(corner);
+
     return (
       <div
-        className={`hidden 2xl:flex flex-col gap-3 fixed ${
-          side === "left" ? "left-2" : "right-2"
-        } top-1/2 -translate-y-1/2 z-10 max-h-[80vh] overflow-y-auto scrollbar-hide`}
+        className={`hidden 2xl:flex flex-col gap-3 fixed ${positionClass} z-10 transition-all duration-1000 ease-in-out`}
       >
         {/* Network Equipment Images */}
-        <div className="flex flex-col gap-2">
+        <div className={`flex flex-col gap-2 p-2 rounded-xl bg-gradient-to-br ${colors[colorIndex]} backdrop-blur-sm transition-all duration-1000`}>
           {images.map((img, idx) => (
             <div
               key={idx}
-              className="relative group overflow-hidden rounded-lg border border-border/30 bg-card/50 backdrop-blur-sm shadow-md hover:shadow-xl hover:shadow-primary/20 transition-all duration-500 hover:-translate-y-1 hover:border-primary/50"
+              className={`relative group overflow-hidden rounded-lg border bg-card/50 shadow-lg ${glowColors[colorIndex]} hover:shadow-xl transition-all duration-500 hover:-translate-y-1 animate-pulse-slow`}
+              style={{ animationDelay: `${idx * 200}ms` }}
             >
               <img
                 src={img.url}
@@ -59,8 +119,13 @@ export function NetworkDecor({ position = "both", showAd = true, className = "" 
                   {img.label}
                 </span>
               </div>
-              {/* Glow effect on hover */}
-              <div className="absolute inset-0 rounded-lg ring-2 ring-primary/0 group-hover:ring-primary/40 transition-all duration-300" />
+              {/* Color-changing border glow */}
+              <div 
+                className={`absolute inset-0 rounded-lg ring-2 ring-transparent group-hover:ring-current transition-all duration-300`}
+                style={{ 
+                  color: colorIndex === 0 ? 'hsl(195, 100%, 50%)' : colorIndex === 1 ? 'hsl(280, 85%, 60%)' : 'hsl(330, 85%, 55%)'
+                }}
+              />
             </div>
           ))}
         </div>
@@ -68,23 +133,38 @@ export function NetworkDecor({ position = "both", showAd = true, className = "" 
         {/* Advertise Here Banner */}
         {showAd && (
           <div
-            className={`mt-2 px-2 py-1.5 rounded-lg border-2 border-dashed transition-all duration-500 cursor-pointer hover:scale-105 hover:-translate-y-0.5 ${
+            className={`px-2 py-1.5 rounded-lg border-2 border-dashed transition-all duration-500 cursor-pointer hover:scale-105 ${
               adVisible
-                ? "border-primary bg-primary/15 shadow-lg shadow-primary/30"
+                ? `border-current bg-gradient-to-r ${colors[colorIndex]} shadow-lg ${glowColors[colorIndex]}`
                 : "border-muted-foreground/30 bg-muted/20"
             }`}
+            style={{
+              borderColor: adVisible 
+                ? colorIndex === 0 ? 'hsl(195, 100%, 50%)' : colorIndex === 1 ? 'hsl(280, 85%, 60%)' : 'hsl(330, 85%, 55%)'
+                : undefined
+            }}
           >
             <p
               className={`text-[10px] font-bold text-center transition-all duration-300 ${
-                adVisible ? "text-primary scale-105" : "text-muted-foreground scale-100"
+                adVisible ? "scale-105" : "text-muted-foreground scale-100"
               }`}
+              style={{
+                color: adVisible 
+                  ? colorIndex === 0 ? 'hsl(195, 100%, 50%)' : colorIndex === 1 ? 'hsl(280, 85%, 60%)' : 'hsl(330, 85%, 55%)'
+                  : undefined
+              }}
             >
               📢 Advertise
             </p>
             <p
               className={`text-[8px] text-center transition-all duration-300 ${
-                adVisible ? "text-primary" : "text-muted-foreground"
+                adVisible ? "" : "text-muted-foreground"
               }`}
+              style={{
+                color: adVisible 
+                  ? colorIndex === 0 ? 'hsl(195, 100%, 50%)' : colorIndex === 1 ? 'hsl(280, 85%, 60%)' : 'hsl(330, 85%, 55%)'
+                  : undefined
+              }}
             >
               Here
             </p>
