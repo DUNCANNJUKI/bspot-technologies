@@ -9,11 +9,13 @@ const VisitorCounter = () => {
   useEffect(() => {
     const incrementAndFetchCount = async () => {
       try {
-        // Call the function to increment visitor count
-        const { data, error } = await supabase.rpc('increment_visitor_count');
+        // Call the edge function to increment visitor count with server-side rate limiting
+        const { data, error } = await supabase.functions.invoke('increment-visitor', {
+          method: 'POST'
+        });
         
         if (error) {
-          console.error("Error incrementing visitor count:", error);
+          console.error("Error calling increment-visitor:", error);
           // Fallback: just fetch the current count
           const { data: visitors } = await supabase
             .from('site_visitors')
@@ -23,8 +25,8 @@ const VisitorCounter = () => {
           if (visitors) {
             setCount(visitors.count);
           }
-        } else {
-          setCount(data);
+        } else if (data?.count !== undefined) {
+          setCount(data.count);
         }
       } catch (err) {
         console.error("Error with visitor counter:", err);
