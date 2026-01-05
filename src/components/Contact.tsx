@@ -7,7 +7,7 @@ import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { SocialLinks } from "./SocialLinks";
+
 import { FloatingTechIcons } from "./FloatingTechIcons";
 
 const contactSchema = z.object({
@@ -211,14 +211,6 @@ const Contact = () => {
                 </Card>
               ))}
             </div>
-            
-            {/* Social Media - Single instance */}
-            <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-              <CardContent className="p-5">
-                <h4 className="text-sm font-semibold text-foreground mb-4">Follow Us</h4>
-                <SocialLinks size="lg" />
-              </CardContent>
-            </Card>
           </div>
 
           {/* Contact Form */}
