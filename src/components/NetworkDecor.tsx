@@ -97,7 +97,7 @@ export function NetworkDecor({ position = "both", showAd = true, className = "" 
 
     return (
       <div
-        className={`hidden 2xl:flex flex-col gap-3 fixed ${positionClass} z-10 transition-all duration-1000 ease-in-out`}
+        className={`hidden xl:flex flex-col gap-3 fixed ${positionClass} z-10 transition-all duration-1000 ease-in-out`}
       >
         {/* Network Equipment Images */}
         <div className={`flex flex-col gap-2 p-2 rounded-xl bg-gradient-to-br ${colors[colorIndex]} backdrop-blur-sm transition-all duration-1000`}>
