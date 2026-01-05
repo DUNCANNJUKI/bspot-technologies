@@ -77,13 +77,13 @@ export function NetworkDecor({ position = "both", showAd = true, className = "" 
   const getCornerPosition = (corner: Corner) => {
     switch (corner) {
       case "top-left":
-        return "top-24 left-2";
+        return "top-24 -left-16 hover:left-1";
       case "top-right":
-        return "top-24 right-2";
+        return "top-24 -right-16 hover:right-1";
       case "bottom-left":
-        return "bottom-24 left-2";
+        return "bottom-24 -left-16 hover:left-1";
       case "bottom-right":
-        return "bottom-24 right-2";
+        return "bottom-24 -right-16 hover:right-1";
     }
   };
 
