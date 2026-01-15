@@ -29,11 +29,11 @@ const Index = () => {
     return <PageSkeleton />;
   }
   return (
-    <div className="min-h-screen bg-background font-sans w-full overflow-x-hidden">
+    <div className="min-h-screen bg-background font-sans w-full overflow-x-hidden relative">
+      {/* Floating network equipment background */}
+      <NetworkDecor />
       <Header />
-      {/* Network equipment decorations on sides */}
-      <NetworkDecor position="both" showAd={true} />
-      <main className="pt-20 w-full overflow-x-hidden">
+      <main className="pt-20 w-full overflow-x-hidden relative z-10">
         <Hero />
         <Suspense fallback={<ServicesSkeleton />}>
           <AnimatedSection id="services">
