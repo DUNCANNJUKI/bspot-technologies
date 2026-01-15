@@ -1,10 +1,10 @@
-
 import { lazy, Suspense, useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ServicesSkeleton from "@/components/ServicesSkeleton";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { NetworkDecor } from "@/components/NetworkDecor";
+import { ParticleGrid } from "@/components/ParticleGrid";
 import PageSkeleton from "@/components/PageSkeleton";
 
 // Lazy load components to reduce initial bundle size and improve performance
@@ -13,6 +13,7 @@ const About = lazy(() => import("@/components/About"));
 const Testimonials = lazy(() => import("@/components/Testimonials"));
 const FAQ = lazy(() => import("@/components/FAQ"));
 const Contact = lazy(() => import("@/components/Contact"));
+const AdvertiseSection = lazy(() => import("@/components/AdvertiseSection"));
 const Footer = lazy(() => import("@/components/Footer"));
 const ChatbotWidget = lazy(() => import("@/components/ChatbotWidget"));
 
@@ -30,6 +31,8 @@ const Index = () => {
   }
   return (
     <div className="min-h-screen bg-background font-sans w-full overflow-x-hidden relative">
+      {/* Particle grid background effect */}
+      <ParticleGrid />
       {/* Floating network equipment background */}
       <NetworkDecor />
       <Header />
@@ -52,6 +55,9 @@ const Index = () => {
           </AnimatedSection>
           <AnimatedSection id="contact">
             <Contact />
+          </AnimatedSection>
+          <AnimatedSection id="advertise">
+            <AdvertiseSection />
           </AnimatedSection>
           <Footer />
         </Suspense>
