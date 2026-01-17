@@ -29,7 +29,7 @@ const floatingEquipment = [
   { Icon: Server, position: "top-[30%] right-[18%]", size: "w-5 h-5 md:w-8 md:h-8", delay: 3, duration: 21, glow: true },
 ];
 
-export const NetworkDecor = memo(function NetworkDecor({ className = "" }: NetworkDecorProps) {
+function NetworkDecorComponent({ className = "" }: NetworkDecorProps) {
   return (
     <div className={`fixed inset-0 overflow-hidden pointer-events-none z-0 ${className}`}>
       {/* Floating network equipment with glow effects */}
@@ -55,6 +55,7 @@ export const NetworkDecor = memo(function NetworkDecor({ className = "" }: Netwo
       <div className="gradient-orb gradient-orb-3" />
     </div>
   );
-});
+}
 
+export const NetworkDecor = memo(NetworkDecorComponent);
 export default NetworkDecor;
