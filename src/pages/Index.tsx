@@ -31,10 +31,10 @@ const Index = () => {
   }
   return (
     <div className="min-h-screen bg-background font-sans w-full overflow-x-hidden relative">
-      {/* Particle grid background effect */}
-      <ParticleGrid />
-      {/* Floating network equipment background */}
-      <NetworkDecor />
+      {/* Particle grid background effect (TEMP DISABLED FOR DEBUG) */}
+      {/* <ParticleGrid /> */}
+      {/* Floating network equipment background (TEMP DISABLED FOR DEBUG) */}
+      {/* <NetworkDecor /> */}
       <Header />
       <main className="pt-20 w-full overflow-x-hidden relative z-10">
         <Hero />
