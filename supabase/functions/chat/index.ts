@@ -1,13 +1,83 @@
 // @ts-nocheck
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { Resend } from "npm:resend@2.0.0";
 import { checkRateLimit } from "./rate-limiter.ts";
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS, GET",
   "Access-Control-Max-Age": "86400",
+};
+
+// Issue keywords to detect when user is reporting a problem
+const issueKeywords = [
+  "report issue", "report a problem", "file complaint", "complaint",
+  "not working", "broken", "down", "outage", "no internet", "no connection",
+  "slow internet", "very slow", "connection dropping", "keeps disconnecting",
+  "billing issue", "overcharged", "wrong bill", "payment problem",
+  "terrible service", "worst service", "frustrated", "angry", "unacceptable",
+  "escalate", "speak to manager", "supervisor", "urgent issue", "emergency"
+];
+
+// Function to detect if the conversation contains an issue report
+const detectIssueReport = (messages: Array<{role: string, content: string}>): {isIssue: boolean, issueDetails: string} => {
+  const userMessages = messages.filter(m => m.role === 'user');
+  const lastFewMessages = userMessages.slice(-3); // Check last 3 user messages
+  const combinedText = lastFewMessages.map(m => m.content.toLowerCase()).join(' ');
+  
+  const hasIssueKeyword = issueKeywords.some(keyword => combinedText.includes(keyword.toLowerCase()));
+  
+  if (hasIssueKeyword) {
+    return {
+      isIssue: true,
+      issueDetails: lastFewMessages.map(m => m.content).join('\n---\n')
+    };
+  }
+  
+  return { isIssue: false, issueDetails: '' };
+};
+
+// Function to send issue report email
+const sendIssueReportEmail = async (issueDetails: string, conversationHistory: string): Promise<boolean> => {
+  try {
+    const emailResponse = await resend.emails.send({
+      from: "Bspot AI <onboarding@resend.dev>",
+      to: ["bspottechnologies@gmail.com"],
+      subject: "🚨 Issue Report from Chatbot",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #DC2626; border-bottom: 2px solid #DC2626; padding-bottom: 10px;">
+            🚨 Customer Issue Report via Chatbot
+          </h2>
+          
+          <div style="background-color: #FEF2F2; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #DC2626;">
+            <h3 style="color: #DC2626; margin-top: 0;">Issue Details</h3>
+            <p style="white-space: pre-wrap;">${issueDetails}</p>
+          </div>
+          
+          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="color: #333; margin-top: 0;">Full Conversation</h3>
+            <pre style="white-space: pre-wrap; font-size: 12px; background: #fff; padding: 15px; border-radius: 5px;">${conversationHistory}</pre>
+          </div>
+          
+          <div style="color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+            <p><strong>Action Required:</strong> Please follow up with this customer as soon as possible.</p>
+            <p>Timestamp: ${new Date().toLocaleString('en-US', { timeZone: 'Africa/Nairobi' })} EAT</p>
+          </div>
+        </div>
+      `,
+    });
+    
+    console.log("Issue report email sent successfully:", emailResponse);
+    return true;
+  } catch (error) {
+    console.error("Failed to send issue report email:", error);
+    return false;
+  }
 };
 
 const getTimeGreeting = () => {
@@ -275,6 +345,16 @@ Immediately provide contact information for:
 - Legal or compliance questions
 - Any situation where human expertise would serve customer better
 
+ISSUE REPORTING CAPABILITY:
+When users report issues, problems, or complaints:
+1. Acknowledge their frustration with empathy
+2. Gather relevant details about the issue
+3. Inform them that their issue has been automatically forwarded to our support team
+4. Provide immediate troubleshooting steps if applicable
+5. Share contact information for urgent follow-up
+
+The system automatically detects and emails issue reports to our team. Let users know: "I've forwarded your issue to our support team, and they will contact you shortly. For urgent matters, please call +254-750-444-167."
+
 QUALITY STANDARDS:
 ✅ Every response should be helpful and actionable
 ✅ Never leave users without next steps
@@ -329,6 +409,18 @@ serve(async (req: Request) => {
 
     const { messages } = await req.json();
     console.log("Received chat request with", messages?.length || 0, "messages");
+    
+    // Detect if this is an issue report
+    const issueCheck = detectIssueReport(messages || []);
+    if (issueCheck.isIssue) {
+      console.log("Issue detected in conversation, sending email report");
+      const conversationHistory = (messages || [])
+        .map((m: {role: string, content: string}) => `${m.role.toUpperCase()}: ${m.content}`)
+        .join('\n\n');
+      
+      // Send email in background (don't wait for it)
+      sendIssueReportEmail(issueCheck.issueDetails, conversationHistory);
+    }
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
