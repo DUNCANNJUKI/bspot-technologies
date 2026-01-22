@@ -95,8 +95,12 @@ const About = () => {
             {/* Advertise With Us Blinking Popup */}
             <div className="mt-8 flex justify-center lg:justify-start">
               <a
-                href="#advertise"
+                href="#contact"
                 className="group relative inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-gradient-to-r from-primary/90 to-secondary/90 backdrop-blur-sm border border-primary/50 shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all duration-300 hover:scale-105 animate-pulse cursor-pointer"
+                onClick={() => {
+                  // Set a flag to indicate advertising inquiry
+                  sessionStorage.setItem('inquiry_type', 'advertising');
+                }}
               >
                 <Megaphone className="w-5 h-5 text-primary-foreground animate-bounce" />
                 <span className="text-sm sm:text-base font-bold text-primary-foreground whitespace-nowrap">
