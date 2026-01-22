@@ -1,4 +1,5 @@
 import { Card, CardContent } from "./ui/card";
+import { Megaphone } from "lucide-react";
 
 const About = () => {
 
@@ -89,6 +90,20 @@ const About = () => {
                 <span className="text-primary font-bold">To make internet access simple, affordable, and dependable for all communities</span>, 
                 empowering homes, businesses, and learning environments with seamless connectivity.
               </p>
+            </div>
+            
+            {/* Advertise With Us Blinking Popup */}
+            <div className="mt-8 flex justify-center lg:justify-start">
+              <a
+                href="#advertise"
+                className="group relative inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-gradient-to-r from-primary/90 to-secondary/90 backdrop-blur-sm border border-primary/50 shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all duration-300 hover:scale-105 animate-pulse cursor-pointer"
+              >
+                <Megaphone className="w-5 h-5 text-primary-foreground animate-bounce" />
+                <span className="text-sm sm:text-base font-bold text-primary-foreground whitespace-nowrap">
+                  Advertise With Us
+                </span>
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-ping" />
+              </a>
             </div>
           </div>
 
