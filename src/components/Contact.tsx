@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
@@ -49,6 +49,20 @@ const Contact = () => {
   });
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Check if user came from "Advertise With Us" button
+  useEffect(() => {
+    const inquiryType = sessionStorage.getItem('inquiry_type');
+    if (inquiryType === 'advertising') {
+      setFormData(prev => ({
+        ...prev,
+        service: "Advertising Inquiry",
+        message: "Hi, I'm interested in advertising opportunities with Bspot Technologies. Please share details about your advertising packages and rates."
+      }));
+      // Clear the flag after use
+      sessionStorage.removeItem('inquiry_type');
+    }
+  }, []);
 
   const contactInfo = [
     {
@@ -286,6 +300,7 @@ const Contact = () => {
                       <option>Event WiFi Services</option>
                       <option>Network Optimization</option>
                       <option>Technical Support</option>
+                      <option>Advertising Inquiry</option>
                       <option>Other</option>
                     </select>
                     {errors.service && <p className="text-xs text-destructive mt-1">{errors.service}</p>}
