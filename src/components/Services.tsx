@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Wifi, Building, Calendar, Users, Settings, Headphones } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { FloatingAdBanner } from "./FloatingAdBanner";
 import wifiConnectivity from "@/assets/wifi-connectivity.webp";
 import accessPoint from "@/assets/access-point.webp";
 
@@ -110,6 +111,10 @@ const Services = () => {
 
   return (
     <div className="py-20 sm:py-24 bg-gradient-to-br from-background via-primary/5 to-secondary/10 relative overflow-hidden">
+      {/* Floating Advertise Banners */}
+      <FloatingAdBanner position="right" delay={0} className="top-24" />
+      <FloatingAdBanner position="left" delay={2} className="bottom-32" />
+
       {/* Tech Background Elements */}
       <div
         className="absolute top-0 right-0 w-1/3 h-full bg-cover bg-center opacity-8 blur-sm"
