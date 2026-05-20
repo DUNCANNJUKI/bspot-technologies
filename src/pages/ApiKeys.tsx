@@ -31,7 +31,7 @@ export default function ApiKeys() {
 
   const create = async () => {
     if (!name.trim() || !clientId) return toast.error("Name required");
-    const raw = "btx_" + crypto.randomUUID().replaceAll("-", "") + crypto.randomUUID().replaceAll("-", "");
+    const raw = "btx_" + crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "");
     const hash = await sha256Hex(raw);
     const prefix = raw.slice(0, 10);
     const { error } = await supabase.from("api_keys").insert({ client_id: clientId, name, key_prefix: prefix, key_hash: hash });

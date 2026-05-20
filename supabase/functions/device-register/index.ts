@@ -1,0 +1,28 @@
+import { corsHeaders, json, errorRes, authApiKey, adminClient } from "../_shared/utils.ts";
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method !== "POST") return errorRes("Method not allowed", 405);
+
+  const auth = await authApiKey(req);
+  if (!auth) return errorRes("Invalid or missing API key", 401);
+
+  let body: any;
+  try { body = await req.json(); } catch { return errorRes("Invalid JSON body"); }
+  const device_name = String(body.device_name ?? "").trim();
+  if (!device_name) return errorRes("device_name required");
+
+  const token = "dev_" + crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "");
+  const sb = adminClient();
+  const { data, error } = await sb.from("devices").insert({
+    client_id: auth.client_id, device_name, device_token: token,
+    phone_number: body.phone_number ?? null,
+    sim_operator: body.sim_operator ?? null,
+    sim_slot: body.sim_slot ?? 1,
+    android_version: body.android_version ?? null,
+    app_version: body.app_version ?? null,
+    status: "offline",
+  }).select().single();
+  if (error) return errorRes(error.message, 500);
+  return json({ id: data.id, device_token: token });
+});

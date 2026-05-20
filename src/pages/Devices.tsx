@@ -39,7 +39,7 @@ export default function Devices() {
   const create = async () => {
     if (!name.trim()) return toast.error("Name required");
     if (!clientId) return toast.error("No client found");
-    const token = "dev_" + crypto.randomUUID().replaceAll("-", "");
+    const token = "dev_" + crypto.randomUUID().replace(/-/g, "");
     const { error } = await supabase.from("devices").insert({
       client_id: clientId, device_name: name, phone_number: phone, device_token: token, status: "offline",
     });
