@@ -14,6 +14,406 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_keys: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          key_hash: string
+          key_prefix: string
+          last_used_at: string | null
+          name: string
+          rate_limit: number
+          status: Database["public"]["Enums"]["api_key_status"]
+          usage_count: number
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          key_hash: string
+          key_prefix: string
+          last_used_at?: string | null
+          name: string
+          rate_limit?: number
+          status?: Database["public"]["Enums"]["api_key_status"]
+          usage_count?: number
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          key_hash?: string
+          key_prefix?: string
+          last_used_at?: string | null
+          name?: string
+          rate_limit?: number
+          status?: Database["public"]["Enums"]["api_key_status"]
+          usage_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_keys_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bulk_campaigns: {
+        Row: {
+          client_id: string
+          created_at: string
+          failed_count: number
+          id: string
+          message_template: string
+          name: string
+          scheduled_at: string | null
+          sent_count: number
+          status: Database["public"]["Enums"]["campaign_status"]
+          total_count: number
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          failed_count?: number
+          id?: string
+          message_template: string
+          name: string
+          scheduled_at?: string | null
+          sent_count?: number
+          status?: Database["public"]["Enums"]["campaign_status"]
+          total_count?: number
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          failed_count?: number
+          id?: string
+          message_template?: string
+          name?: string
+          scheduled_at?: string | null
+          sent_count?: number
+          status?: Database["public"]["Enums"]["campaign_status"]
+          total_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bulk_campaigns_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          created_at: string
+          id: string
+          monthly_quota: number
+          name: string
+          owner_user_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          monthly_quota?: number
+          name: string
+          owner_user_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          monthly_quota?: number
+          name?: string
+          owner_user_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      device_logs: {
+        Row: {
+          created_at: string
+          device_id: string
+          event_type: string
+          id: string
+          payload: Json | null
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          event_type: string
+          id?: string
+          payload?: Json | null
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          event_type?: string
+          id?: string
+          payload?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "device_logs_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "devices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      devices: {
+        Row: {
+          android_version: string | null
+          app_version: string | null
+          battery_level: number | null
+          client_id: string | null
+          created_at: string
+          device_name: string
+          device_token: string
+          id: string
+          internet_type: string | null
+          ip_address: string | null
+          last_seen: string | null
+          phone_number: string | null
+          signal_strength: number | null
+          sim_operator: string | null
+          sim_slot: number | null
+          status: Database["public"]["Enums"]["device_status"]
+          total_sms_failed: number
+          total_sms_sent: number
+          updated_at: string
+        }
+        Insert: {
+          android_version?: string | null
+          app_version?: string | null
+          battery_level?: number | null
+          client_id?: string | null
+          created_at?: string
+          device_name: string
+          device_token: string
+          id?: string
+          internet_type?: string | null
+          ip_address?: string | null
+          last_seen?: string | null
+          phone_number?: string | null
+          signal_strength?: number | null
+          sim_operator?: string | null
+          sim_slot?: number | null
+          status?: Database["public"]["Enums"]["device_status"]
+          total_sms_failed?: number
+          total_sms_sent?: number
+          updated_at?: string
+        }
+        Update: {
+          android_version?: string | null
+          app_version?: string | null
+          battery_level?: number | null
+          client_id?: string | null
+          created_at?: string
+          device_name?: string
+          device_token?: string
+          id?: string
+          internet_type?: string | null
+          ip_address?: string | null
+          last_seen?: string | null
+          phone_number?: string | null
+          signal_strength?: number | null
+          sim_operator?: string | null
+          sim_slot?: number | null
+          status?: Database["public"]["Enums"]["device_status"]
+          total_sms_failed?: number
+          total_sms_sent?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "devices_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          message_id: string
+          payload: Json | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          message_id: string
+          payload?: Json | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          message_id?: string
+          payload?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_events_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          client_id: string
+          created_at: string
+          delivered_at: string | null
+          device_id: string | null
+          encoding: string
+          error_message: string | null
+          external_reference: string | null
+          failed_at: string | null
+          id: string
+          max_retries: number
+          message: string
+          parts_count: number
+          priority: number
+          processing_at: string | null
+          provider_response: Json | null
+          recipient: string
+          retry_count: number
+          sent_at: string | null
+          status: Database["public"]["Enums"]["message_status"]
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          delivered_at?: string | null
+          device_id?: string | null
+          encoding?: string
+          error_message?: string | null
+          external_reference?: string | null
+          failed_at?: string | null
+          id?: string
+          max_retries?: number
+          message: string
+          parts_count?: number
+          priority?: number
+          processing_at?: string | null
+          provider_response?: Json | null
+          recipient: string
+          retry_count?: number
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["message_status"]
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          delivered_at?: string | null
+          device_id?: string | null
+          encoding?: string
+          error_message?: string | null
+          external_reference?: string | null
+          failed_at?: string | null
+          id?: string
+          max_retries?: number
+          message?: string
+          parts_count?: number
+          priority?: number
+          processing_at?: string | null
+          provider_response?: Json | null
+          recipient?: string
+          retry_count?: number
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["message_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "devices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          company: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          company?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          company?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       site_visitors: {
         Row: {
           count: number
@@ -32,15 +432,60 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      get_user_client_id: { Args: { _user_id: string }; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       increment_visitor_count: { Args: never; Returns: number }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      api_key_status: "active" | "revoked"
+      app_role: "super_admin" | "admin" | "client_user"
+      campaign_status:
+        | "pending"
+        | "processing"
+        | "completed"
+        | "failed"
+        | "cancelled"
+      device_status: "online" | "offline" | "sending" | "inactive" | "disabled"
+      message_status:
+        | "queued"
+        | "processing"
+        | "sent"
+        | "delivered"
+        | "failed"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -167,6 +612,25 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      api_key_status: ["active", "revoked"],
+      app_role: ["super_admin", "admin", "client_user"],
+      campaign_status: [
+        "pending",
+        "processing",
+        "completed",
+        "failed",
+        "cancelled",
+      ],
+      device_status: ["online", "offline", "sending", "inactive", "disabled"],
+      message_status: [
+        "queued",
+        "processing",
+        "sent",
+        "delivered",
+        "failed",
+        "cancelled",
+      ],
+    },
   },
 } as const
