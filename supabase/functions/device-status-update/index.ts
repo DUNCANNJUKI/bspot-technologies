@@ -1,5 +1,4 @@
-import { corsHeaders, json, errorRes, authDevice, adminClient } from "../_shared/utils.ts";
-import { dispatchEvent } from "../webhook-dispatch/index.ts";
+import { corsHeaders, json, errorRes, authDevice, adminClient, dispatchEvent } from "../_shared/utils.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
