@@ -23,3 +23,15 @@ verify_jwt = false
 
 [functions.api-keys-create]
 verify_jwt = true
+
+[functions.bootstrap-superadmin]
+verify_jwt = false
+
+[functions.claim-super-admin]
+verify_jwt = false
+
+[functions.webhook-dispatch]
+verify_jwt = false
+
+[functions.webhook-test]
+verify_jwt = false
