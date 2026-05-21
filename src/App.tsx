@@ -21,6 +21,8 @@ import Analytics from "@/pages/Analytics";
 import Logs from "@/pages/Logs";
 import Settings from "@/pages/Settings";
 import ApiDocs from "@/pages/ApiDocs";
+import Webhooks from "@/pages/Webhooks";
+import AndroidClient from "@/pages/AndroidClient";
 import NotFound from "@/pages/NotFound";
 
 const App = () => (
@@ -46,6 +48,8 @@ const App = () => (
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/logs" element={<Logs />} />
               <Route path="/api-docs" element={<ApiDocs />} />
+              <Route path="/webhooks" element={<Webhooks />} />
+              <Route path="/android-client" element={<AndroidClient />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
 

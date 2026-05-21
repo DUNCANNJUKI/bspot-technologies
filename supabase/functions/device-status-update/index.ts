@@ -1,4 +1,4 @@
-import { corsHeaders, json, errorRes, authDevice, adminClient } from "../_shared/utils.ts";
+import { corsHeaders, json, errorRes, authDevice, adminClient, dispatchEvent } from "../_shared/utils.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -34,6 +34,13 @@ Deno.serve(async (req) => {
   } else if (status === "failed") {
     await sb.from("devices").update({ total_sms_failed: (device.total_sms_failed ?? 0) + 1, last_seen: now }).eq("id", device.id);
   }
+
+  // Fire webhook (best-effort, async)
+  const evt = `message.${status}`;
+  dispatchEvent(device.client_id, evt, {
+    message_id, status, recipient: body.recipient, device_id: device.id,
+    error_message: update.error_message, timestamp: now,
+  }, message_id).catch(() => {});
 
   return json({ ok: true });
 });

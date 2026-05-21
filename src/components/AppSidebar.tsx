@@ -1,6 +1,7 @@
 import {
   LayoutDashboard, Smartphone, MessageSquare, Send, KeyRound,
   Users, BarChart3, ScrollText, FileCode2, Settings as SettingsIcon, Radio,
+  Webhook, Bot,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
@@ -17,6 +18,8 @@ const main = [
 ];
 const dev = [
   { title: "API Keys", url: "/api-keys", icon: KeyRound },
+  { title: "Webhooks", url: "/webhooks", icon: Webhook },
+  { title: "Android Client", url: "/android-client", icon: Bot },
   { title: "API Docs", url: "/api-docs", icon: FileCode2 },
 ];
 const insights = [
