@@ -453,6 +453,87 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_deliveries: {
+        Row: {
+          attempt: number
+          created_at: string
+          delivered_at: string | null
+          event_type: string
+          id: string
+          message_id: string | null
+          payload: Json
+          response_body: string | null
+          response_status: number | null
+          succeeded: boolean
+          webhook_id: string
+        }
+        Insert: {
+          attempt?: number
+          created_at?: string
+          delivered_at?: string | null
+          event_type: string
+          id?: string
+          message_id?: string | null
+          payload: Json
+          response_body?: string | null
+          response_status?: number | null
+          succeeded?: boolean
+          webhook_id: string
+        }
+        Update: {
+          attempt?: number
+          created_at?: string
+          delivered_at?: string | null
+          event_type?: string
+          id?: string
+          message_id?: string | null
+          payload?: Json
+          response_body?: string | null
+          response_status?: number | null
+          succeeded?: boolean
+          webhook_id?: string
+        }
+        Relationships: []
+      }
+      webhooks: {
+        Row: {
+          active: boolean
+          client_id: string
+          created_at: string
+          events: string[]
+          failure_count: number
+          id: string
+          last_status: number | null
+          secret: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          active?: boolean
+          client_id: string
+          created_at?: string
+          events?: string[]
+          failure_count?: number
+          id?: string
+          last_status?: number | null
+          secret?: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          active?: boolean
+          client_id?: string
+          created_at?: string
+          events?: string[]
+          failure_count?: number
+          id?: string
+          last_status?: number | null
+          secret?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
