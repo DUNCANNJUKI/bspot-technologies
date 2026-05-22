@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Smartphone, MessageSquare, Send, KeyRound,
-  Users, BarChart3, ScrollText, FileCode2, Settings as SettingsIcon, Radio,
+  Users, BarChart3, ScrollText, FileCode2, Settings as SettingsIcon,
   Webhook, Bot,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
@@ -9,6 +9,7 @@ import {
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, useSidebar,
 } from "@/components/ui/sidebar";
 import { useAuth, isAdmin } from "@/lib/auth";
+import logo from "@/assets/btextman-logo.png";
 
 const main = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -52,12 +53,10 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-2 px-2 py-3">
-          <div className="h-8 w-8 rounded-md bg-gradient-primary flex items-center justify-center shadow-glow">
-            <Radio className="h-4 w-4 text-primary-foreground" />
-          </div>
+          <img src={logo} alt="B-TEXTMAN" className="h-9 w-9 rounded-md shadow-glow object-cover" />
           {!collapsed && (
             <div className="flex flex-col leading-tight">
-              <span className="font-bold tracking-tight">B TEXTMAN</span>
+              <span className="font-bold tracking-tight">B-TEXTMAN</span>
               <span className="text-[10px] uppercase tracking-wider text-muted-foreground">SMS Gateway</span>
             </div>
           )}

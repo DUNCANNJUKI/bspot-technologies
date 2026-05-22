@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Radio, Smartphone, Zap, ShieldCheck, BarChart3, Globe2, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Smartphone, Zap, ShieldCheck, BarChart3, Globe2, ArrowRight, CheckCircle2 } from "lucide-react";
+import logo from "@/assets/btextman-logo.png";
 
 export default function Landing() {
   return (
@@ -11,11 +12,9 @@ export default function Landing() {
       <header className="relative z-10 border-b border-border/60 bg-background/70 backdrop-blur">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-md bg-gradient-primary flex items-center justify-center shadow-glow">
-              <Radio className="h-4 w-4 text-primary-foreground" />
-            </div>
+            <img src={logo} alt="B-TEXTMAN" className="h-10 w-10 rounded-md shadow-glow object-cover" />
             <div className="leading-tight">
-              <div className="font-bold tracking-tight">B TEXTMAN</div>
+              <div className="font-bold tracking-tight">B-TEXTMAN</div>
               <div className="text-[10px] uppercase tracking-wider text-muted-foreground">SMS Gateway</div>
             </div>
           </div>

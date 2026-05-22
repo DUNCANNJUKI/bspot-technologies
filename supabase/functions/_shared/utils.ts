@@ -34,13 +34,13 @@ export async function authApiKey(req: Request) {
   const raw = m[1].trim();
   const hash = await sha256Hex(raw);
   const sb = adminClient();
-  const { data } = await sb.from("api_keys").select("id,client_id,status").eq("key_hash", hash).maybeSingle();
+  const { data } = await sb.from("api_keys").select("id,client_id,status,usage_count").eq("key_hash", hash).maybeSingle();
   if (!data || data.status !== "active") return null;
-  // increment usage async (fire and forget)
-  sb.from("api_keys").update({ usage_count: undefined as any, last_used_at: new Date().toISOString() }).eq("id", data.id).then(() => {});
-  // proper atomic increment via SQL-less workaround:
-  sb.rpc as any; // noop
-  await sb.from("api_keys").update({ last_used_at: new Date().toISOString() }).eq("id", data.id);
+  // fire-and-forget usage tracking
+  sb.from("api_keys").update({
+    last_used_at: new Date().toISOString(),
+    usage_count: (data.usage_count ?? 0) + 1,
+  }).eq("id", data.id).then(() => {});
   return { client_id: data.client_id as string, api_key_id: data.id as string };
 }
 
