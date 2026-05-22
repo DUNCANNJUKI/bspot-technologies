@@ -6,14 +6,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Plus, Trash2, Send, Eye, EyeOff, Copy } from "lucide-react";
+import { Plus, Trash2, Send, Eye, EyeOff, Copy, FlaskConical, Loader2 } from "lucide-react";
 import { z } from "zod";
 
 const EVENTS = ["message.sent", "message.delivered", "message.failed", "test.ping"];
-const schema = z.object({ url: z.string().url("Must be a valid https URL").max(500) });
+const SAMPLE_PAYLOADS: Record<string, object> = {
+  "message.sent": { message_id: "msg_123", recipient: "+254700000000", status: "sent", sent_at: new Date().toISOString() },
+  "message.delivered": { message_id: "msg_123", recipient: "+254700000000", status: "delivered", delivered_at: new Date().toISOString() },
+  "message.failed": { message_id: "msg_123", recipient: "+254700000000", status: "failed", error: "Network error" },
+  "test.ping": { message: "Hello from B-TEXTMAN", at: new Date().toISOString() },
+};
+const schema = z.object({ url: z.string().url("Must be a valid URL").max(500) });
 
 export default function Webhooks() {
   const { clientId } = useAuth();
@@ -24,10 +32,18 @@ export default function Webhooks() {
   const [events, setEvents] = useState<string[]>(["message.sent", "message.delivered", "message.failed"]);
   const [showSecret, setShowSecret] = useState<Record<string, boolean>>({});
 
+  // Console state
+  const [consoleHookId, setConsoleHookId] = useState<string>("");
+  const [consoleEvent, setConsoleEvent] = useState<string>("test.ping");
+  const [consolePayload, setConsolePayload] = useState<string>(JSON.stringify(SAMPLE_PAYLOADS["test.ping"], null, 2));
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState<any>(null);
+
   const load = async () => {
     if (!clientId) return;
     const { data } = await supabase.from("webhooks").select("*").eq("client_id", clientId).order("created_at", { ascending: false });
     setHooks(data ?? []);
+    if (data?.length && !consoleHookId) setConsoleHookId(data[0].id);
     const ids = (data ?? []).map((h) => h.id);
     if (ids.length) {
       const { data: d } = await supabase.from("webhook_deliveries").select("*").in("webhook_id", ids).order("created_at", { ascending: false }).limit(50);
@@ -36,6 +52,12 @@ export default function Webhooks() {
   };
 
   useEffect(() => { load(); }, [clientId]);
+
+  useEffect(() => {
+    if (SAMPLE_PAYLOADS[consoleEvent]) {
+      setConsolePayload(JSON.stringify(SAMPLE_PAYLOADS[consoleEvent], null, 2));
+    }
+  }, [consoleEvent]);
 
   const create = async () => {
     const v = schema.safeParse({ url });
@@ -47,28 +69,34 @@ export default function Webhooks() {
     setUrl(""); setOpen(false); load();
   };
 
-  const toggle = async (h: any) => {
-    await supabase.from("webhooks").update({ active: !h.active }).eq("id", h.id);
-    load();
-  };
+  const toggle = async (h: any) => { await supabase.from("webhooks").update({ active: !h.active }).eq("id", h.id); load(); };
   const remove = async (id: string) => {
     if (!confirm("Delete this webhook?")) return;
     await supabase.from("webhooks").delete().eq("id", id); load();
   };
-  const test = async (id: string) => {
-    const { error } = await supabase.functions.invoke("webhook-test", { body: { webhook_id: id } });
-    if (error) return toast.error(error.message);
-    toast.success("Test event dispatched");
-    setTimeout(load, 1200);
-  };
   const copy = (s: string) => { navigator.clipboard.writeText(s); toast.success("Copied"); };
+
+  const runConsole = async () => {
+    if (!consoleHookId) return toast.error("Pick a webhook");
+    let payload: any;
+    try { payload = JSON.parse(consolePayload); } catch { return toast.error("Payload is not valid JSON"); }
+    setRunning(true); setResult(null);
+    const { data, error } = await supabase.functions.invoke("webhook-test", {
+      body: { webhook_id: consoleHookId, event_type: consoleEvent, payload },
+    });
+    setRunning(false);
+    if (error) return toast.error(error.message);
+    setResult(data);
+    toast.success(data?.ok ? `Delivered in ${data.duration_ms}ms` : `Failed (HTTP ${data?.response?.status || "ERR"})`);
+    load();
+  };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Webhooks</h1>
-          <p className="text-sm text-muted-foreground">Receive realtime delivery status callbacks. Signed with HMAC-SHA256 via <code>X-BTextman-Signature</code>.</p>
+          <p className="text-sm text-muted-foreground">Receive realtime delivery callbacks. Signed with HMAC-SHA256 via <code className="text-xs">X-BTextman-Signature</code>.</p>
         </div>
         <Button onClick={() => setOpen(true)}><Plus className="h-4 w-4 mr-2" />New webhook</Button>
       </div>
@@ -76,13 +104,13 @@ export default function Webhooks() {
       <div className="grid gap-3">
         {hooks.length === 0 && <Card className="p-8 text-center text-muted-foreground">No webhooks yet.</Card>}
         {hooks.map((h) => (
-          <Card key={h.id} className="p-4 space-y-3">
+          <Card key={h.id} className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <code className="text-sm truncate">{h.url}</code>
                   <Badge variant={h.active ? "default" : "secondary"}>{h.active ? "active" : "paused"}</Badge>
-                  {h.last_status && <Badge variant={h.last_status < 400 ? "default" : "destructive"}>HTTP {h.last_status}</Badge>}
+                  {h.last_status ? <Badge variant={h.last_status < 400 ? "default" : "destructive"}>HTTP {h.last_status}</Badge> : null}
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">Events: {(h.events ?? []).join(", ")}</div>
                 <div className="text-xs mt-2 flex items-center gap-2">
@@ -96,7 +124,9 @@ export default function Webhooks() {
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <Switch checked={h.active} onCheckedChange={() => toggle(h)} />
-                <Button size="sm" variant="outline" onClick={() => test(h.id)}><Send className="h-3 w-3 mr-1" />Test</Button>
+                <Button size="sm" variant="outline" onClick={() => { setConsoleHookId(h.id); document.getElementById("wh-console")?.scrollIntoView({ behavior: "smooth" }); }}>
+                  <FlaskConical className="h-3 w-3 mr-1" />Test
+                </Button>
                 <Button size="sm" variant="ghost" onClick={() => remove(h.id)}><Trash2 className="h-4 w-4" /></Button>
               </div>
             </div>
@@ -104,15 +134,75 @@ export default function Webhooks() {
         ))}
       </div>
 
+      {/* === Test Console === */}
+      <Card id="wh-console" className="p-5 space-y-4">
+        <div className="flex items-center gap-2">
+          <FlaskConical className="h-5 w-5 text-primary" />
+          <h2 className="font-semibold">Test console</h2>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <Label>Webhook</Label>
+              <Select value={consoleHookId} onValueChange={setConsoleHookId}>
+                <SelectTrigger><SelectValue placeholder="Pick a webhook" /></SelectTrigger>
+                <SelectContent>{hooks.map((h) => <SelectItem key={h.id} value={h.id}>{h.url}</SelectItem>)}</SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label>Event type</Label>
+              <Select value={consoleEvent} onValueChange={setConsoleEvent}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>{EVENTS.map((e) => <SelectItem key={e} value={e}>{e}</SelectItem>)}</SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label>Payload (JSON)</Label>
+              <Textarea value={consolePayload} onChange={(e) => setConsolePayload(e.target.value)} rows={10} className="font-mono text-xs" />
+            </div>
+            <Button onClick={runConsole} disabled={running || !consoleHookId}>
+              {running ? <><Loader2 className="h-4 w-4 mr-1 animate-spin" />Sending…</> : <><Send className="h-4 w-4 mr-1" />Send event</>}
+            </Button>
+          </div>
+
+          <div className="space-y-3">
+            {!result && <div className="text-sm text-muted-foreground p-4 border border-dashed border-border rounded-md">Run a test to see the signature, request and response here.</div>}
+            {result && (
+              <>
+                <div className="flex items-center gap-2">
+                  <Badge variant={result.ok ? "default" : "destructive"}>HTTP {result.response?.status || "ERR"}</Badge>
+                  <span className="text-xs text-muted-foreground">{result.duration_ms}ms</span>
+                </div>
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Signature</div>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 text-[10px] break-all bg-muted p-2 rounded">{result.signature}</code>
+                    <Button size="icon" variant="outline" onClick={() => copy(result.signature)}><Copy className="h-3 w-3" /></Button>
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Request body</div>
+                  <pre className="text-[10px] bg-muted p-2 rounded max-h-40 overflow-auto"><code>{result.request?.body}</code></pre>
+                </div>
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Response</div>
+                  <pre className="text-[10px] bg-muted p-2 rounded max-h-40 overflow-auto"><code>{result.response?.body || result.response?.error || "(empty)"}</code></pre>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </Card>
+
       <Card className="p-4">
-        <h2 className="font-semibold mb-3">Recent deliveries</h2>
+        <h2 className="font-semibold mb-3">Delivery history</h2>
         <div className="space-y-1 text-xs max-h-80 overflow-auto">
           {deliveries.length === 0 && <div className="text-muted-foreground">No deliveries yet.</div>}
           {deliveries.map((d) => (
             <div key={d.id} className="flex items-center gap-2 py-1 border-b border-border/40">
               <Badge variant={d.succeeded ? "default" : "destructive"} className="shrink-0">{d.response_status || "ERR"}</Badge>
               <span className="font-mono shrink-0">{d.event_type}</span>
-              <span className="text-muted-foreground truncate">{d.response_body?.slice(0, 80)}</span>
+              <span className="text-muted-foreground truncate">{d.response_body?.slice(0, 100)}</span>
               <span className="ml-auto text-muted-foreground shrink-0">{new Date(d.created_at).toLocaleTimeString()}</span>
             </div>
           ))}
