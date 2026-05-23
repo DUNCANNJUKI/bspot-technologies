@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import QRCode from "qrcode";
 import { Copy, Smartphone, CheckCircle2, KeyRound, Radio, Send, Activity, ArrowRight } from "lucide-react";
 
 const SUPABASE_URL = "https://rtgcrclgmvcmrjpvtpwm.supabase.co";
@@ -22,8 +23,9 @@ const ENDPOINTS = {
 const STEPS = [
   { id: 1, title: "Create API key", icon: KeyRound },
   { id: 2, title: "Register device", icon: Radio },
-  { id: 3, title: "Heartbeat & realtime", icon: Activity },
-  { id: 4, title: "Send & report", icon: Send },
+  { id: 3, title: "QR / snippet", icon: Smartphone },
+  { id: 4, title: "Heartbeat & realtime", icon: Activity },
+  { id: 5, title: "Send & report", icon: Send },
 ];
 
 export default function AndroidClient() {
@@ -32,12 +34,35 @@ export default function AndroidClient() {
   const [name, setName] = useState("Samsung-A12-Nairobi-1");
   const [phone, setPhone] = useState("+254700000000");
   const [hasKey, setHasKey] = useState(false);
+  const [devices, setDevices] = useState<any[]>([]);
+  const [selectedToken, setSelectedToken] = useState("");
+  const [qrCode, setQrCode] = useState("");
 
   useEffect(() => {
     if (!clientId) return;
     supabase.from("api_keys").select("id").eq("client_id", clientId).eq("status", "active").limit(1)
       .then(({ data }) => setHasKey((data?.length ?? 0) > 0));
+    supabase.from("devices").select("id,device_name,device_token").eq("client_id", clientId).order("created_at", { ascending: false })
+      .then(({ data }) => {
+        setDevices(data ?? []);
+        setSelectedToken((data?.[0]?.device_token as string) ?? "");
+      });
   }, [clientId]);
+
+  const activationBundle = useMemo(() => JSON.stringify({
+    device_name: name,
+    device_token: selectedToken,
+    supabase_url: SUPABASE_URL,
+    supabase_anon_key: ANON_KEY,
+    register_endpoint: ENDPOINTS.register,
+    heartbeat_endpoint: ENDPOINTS.heartbeat,
+    status_update_endpoint: ENDPOINTS.statusUpdate,
+  }, null, 2), [name, selectedToken]);
+
+  useEffect(() => {
+    if (!selectedToken) return void setQrCode("");
+    QRCode.toDataURL(activationBundle, { margin: 1, width: 240 }).then(setQrCode).catch(() => setQrCode(""));
+  }, [activationBundle, selectedToken]);
 
   const copy = (s: string) => { navigator.clipboard.writeText(s); toast.success("Copied"); };
 
@@ -215,6 +240,38 @@ class GatewayService : Service() {
 
       {step === 3 && (
         <Card className="p-5 space-y-4">
+          <h2 className="font-semibold">3. QR code / manual activation bundle</h2>
+          <p className="text-sm text-muted-foreground">For Android apps that expect manual setup like your screenshots, use these exact fields: <strong>Device name</strong>, <strong>Device token</strong>, <strong>Supabase URL</strong>, and <strong>Supabase anon key</strong>. The token comes from an existing device record or from the <code>/device-register</code> response.</p>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <Label>Existing device token</Label>
+                <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={selectedToken} onChange={(e) => setSelectedToken(e.target.value)}>
+                  <option value="">Select a device token</option>
+                  {devices.map((device) => <option key={device.id} value={device.device_token}>{device.device_name}</option>)}
+                </select>
+              </div>
+              <ManifestRow label="Supabase URL" value={SUPABASE_URL} />
+              <ManifestRow label="Supabase anon key" value={ANON_KEY} />
+            </div>
+            <div className="space-y-3">
+              {qrCode ? <img src={qrCode} alt="Android activation QR" className="h-60 w-60 rounded-md border border-border bg-white p-2" /> : <div className="h-60 w-60 rounded-md border border-dashed border-border flex items-center justify-center text-sm text-muted-foreground">Select a device token to generate QR</div>}
+              <Button variant="outline" onClick={() => copy(activationBundle)}>Copy setup snippet</Button>
+            </div>
+          </div>
+
+          <pre className="text-[11px] bg-muted rounded p-3 overflow-auto max-h-56"><code>{activationBundle}</code></pre>
+
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
+            <Button onClick={() => setStep(4)}>Next<ArrowRight className="h-4 w-4 ml-1" /></Button>
+          </div>
+        </Card>
+      )}
+
+      {step === 4 && (
+        <Card className="p-5 space-y-4">
           <h2 className="font-semibold">3. Background heartbeat &amp; realtime subscription</h2>
           <p className="text-sm text-muted-foreground">Run a foreground <code>Service</code> that (a) sends a heartbeat every 30s and (b) subscribes to Realtime <code>postgres_changes</code> on <code>public.messages</code> filtered to this device's channel.</p>
 
@@ -234,13 +291,13 @@ class GatewayService : Service() {
           </div>
 
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setStep(2)}>Back</Button>
-            <Button onClick={() => setStep(4)}>Next<ArrowRight className="h-4 w-4 ml-1" /></Button>
+            <Button variant="outline" onClick={() => setStep(3)}>Back</Button>
+            <Button onClick={() => setStep(5)}>Next<ArrowRight className="h-4 w-4 ml-1" /></Button>
           </div>
         </Card>
       )}
 
-      {step === 4 && (
+      {step === 5 && (
         <Card className="p-5 space-y-4">
           <h2 className="font-semibold">4. Send the SMS &amp; report status</h2>
           <p className="text-sm text-muted-foreground">When the realtime channel fires an <code>INSERT</code> on <code>messages</code>, call <code>SmsManager.sendTextMessage()</code>, then POST the result back so the server can fire <code>message.sent</code> / <code>message.failed</code> webhooks.</p>
@@ -261,7 +318,7 @@ class GatewayService : Service() {
               <CheckCircle2 className="inline h-4 w-4 text-success mr-1" />
               You're done — open <a href="/devices" className="underline text-primary">Devices</a> to watch the new phone come online.
             </div>
-            <Button variant="outline" onClick={() => setStep(3)}>Back</Button>
+            <Button variant="outline" onClick={() => setStep(4)}>Back</Button>
           </div>
         </Card>
       )}
