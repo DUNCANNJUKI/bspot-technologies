@@ -12,17 +12,41 @@ Deno.serve(async (req) => {
   const device_name = String(body.device_name ?? "").trim();
   if (!device_name) return errorRes("device_name required");
 
-  const token = "dev_" + crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "");
+  const requestedToken = String(body.device_token ?? "").trim();
+  const token = requestedToken || ("dev_" + crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, ""));
+
   const sb = adminClient();
-  const { data, error } = await sb.from("devices").insert({
-    client_id: auth.client_id, device_name, device_token: token,
+  const base = {
+    client_id: auth.client_id,
+    device_name,
+    device_token: token,
     phone_number: body.phone_number ?? null,
     sim_operator: body.sim_operator ?? null,
     sim_slot: body.sim_slot ?? 1,
     android_version: body.android_version ?? null,
     app_version: body.app_version ?? null,
     status: "offline",
-  }).select().single();
+  };
+
+  const existingId = String(body.device_id ?? "").trim();
+  let data: any = null;
+  let error: any = null;
+
+  if (existingId) {
+    const result = await sb.from("devices")
+      .update(base)
+      .eq("id", existingId)
+      .eq("client_id", auth.client_id)
+      .select()
+      .single();
+    data = result.data;
+    error = result.error;
+  } else {
+    const result = await sb.from("devices").insert(base).select().single();
+    data = result.data;
+    error = result.error;
+  }
+
   if (error) return errorRes(error.message, 500);
-  return json({ id: data.id, device_token: token });
+  return json({ id: data.id, device_id: data.id, device_token: token, client_id: auth.client_id });
 });
