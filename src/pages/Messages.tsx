@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth, isAdmin } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Send, Search, Download, RefreshCw, ChevronDown } from "lucide-react";
+import { Send, Search, Download, RefreshCw, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
 const STATUSES = ["queued", "processing", "sent", "delivered", "failed", "cancelled"];
 
@@ -30,17 +30,23 @@ export default function Messages() {
   const [open, setOpen] = useState(false);
   const [recipient, setRecipient] = useState("");
   const [msg, setMsg] = useState("");
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(50);
+  const [totalCount, setTotalCount] = useState(0);
 
   const load = async () => {
-    let q: any = supabase.from("messages").select("*");
+    const fromIndex = page * pageSize;
+    const toIndex = fromIndex + pageSize - 1;
+    let q: any = supabase.from("messages").select("*", { count: "exact" });
     if (!admin && clientId) q = q.eq("client_id", clientId);
     if (admin && clientFilter !== "all") q = q.eq("client_id", clientFilter);
     if (status !== "all") q = q.eq("status", status);
     if (deviceId !== "all") q = q.eq("device_id", deviceId);
     if (from) q = q.gte("created_at", new Date(from).toISOString());
     if (to) q = q.lte("created_at", new Date(to + "T23:59:59").toISOString());
-    const { data } = await q.order("created_at", { ascending: false }).limit(1000);
+    const { data, count } = await q.order("created_at", { ascending: false }).range(fromIndex, toIndex);
     setItems(data ?? []);
+    setTotalCount(count ?? 0);
   };
 
   const loadMeta = async () => {
@@ -59,7 +65,9 @@ export default function Messages() {
     const ch = supabase.channel("msgs-feed").on("postgres_changes", { event: "*", schema: "public", table: "messages" }, load).subscribe();
     return () => { supabase.removeChannel(ch); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clientId, admin, status, deviceId, clientFilter, from, to]);
+  }, [clientId, admin, status, deviceId, clientFilter, from, to, page, pageSize]);
+
+  useEffect(() => { setPage(0); }, [status, deviceId, clientFilter, from, to, search]);
 
   const send = async () => {
     if (!recipient.trim() || !msg.trim()) return toast.error("Recipient and message required");
@@ -80,7 +88,8 @@ export default function Messages() {
     if (error) toast.error(error.message); else toast.success("Re-queued");
   };
 
-  const filtered = items.filter((m) => !search || m.recipient?.includes(search) || m.message?.toLowerCase().includes(search.toLowerCase()));
+  const filtered = useMemo(() => items.filter((m) => !search || m.recipient?.includes(search) || m.message?.toLowerCase().includes(search.toLowerCase())), [items, search]);
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
   const filename = () => {
     const parts = ["delivery-report"];
@@ -188,6 +197,18 @@ export default function Messages() {
             Clear filters
           </Button>
         )}
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <p className="text-xs text-muted-foreground">Showing {filtered.length} rows on this page · {totalCount} total matching messages.</p>
+          <div className="flex items-center gap-2">
+            <Select value={String(pageSize)} onValueChange={(v) => { setPage(0); setPageSize(Number(v)); }}>
+              <SelectTrigger className="w-[110px]"><SelectValue /></SelectTrigger>
+              <SelectContent>{[25, 50, 100].map((size) => <SelectItem key={size} value={String(size)}>{size}/page</SelectItem>)}</SelectContent>
+            </Select>
+            <Button size="icon" variant="outline" onClick={() => setPage((p) => Math.max(0, p - 1))} disabled={page === 0}><ChevronLeft className="h-4 w-4" /></Button>
+            <div className="min-w-[90px] text-center text-xs text-muted-foreground">Page {page + 1} / {totalPages}</div>
+            <Button size="icon" variant="outline" onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))} disabled={page + 1 >= totalPages}><ChevronRight className="h-4 w-4" /></Button>
+          </div>
+        </div>
         <div className="rounded-md border border-border overflow-x-auto">
           <Table>
             <TableHeader><TableRow>
@@ -196,7 +217,7 @@ export default function Messages() {
             </TableRow></TableHeader>
             <TableBody>
               {filtered.length === 0 && <TableRow><TableCell colSpan={6} className="text-center text-sm text-muted-foreground py-8">No messages match filters</TableCell></TableRow>}
-              {filtered.slice(0, 300).map((m) => (
+              {filtered.map((m) => (
                 <TableRow key={m.id}>
                   <TableCell className="font-mono text-xs">{m.recipient}</TableCell>
                   <TableCell className="max-w-[300px] truncate text-sm">{m.message}</TableCell>
@@ -209,7 +230,7 @@ export default function Messages() {
             </TableBody>
           </Table>
         </div>
-        {filtered.length > 300 && <p className="text-xs text-muted-foreground">Showing 300 of {filtered.length} rows — export to see all.</p>}
+        <p className="text-xs text-muted-foreground">Exports use the same active filters and the currently loaded page so large datasets stay predictable.</p>
       </Card>
     </div>
   );

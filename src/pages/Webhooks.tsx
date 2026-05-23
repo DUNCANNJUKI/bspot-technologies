@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
@@ -10,8 +10,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
-import { Plus, Trash2, Send, Eye, EyeOff, Copy, FlaskConical, Loader2 } from "lucide-react";
+import { Plus, Trash2, Send, Eye, EyeOff, Copy, FlaskConical, Loader2, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { z } from "zod";
 
 const EVENTS = ["message.sent", "message.delivered", "message.failed", "test.ping"];
@@ -38,20 +39,38 @@ export default function Webhooks() {
   const [consolePayload, setConsolePayload] = useState<string>(JSON.stringify(SAMPLE_PAYLOADS["test.ping"], null, 2));
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [historyPage, setHistoryPage] = useState(0);
+  const [historyPageSize, setHistoryPageSize] = useState(20);
+  const [retryingId, setRetryingId] = useState<string | null>(null);
+  const [deliveryCount, setDeliveryCount] = useState(0);
 
   const load = async () => {
     if (!clientId) return;
     const { data } = await supabase.from("webhooks").select("*").eq("client_id", clientId).order("created_at", { ascending: false });
     setHooks(data ?? []);
     if (data?.length && !consoleHookId) setConsoleHookId(data[0].id);
-    const ids = (data ?? []).map((h) => h.id);
-    if (ids.length) {
-      const { data: d } = await supabase.from("webhook_deliveries").select("*").in("webhook_id", ids).order("created_at", { ascending: false }).limit(50);
-      setDeliveries(d ?? []);
-    } else setDeliveries([]);
+    setHistoryPage(0);
   };
 
   useEffect(() => { load(); }, [clientId]);
+
+  useEffect(() => {
+    const loadDeliveries = async () => {
+      const ids = hooks.map((h) => h.id);
+      if (!ids.length) return setDeliveries([]);
+      const from = historyPage * historyPageSize;
+      const to = from + historyPageSize - 1;
+      const { data, count } = await supabase
+        .from("webhook_deliveries")
+        .select("*", { count: "exact" })
+        .in("webhook_id", ids)
+        .order("created_at", { ascending: false })
+        .range(from, to);
+      setDeliveries(data ?? []);
+      setDeliveryCount(count ?? 0);
+    };
+    loadDeliveries();
+  }, [hooks, historyPage, historyPageSize]);
 
   useEffect(() => {
     if (SAMPLE_PAYLOADS[consoleEvent]) {
@@ -90,6 +109,26 @@ export default function Webhooks() {
     toast.success(data?.ok ? `Delivered in ${data.duration_ms}ms` : `Failed (HTTP ${data?.response?.status || "ERR"})`);
     load();
   };
+
+  const retryDelivery = async (delivery: any) => {
+    const hook = hooks.find((item) => item.id === delivery.webhook_id);
+    if (!hook) return toast.error("Webhook no longer exists");
+    setRetryingId(delivery.id);
+    const { data, error } = await supabase.functions.invoke("webhook-test", {
+      body: {
+        webhook_id: hook.id,
+        event_type: delivery.event_type,
+        payload: delivery.payload,
+      },
+    });
+    setRetryingId(null);
+    if (error) return toast.error(error.message);
+    toast.success(data?.ok ? `Retry delivered (attempt ${data?.delivery?.attempt ?? "?"})` : "Retry recorded");
+    if (consoleHookId === hook.id) setResult(data);
+    load();
+  };
+
+  const totalPages = useMemo(() => Math.max(1, Math.ceil(deliveryCount / historyPageSize)), [deliveryCount, historyPageSize]);
 
   return (
     <div className="space-y-6">
@@ -194,19 +233,43 @@ export default function Webhooks() {
         </div>
       </Card>
 
-      <Card className="p-4">
-        <h2 className="font-semibold mb-3">Delivery history</h2>
-        <div className="space-y-1 text-xs max-h-80 overflow-auto">
+      <Card className="p-4 space-y-3">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <h2 className="font-semibold">Delivery history</h2>
+          <div className="flex items-center gap-2">
+            <Select value={String(historyPageSize)} onValueChange={(v) => { setHistoryPage(0); setHistoryPageSize(Number(v)); }}>
+              <SelectTrigger className="w-[110px]"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {[10, 20, 50].map((size) => <SelectItem key={size} value={String(size)}>{size}/page</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Button size="icon" variant="outline" onClick={() => setHistoryPage((p) => Math.max(0, p - 1))} disabled={historyPage === 0}><ChevronLeft className="h-4 w-4" /></Button>
+            <div className="text-xs text-muted-foreground min-w-[90px] text-center">Page {historyPage + 1} / {totalPages}</div>
+            <Button size="icon" variant="outline" onClick={() => setHistoryPage((p) => Math.min(totalPages - 1, p + 1))} disabled={historyPage + 1 >= totalPages}><ChevronRight className="h-4 w-4" /></Button>
+          </div>
+        </div>
+        <ScrollArea className="h-80 rounded-md border border-border">
+          <div className="space-y-1 text-xs p-2">
           {deliveries.length === 0 && <div className="text-muted-foreground">No deliveries yet.</div>}
           {deliveries.map((d) => (
-            <div key={d.id} className="flex items-center gap-2 py-1 border-b border-border/40">
+            <div key={d.id} className="flex items-center gap-2 py-2 border-b border-border/40">
               <Badge variant={d.succeeded ? "default" : "destructive"} className="shrink-0">{d.response_status || "ERR"}</Badge>
               <span className="font-mono shrink-0">{d.event_type}</span>
+              <Badge variant="secondary" className="shrink-0">Attempt {d.attempt ?? 1}</Badge>
               <span className="text-muted-foreground truncate">{d.response_body?.slice(0, 100)}</span>
-              <span className="ml-auto text-muted-foreground shrink-0">{new Date(d.created_at).toLocaleTimeString()}</span>
+              <div className="ml-auto flex items-center gap-2 shrink-0">
+              {!d.succeeded && (
+                <Button size="sm" variant="outline" disabled={retryingId === d.id} onClick={() => retryDelivery(d)}>
+                  {retryingId === d.id ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <RefreshCw className="h-3 w-3 mr-1" />}Retry
+                </Button>
+              )}
+              <span className="text-muted-foreground shrink-0">{new Date(d.created_at).toLocaleTimeString()}</span>
+              </div>
             </div>
           ))}
-        </div>
+          </div>
+        </ScrollArea>
+        <div className="text-xs text-muted-foreground">Newest deliveries first. Each retry is stored as a new attempt.</div>
       </Card>
 
       <Dialog open={open} onOpenChange={setOpen}>

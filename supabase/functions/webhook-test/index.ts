@@ -36,6 +36,16 @@ Deno.serve(async (req) => {
   const body = JSON.stringify({ event: event_type, data: eventPayload, timestamp: new Date().toISOString() });
   const signature = await hmacSha256Hex(hook.secret, body);
 
+  const { data: lastAttempt } = await sb.from("webhook_deliveries")
+    .select("attempt")
+    .eq("webhook_id", hook.id)
+    .eq("event_type", event_type)
+    .is("message_id", null)
+    .order("attempt", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const attempt = Number(lastAttempt?.attempt ?? 0) + 1;
+
   let status = 0, respText = "", ok = false, errMsg = "";
   const start = Date.now();
   try {
@@ -58,7 +68,7 @@ Deno.serve(async (req) => {
 
   const { data: delivery } = await sb.from("webhook_deliveries").insert({
     webhook_id: hook.id, event_type, payload: eventPayload,
-    response_status: status, response_body: respText || errMsg, succeeded: ok,
+    response_status: status, response_body: respText || errMsg, attempt, succeeded: ok,
     delivered_at: new Date().toISOString(),
   }).select().single();
 

@@ -77,6 +77,15 @@ export async function dispatchEvent(client_id: string, event_type: string, paylo
   if (!hooks?.length) return;
   const body = JSON.stringify({ event: event_type, data: payload, timestamp: new Date().toISOString() });
   await Promise.all(hooks.filter((h: any) => (h.events ?? []).includes(event_type)).map(async (h: any) => {
+    const { data: lastAttempt } = await sb.from("webhook_deliveries")
+      .select("attempt")
+      .eq("webhook_id", h.id)
+      .eq("event_type", event_type)
+      .eq("message_id", message_id ?? null)
+      .order("attempt", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const attempt = Number(lastAttempt?.attempt ?? 0) + 1;
     let status = 0; let respText = ""; let ok = false;
     try {
       const sig = await hmacSha256Hex(h.secret, body);
@@ -89,7 +98,7 @@ export async function dispatchEvent(client_id: string, event_type: string, paylo
     } catch (e) { respText = String((e as Error).message ?? e).slice(0, 2000); }
     await sb.from("webhook_deliveries").insert({
       webhook_id: h.id, message_id: message_id ?? null, event_type, payload,
-      response_status: status, response_body: respText, succeeded: ok, delivered_at: new Date().toISOString(),
+      response_status: status, response_body: respText, attempt, succeeded: ok, delivered_at: new Date().toISOString(),
     });
     await sb.from("webhooks").update({
       last_status: status,

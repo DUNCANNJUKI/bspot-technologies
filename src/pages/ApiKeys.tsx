@@ -7,9 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Copy, KeyRound, Trash2, RotateCw, CheckCircle2 } from "lucide-react";
+import { Plus, Copy, KeyRound, Trash2, RotateCw, CheckCircle2, ShieldAlert, Clock3, Activity } from "lucide-react";
 
 async function sha256Hex(s: string) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
@@ -23,6 +24,7 @@ export default function ApiKeys() {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [created, setCreated] = useState<{ key: string; name: string; rotated?: boolean } | null>(null);
+  const [auditThreshold, setAuditThreshold] = useState("1000");
 
   const load = async () => {
     if (!clientId) return;
@@ -68,6 +70,10 @@ export default function ApiKeys() {
 
   const copy = (s: string) => { navigator.clipboard.writeText(s); toast.success("Copied"); };
 
+  const suspiciousLimit = Number(auditThreshold) || 1000;
+  const activeCount = keys.filter((k) => k.status === "active").length;
+  const suspiciousKeys = keys.filter((k) => k.status === "active" && ((k.usage_count ?? 0) >= suspiciousLimit || (!k.last_used_at && (k.usage_count ?? 0) > 0)));
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
@@ -107,7 +113,8 @@ export default function ApiKeys() {
         </Dialog>
       </div>
 
-      <Card className="p-4">
+      <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+      <Card className="p-4 space-y-4">
         <div className="rounded-md border border-border overflow-x-auto">
           <Table>
             <TableHeader><TableRow>
@@ -159,6 +166,61 @@ export default function ApiKeys() {
           </Table>
         </div>
       </Card>
+
+      <Card className="p-4 space-y-4">
+        <div className="flex items-center gap-2">
+          <ShieldAlert className="h-5 w-5 text-primary" />
+          <div>
+            <h2 className="font-semibold">Audit panel</h2>
+            <p className="text-sm text-muted-foreground">Review usage patterns and revoke keys after suspicious activity.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 text-sm">
+          <div className="rounded-md border border-border p-3">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Active keys</div>
+            <div className="mt-2 text-2xl font-semibold">{activeCount}</div>
+          </div>
+          <div className="rounded-md border border-border p-3">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Suspicious</div>
+            <div className="mt-2 text-2xl font-semibold">{suspiciousKeys.length}</div>
+          </div>
+          <div className="rounded-md border border-border p-3">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Total calls</div>
+            <div className="mt-2 text-2xl font-semibold">{keys.reduce((sum, key) => sum + Number(key.usage_count ?? 0), 0)}</div>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Suspicious usage threshold</Label>
+          <Input type="number" min="1" step="1" value={auditThreshold} onChange={(e) => setAuditThreshold(e.target.value)} />
+          <p className="text-xs text-muted-foreground">Keys with at least this many calls are highlighted below.</p>
+        </div>
+
+        <div className="space-y-3">
+          {keys.map((key) => {
+            const suspicious = key.status === "active" && ((key.usage_count ?? 0) >= suspiciousLimit || (!key.last_used_at && (key.usage_count ?? 0) > 0));
+            return (
+              <div key={key.id} className="rounded-md border border-border p-3 space-y-2">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="font-medium flex items-center gap-2">{key.name}{suspicious && <Badge variant="destructive">Flagged</Badge>}</div>
+                    <div className="text-xs text-muted-foreground font-mono">{key.key_prefix}…</div>
+                  </div>
+                  {key.status === "active" && suspicious && (
+                    <Button size="sm" variant="destructive" onClick={() => revoke(key.id)}>Revoke now</Button>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2"><Activity className="h-3 w-3" />Calls: <span className="text-foreground">{key.usage_count}</span></div>
+                  <div className="flex items-center gap-2"><Clock3 className="h-3 w-3" />Last used: <span className="text-foreground">{key.last_used_at ? new Date(key.last_used_at).toLocaleString() : "never"}</span></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Card>
+      </div>
     </div>
   );
 }
