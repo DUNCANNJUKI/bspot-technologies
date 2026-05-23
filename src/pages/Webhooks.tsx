@@ -42,6 +42,7 @@ export default function Webhooks() {
   const [historyPage, setHistoryPage] = useState(0);
   const [historyPageSize, setHistoryPageSize] = useState(20);
   const [retryingId, setRetryingId] = useState<string | null>(null);
+  const [deliveryCount, setDeliveryCount] = useState(0);
 
   const load = async () => {
     if (!clientId) return;
@@ -59,13 +60,14 @@ export default function Webhooks() {
       if (!ids.length) return setDeliveries([]);
       const from = historyPage * historyPageSize;
       const to = from + historyPageSize - 1;
-      const { data } = await supabase
+      const { data, count } = await supabase
         .from("webhook_deliveries")
         .select("*", { count: "exact" })
         .in("webhook_id", ids)
         .order("created_at", { ascending: false })
         .range(from, to);
       setDeliveries(data ?? []);
+      setDeliveryCount(count ?? 0);
     };
     loadDeliveries();
   }, [hooks, historyPage, historyPageSize]);
@@ -126,10 +128,7 @@ export default function Webhooks() {
     load();
   };
 
-  const deliveryMeta = useMemo(() => {
-    const total = hooks.length ? Math.max(historyPage + 1, historyPage + Number(deliveries.length > 0)) : 0;
-    return { total };
-  }, [hooks.length, historyPage, deliveries.length]);
+  const totalPages = useMemo(() => Math.max(1, Math.ceil(deliveryCount / historyPageSize)), [deliveryCount, historyPageSize]);
 
   return (
     <div className="space-y-6">
@@ -245,8 +244,8 @@ export default function Webhooks() {
               </SelectContent>
             </Select>
             <Button size="icon" variant="outline" onClick={() => setHistoryPage((p) => Math.max(0, p - 1))} disabled={historyPage === 0}><ChevronLeft className="h-4 w-4" /></Button>
-            <div className="text-xs text-muted-foreground min-w-[72px] text-center">Page {historyPage + 1}</div>
-            <Button size="icon" variant="outline" onClick={() => setHistoryPage((p) => p + 1)} disabled={deliveries.length < historyPageSize && historyPage > 0}><ChevronRight className="h-4 w-4" /></Button>
+            <div className="text-xs text-muted-foreground min-w-[90px] text-center">Page {historyPage + 1} / {totalPages}</div>
+            <Button size="icon" variant="outline" onClick={() => setHistoryPage((p) => Math.min(totalPages - 1, p + 1))} disabled={historyPage + 1 >= totalPages}><ChevronRight className="h-4 w-4" /></Button>
           </div>
         </div>
         <ScrollArea className="h-80 rounded-md border border-border">
@@ -258,12 +257,14 @@ export default function Webhooks() {
               <span className="font-mono shrink-0">{d.event_type}</span>
               <Badge variant="secondary" className="shrink-0">Attempt {d.attempt ?? 1}</Badge>
               <span className="text-muted-foreground truncate">{d.response_body?.slice(0, 100)}</span>
+              <div className="ml-auto flex items-center gap-2 shrink-0">
               {!d.succeeded && (
-                <Button size="sm" variant="outline" className="ml-auto" disabled={retryingId === d.id} onClick={() => retryDelivery(d)}>
+                <Button size="sm" variant="outline" disabled={retryingId === d.id} onClick={() => retryDelivery(d)}>
                   {retryingId === d.id ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <RefreshCw className="h-3 w-3 mr-1" />}Retry
                 </Button>
               )}
-              <span className="ml-auto text-muted-foreground shrink-0">{new Date(d.created_at).toLocaleTimeString()}</span>
+              <span className="text-muted-foreground shrink-0">{new Date(d.created_at).toLocaleTimeString()}</span>
+              </div>
             </div>
           ))}
           </div>
