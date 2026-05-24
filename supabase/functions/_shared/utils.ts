@@ -21,6 +21,19 @@ export const adminClient = () =>
     auth: { persistSession: false },
   });
 
+const safeJson = (value: unknown) => {
+  try {
+    return JSON.parse(JSON.stringify(value ?? {}));
+  } catch {
+    return {};
+  }
+};
+
+const headerSnapshot = (headers: Headers) => {
+  const keep = ["content-type", "user-agent", "x-forwarded-for", "cf-connecting-ip", "x-real-ip"];
+  return Object.fromEntries(keep.map((key) => [key, headers.get(key)]).filter(([, value]) => Boolean(value)) as [string, string][]);
+};
+
 async function sha256Hex(s: string) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -36,11 +49,21 @@ export async function authApiKey(req: Request) {
   const sb = adminClient();
   const { data } = await sb.from("api_keys").select("id,client_id,status,usage_count").eq("key_hash", hash).maybeSingle();
   if (!data || data.status !== "active") return null;
+  const url = new URL(req.url);
+  const forwardedFor = req.headers.get("x-forwarded-for") ?? req.headers.get("cf-connecting-ip") ?? req.headers.get("x-real-ip") ?? null;
   // fire-and-forget usage tracking
   sb.from("api_keys").update({
     last_used_at: new Date().toISOString(),
     usage_count: (data.usage_count ?? 0) + 1,
   }).eq("id", data.id).then(() => {});
+  sb.from("api_key_request_logs").insert({
+    api_key_id: data.id,
+    client_id: data.client_id,
+    endpoint_path: url.pathname.replace(/^\/functions\/v1/, "") || url.pathname,
+    request_method: req.method,
+    ip_address: forwardedFor,
+    user_agent: req.headers.get("user-agent"),
+  }).then(() => {});
   return { client_id: data.client_id as string, api_key_id: data.id as string };
 }
 
@@ -75,7 +98,8 @@ export async function dispatchEvent(client_id: string, event_type: string, paylo
   const sb = adminClient();
   const { data: hooks } = await sb.from("webhooks").select("*").eq("client_id", client_id).eq("active", true);
   if (!hooks?.length) return;
-  const body = JSON.stringify({ event: event_type, data: payload, timestamp: new Date().toISOString() });
+  const requestBody = { event: event_type, data: payload, timestamp: new Date().toISOString() };
+  const body = JSON.stringify(requestBody);
   await Promise.all(hooks.filter((h: any) => (h.events ?? []).includes(event_type)).map(async (h: any) => {
     const { data: lastAttempt } = await sb.from("webhook_deliveries")
       .select("attempt")
@@ -86,18 +110,36 @@ export async function dispatchEvent(client_id: string, event_type: string, paylo
       .limit(1)
       .maybeSingle();
     const attempt = Number(lastAttempt?.attempt ?? 0) + 1;
-    let status = 0; let respText = ""; let ok = false;
+    let status = 0; let respText = ""; let ok = false; let responseHeaders: Record<string, string> = {}; let durationMs = 0;
+    const requestHeaders = { "Content-Type": "application/json", "X-BTextman-Event": event_type };
     try {
       const sig = await hmacSha256Hex(h.secret, body);
+      const startedAt = Date.now();
       const r = await fetch(h.url, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "X-BTextman-Signature": sig, "X-BTextman-Event": event_type },
+        headers: { ...requestHeaders, "X-BTextman-Signature": sig },
         body,
       });
+      durationMs = Date.now() - startedAt;
       status = r.status; respText = (await r.text()).slice(0, 2000); ok = r.ok;
+      responseHeaders = Object.fromEntries(r.headers.entries());
+      await sb.from("webhook_deliveries").insert({
+        webhook_id: h.id, message_id: message_id ?? null, event_type, payload,
+        target_url: h.url, request_body: safeJson(requestBody), request_headers: safeJson({ ...requestHeaders, "X-BTextman-Signature": sig }),
+        response_headers: safeJson(responseHeaders), request_signature: sig, duration_ms: durationMs,
+        response_status: status, response_body: respText, attempt, succeeded: ok, delivered_at: new Date().toISOString(),
+      });
+      await sb.from("webhooks").update({
+        last_status: status,
+        failure_count: ok ? 0 : (h.failure_count ?? 0) + 1,
+        active: ok ? true : ((h.failure_count ?? 0) + 1 < 10),
+      }).eq("id", h.id);
+      return;
     } catch (e) { respText = String((e as Error).message ?? e).slice(0, 2000); }
     await sb.from("webhook_deliveries").insert({
       webhook_id: h.id, message_id: message_id ?? null, event_type, payload,
+      target_url: h.url, request_body: safeJson(requestBody), request_headers: safeJson(headerSnapshot(new Headers(requestHeaders))),
+      response_headers: safeJson(responseHeaders), request_signature: null, duration_ms: durationMs,
       response_status: status, response_body: respText, attempt, succeeded: ok, delivered_at: new Date().toISOString(),
     });
     await sb.from("webhooks").update({
