@@ -56,15 +56,28 @@ export async function authApiKey(req: Request) {
     last_used_at: new Date().toISOString(),
     usage_count: (data.usage_count ?? 0) + 1,
   }).eq("id", data.id).then(() => {});
-  sb.from("api_key_request_logs").insert({
+  const { data: requestLog } = await sb.from("api_key_request_logs").insert({
     api_key_id: data.id,
     client_id: data.client_id,
     endpoint_path: url.pathname.replace(/^\/functions\/v1/, "") || url.pathname,
     request_method: req.method,
     ip_address: forwardedFor,
     user_agent: req.headers.get("user-agent"),
-  }).then(() => {});
-  return { client_id: data.client_id as string, api_key_id: data.id as string };
+  }).select("id").maybeSingle();
+  return { client_id: data.client_id as string, api_key_id: data.id as string, request_log_id: requestLog?.id as string | undefined };
+}
+
+export async function finalizeApiKeyRequestLog(request_log_id?: string, details?: {
+  status_code?: number;
+  device_id?: string | null;
+  device_name?: string | null;
+}) {
+  if (!request_log_id) return;
+  await adminClient().from("api_key_request_logs").update({
+    status_code: details?.status_code ?? null,
+    device_id: details?.device_id ?? null,
+    device_name: details?.device_name ?? null,
+  }).eq("id", request_log_id);
 }
 
 /** Validate device token. Returns device row or null. */
