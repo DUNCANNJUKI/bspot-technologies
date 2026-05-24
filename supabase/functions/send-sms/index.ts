@@ -1,4 +1,4 @@
-import { corsHeaders, json, errorRes, authApiKey, adminClient, detectEncoding } from "../_shared/utils.ts";
+import { corsHeaders, json, errorRes, authApiKey, adminClient, detectEncoding, finalizeApiKeyRequestLog } from "../_shared/utils.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -27,5 +27,6 @@ Deno.serve(async (req) => {
   }).select().single();
 
   if (error) return errorRes(error.message, 500);
+  await finalizeApiKeyRequestLog(auth.request_log_id, { status_code: 200, device_id: data.device_id ?? null });
   return json({ id: data.id, status: data.status, parts, encoding });
 });

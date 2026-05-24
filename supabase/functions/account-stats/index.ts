@@ -1,4 +1,4 @@
-import { corsHeaders, json, errorRes, authApiKey, adminClient } from "../_shared/utils.ts";
+import { corsHeaders, json, errorRes, authApiKey, adminClient, finalizeApiKeyRequestLog } from "../_shared/utils.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -17,6 +17,7 @@ Deno.serve(async (req) => {
   (msgs ?? []).forEach((m: any) => { counts[m.status as keyof typeof counts] = (counts[m.status as keyof typeof counts] ?? 0) + 1; });
   const devicesOnline = (devs ?? []).filter((d: any) => d.status === "online" || d.status === "sending").length;
 
+  await finalizeApiKeyRequestLog(auth.request_log_id, { status_code: 200 });
   return json({
     messages: counts,
     devices: { total: devs?.length ?? 0, online: devicesOnline },
