@@ -1,4 +1,4 @@
-import { corsHeaders, json, errorRes, authApiKey, adminClient } from "../_shared/utils.ts";
+import { corsHeaders, json, errorRes, authApiKey, adminClient, finalizeApiKeyRequestLog } from "../_shared/utils.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -15,5 +15,6 @@ Deno.serve(async (req) => {
   const { data, error } = await sb.from("messages").select("*").eq("id", id).eq("client_id", auth.client_id).maybeSingle();
   if (error) return errorRes(error.message, 500);
   if (!data) return errorRes("not found", 404);
+  await finalizeApiKeyRequestLog(auth.request_log_id, { status_code: 200, device_id: data.device_id ?? null });
   return json(data);
 });

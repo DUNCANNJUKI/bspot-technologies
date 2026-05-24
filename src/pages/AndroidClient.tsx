@@ -37,6 +37,8 @@ export default function AndroidClient() {
   const [devices, setDevices] = useState<any[]>([]);
   const [selectedToken, setSelectedToken] = useState("");
   const [qrCode, setQrCode] = useState("");
+  const [validating, setValidating] = useState(false);
+  const [validationResult, setValidationResult] = useState<any | null>(null);
 
   useEffect(() => {
     if (!clientId) return;
@@ -65,6 +67,31 @@ export default function AndroidClient() {
   }, [activationBundle, selectedToken]);
 
   const copy = (s: string) => { navigator.clipboard.writeText(s); toast.success("Copied"); };
+
+  const validateHeartbeat = async () => {
+    if (!selectedToken) return toast.error("Select a device token first");
+    setValidating(true);
+    setValidationResult(null);
+    try {
+      const res = await fetch(ENDPOINTS.heartbeat, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${selectedToken}`,
+          apikey: ANON_KEY,
+        },
+        body: JSON.stringify({ app_version: "wizard-check", battery_level: 100, signal_strength: 4, internet_type: "wizard" }),
+      });
+      const data = await res.json().catch(() => ({}));
+      setValidationResult({ ok: res.ok, status: res.status, data });
+      if (res.ok) toast.success("Heartbeat check passed"); else toast.error(data?.error || `Heartbeat failed (${res.status})`);
+    } catch (error) {
+      setValidationResult({ ok: false, status: 0, data: { error: error instanceof Error ? error.message : "Request failed" } });
+      toast.error("Heartbeat validation failed");
+    } finally {
+      setValidating(false);
+    }
+  };
 
   const KOTLIN_SAMPLE = `// Persistent registration + foreground service
 object BTextman {
@@ -288,6 +315,27 @@ class GatewayService : Service() {
   "internet_type": "wifi",
   "app_version": "1.0"
 }`}</code></pre>
+          </div>
+
+          <div className="rounded-md border border-border p-4 space-y-3">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div>
+                <div className="font-medium">Live connection check</div>
+                <p className="text-sm text-muted-foreground">Before finishing setup, confirm this token can reach <code>/device-heartbeat</code> and receive queued payloads.</p>
+              </div>
+              <Button onClick={validateHeartbeat} disabled={validating || !selectedToken}>
+                {validating ? "Checking…" : "Validate heartbeat"}
+              </Button>
+            </div>
+            {validationResult && (
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center gap-2">
+                  <Badge variant={validationResult.ok ? "default" : "destructive"}>HTTP {validationResult.status || "ERR"}</Badge>
+                  <span className="text-muted-foreground">{validationResult.ok ? "Gateway reachable" : "Fix token or endpoint before finishing"}</span>
+                </div>
+                <pre className="text-[11px] bg-muted rounded p-3 overflow-auto max-h-48"><code>{JSON.stringify(validationResult.data, null, 2)}</code></pre>
+              </div>
+            )}
           </div>
 
           <div className="flex gap-2">

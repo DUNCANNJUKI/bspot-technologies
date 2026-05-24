@@ -1,4 +1,4 @@
-import { corsHeaders, json, errorRes, authApiKey, adminClient, detectEncoding } from "../_shared/utils.ts";
+import { corsHeaders, json, errorRes, authApiKey, adminClient, detectEncoding, finalizeApiKeyRequestLog } from "../_shared/utils.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -30,5 +30,6 @@ Deno.serve(async (req) => {
   const sb = adminClient();
   const { data, error } = await sb.from("messages").insert(rows).select("id");
   if (error) return errorRes(error.message, 500);
+  await finalizeApiKeyRequestLog(auth.request_log_id, { status_code: 200 });
   return json({ queued: data?.length ?? 0, ids: data?.map((d: any) => d.id) ?? [] });
 });

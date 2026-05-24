@@ -34,5 +34,25 @@ Deno.serve(async (req) => {
     .order("created_at", { ascending: true })
     .limit(10);
 
-  return json({ ok: true, pending: pending ?? [] });
+  const pendingIds = (pending ?? []).map((item: any) => item.id);
+  if (pendingIds.length) {
+    await sb.from("messages")
+      .update({ status: "processing", device_id: device.id, processing_at: new Date().toISOString() })
+      .in("id", pendingIds)
+      .eq("client_id", device.client_id)
+      .eq("status", "queued");
+  }
+
+  return json({
+    ok: true,
+    pending: pending ?? [],
+    pending_sms: (pending ?? []).map((item: any) => ({
+      id: item.id,
+      phone_number: item.recipient,
+      content: item.message,
+      device_token: device.device_token,
+      sim_slot: device.sim_slot ?? 1,
+    })),
+    assigned_count: pendingIds.length,
+  });
 });

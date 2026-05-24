@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_key_request_logs: {
+        Row: {
+          api_key_id: string
+          client_id: string
+          created_at: string
+          device_id: string | null
+          device_name: string | null
+          endpoint_path: string
+          id: string
+          ip_address: string | null
+          request_method: string
+          status_code: number | null
+          user_agent: string | null
+        }
+        Insert: {
+          api_key_id: string
+          client_id: string
+          created_at?: string
+          device_id?: string | null
+          device_name?: string | null
+          endpoint_path: string
+          id?: string
+          ip_address?: string | null
+          request_method?: string
+          status_code?: number | null
+          user_agent?: string | null
+        }
+        Update: {
+          api_key_id?: string
+          client_id?: string
+          created_at?: string
+          device_id?: string | null
+          device_name?: string | null
+          endpoint_path?: string
+          id?: string
+          ip_address?: string | null
+          request_method?: string
+          status_code?: number | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       api_keys: {
         Row: {
           client_id: string
@@ -440,39 +482,57 @@ export type Database = {
           attempt: number
           created_at: string
           delivered_at: string | null
+          duration_ms: number | null
           event_type: string
           id: string
           message_id: string | null
           payload: Json
+          request_body: Json | null
+          request_headers: Json
+          request_signature: string | null
           response_body: string | null
+          response_headers: Json
           response_status: number | null
           succeeded: boolean
+          target_url: string | null
           webhook_id: string
         }
         Insert: {
           attempt?: number
           created_at?: string
           delivered_at?: string | null
+          duration_ms?: number | null
           event_type: string
           id?: string
           message_id?: string | null
           payload: Json
+          request_body?: Json | null
+          request_headers?: Json
+          request_signature?: string | null
           response_body?: string | null
+          response_headers?: Json
           response_status?: number | null
           succeeded?: boolean
+          target_url?: string | null
           webhook_id: string
         }
         Update: {
           attempt?: number
           created_at?: string
           delivered_at?: string | null
+          duration_ms?: number | null
           event_type?: string
           id?: string
           message_id?: string | null
           payload?: Json
+          request_body?: Json | null
+          request_headers?: Json
+          request_signature?: string | null
           response_body?: string | null
+          response_headers?: Json
           response_status?: number | null
           succeeded?: boolean
+          target_url?: string | null
           webhook_id?: string
         }
         Relationships: []
