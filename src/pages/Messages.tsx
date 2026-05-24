@@ -34,16 +34,22 @@ export default function Messages() {
   const [pageSize, setPageSize] = useState(50);
   const [totalCount, setTotalCount] = useState(0);
 
+  const applyMessageFilters = (q: any) => {
+    let query = q;
+    if (!admin && clientId) query = query.eq("client_id", clientId);
+    if (admin && clientFilter !== "all") query = query.eq("client_id", clientFilter);
+    if (status !== "all") query = query.eq("status", status);
+    if (deviceId !== "all") query = query.eq("device_id", deviceId);
+    if (from) query = query.gte("created_at", new Date(from).toISOString());
+    if (to) query = query.lte("created_at", new Date(to + "T23:59:59").toISOString());
+    if (search.trim()) query = query.or(`recipient.ilike.%${search.trim()}%,message.ilike.%${search.trim()}%`);
+    return query;
+  };
+
   const load = async () => {
     const fromIndex = page * pageSize;
     const toIndex = fromIndex + pageSize - 1;
-    let q: any = supabase.from("messages").select("*", { count: "exact" });
-    if (!admin && clientId) q = q.eq("client_id", clientId);
-    if (admin && clientFilter !== "all") q = q.eq("client_id", clientFilter);
-    if (status !== "all") q = q.eq("status", status);
-    if (deviceId !== "all") q = q.eq("device_id", deviceId);
-    if (from) q = q.gte("created_at", new Date(from).toISOString());
-    if (to) q = q.lte("created_at", new Date(to + "T23:59:59").toISOString());
+    let q: any = applyMessageFilters(supabase.from("messages").select("*", { count: "exact" }));
     const { data, count } = await q.order("created_at", { ascending: false }).range(fromIndex, toIndex);
     setItems(data ?? []);
     setTotalCount(count ?? 0);
@@ -88,7 +94,6 @@ export default function Messages() {
     if (error) toast.error(error.message); else toast.success("Re-queued");
   };
 
-  const filtered = useMemo(() => items.filter((m) => !search || m.recipient?.includes(search) || m.message?.toLowerCase().includes(search.toLowerCase())), [items, search]);
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
   const filename = () => {
@@ -103,7 +108,7 @@ export default function Messages() {
     const a = document.createElement("a");
     a.href = url; a.download = `${filename()}.${ext}`; a.click();
     URL.revokeObjectURL(url);
-    toast.success(`Exported ${filtered.length} rows`);
+    toast.success(`Exported ${items.length} rows`);
   };
 
   const exportCsv = () => {
@@ -114,16 +119,16 @@ export default function Messages() {
       return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
     };
     const lines = [cols.join(",")];
-    filtered.forEach((m) => lines.push(cols.map((c) => esc(m[c])).join(",")));
+    items.forEach((m) => lines.push(cols.map((c) => esc(m[c])).join(",")));
     downloadBlob(lines.join("\n"), "csv", "text/csv");
   };
 
   const exportJson = () => {
     downloadBlob(JSON.stringify({
       generated_at: new Date().toISOString(),
-      filters: { status, device_id: deviceId, client_id: clientFilter, from: from || null, to: to || null },
-      count: filtered.length,
-      messages: filtered,
+      filters: { status, device_id: deviceId, client_id: clientFilter, from: from || null, to: to || null, search: search || null, page, page_size: pageSize },
+      count: items.length,
+      messages: items,
     }, null, 2), "json", "application/json");
   };
 
@@ -137,8 +142,8 @@ export default function Messages() {
               <Button variant="outline"><Download className="h-4 w-4 mr-1" />Export<ChevronDown className="h-3 w-3 ml-1" /></Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={exportCsv}>Download CSV ({filtered.length})</DropdownMenuItem>
-              <DropdownMenuItem onClick={exportJson}>Download JSON ({filtered.length})</DropdownMenuItem>
+              <DropdownMenuItem onClick={exportCsv}>Download CSV ({items.length})</DropdownMenuItem>
+              <DropdownMenuItem onClick={exportJson}>Download JSON ({items.length})</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Dialog open={open} onOpenChange={setOpen}>
@@ -198,7 +203,7 @@ export default function Messages() {
           </Button>
         )}
         <div className="flex items-center justify-between gap-3 flex-wrap">
-          <p className="text-xs text-muted-foreground">Showing {filtered.length} rows on this page · {totalCount} total matching messages.</p>
+          <p className="text-xs text-muted-foreground">Showing {items.length} rows on this page · {totalCount} total matching messages.</p>
           <div className="flex items-center gap-2">
             <Select value={String(pageSize)} onValueChange={(v) => { setPage(0); setPageSize(Number(v)); }}>
               <SelectTrigger className="w-[110px]"><SelectValue /></SelectTrigger>
@@ -216,8 +221,8 @@ export default function Messages() {
               <TableHead>Parts</TableHead><TableHead>Created</TableHead><TableHead></TableHead>
             </TableRow></TableHeader>
             <TableBody>
-              {filtered.length === 0 && <TableRow><TableCell colSpan={6} className="text-center text-sm text-muted-foreground py-8">No messages match filters</TableCell></TableRow>}
-              {filtered.map((m) => (
+              {items.length === 0 && <TableRow><TableCell colSpan={6} className="text-center text-sm text-muted-foreground py-8">No messages match filters</TableCell></TableRow>}
+              {items.map((m) => (
                 <TableRow key={m.id}>
                   <TableCell className="font-mono text-xs">{m.recipient}</TableCell>
                   <TableCell className="max-w-[300px] truncate text-sm">{m.message}</TableCell>
@@ -230,7 +235,7 @@ export default function Messages() {
             </TableBody>
           </Table>
         </div>
-        <p className="text-xs text-muted-foreground">Exports use the same active filters and the currently loaded page so large datasets stay predictable.</p>
+        <p className="text-xs text-muted-foreground">Exports use the same server-side filters, search term, and current page as the list.</p>
       </Card>
     </div>
   );
