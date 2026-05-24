@@ -123,14 +123,14 @@ export async function dispatchEvent(client_id: string, event_type: string, paylo
       .limit(1)
       .maybeSingle();
     const attempt = Number(lastAttempt?.attempt ?? 0) + 1;
-    let status = 0; let respText = ""; let ok = false; let responseHeaders: Record<string, string> = {}; let durationMs = 0;
+    let status = 0; let respText = ""; let ok = false; let responseHeaders: Record<string, string> = {}; let durationMs = 0; let signature: string | null = null;
     const requestHeaders = { "Content-Type": "application/json", "X-BTextman-Event": event_type };
     try {
-      const sig = await hmacSha256Hex(h.secret, body);
+      signature = await hmacSha256Hex(h.secret, body);
       const startedAt = Date.now();
       const r = await fetch(h.url, {
         method: "POST",
-        headers: { ...requestHeaders, "X-BTextman-Signature": sig },
+        headers: { ...requestHeaders, "X-BTextman-Signature": signature },
         body,
       });
       durationMs = Date.now() - startedAt;
@@ -138,8 +138,8 @@ export async function dispatchEvent(client_id: string, event_type: string, paylo
       responseHeaders = Object.fromEntries(r.headers.entries());
       await sb.from("webhook_deliveries").insert({
         webhook_id: h.id, message_id: message_id ?? null, event_type, payload,
-        target_url: h.url, request_body: safeJson(requestBody), request_headers: safeJson({ ...requestHeaders, "X-BTextman-Signature": sig }),
-        response_headers: safeJson(responseHeaders), request_signature: sig, duration_ms: durationMs,
+        target_url: h.url, request_body: safeJson(requestBody), request_headers: safeJson({ ...requestHeaders, "X-BTextman-Signature": signature }),
+        response_headers: safeJson(responseHeaders), request_signature: signature, duration_ms: durationMs,
         response_status: status, response_body: respText, attempt, succeeded: ok, delivered_at: new Date().toISOString(),
       });
       await sb.from("webhooks").update({
@@ -152,7 +152,7 @@ export async function dispatchEvent(client_id: string, event_type: string, paylo
     await sb.from("webhook_deliveries").insert({
       webhook_id: h.id, message_id: message_id ?? null, event_type, payload,
       target_url: h.url, request_body: safeJson(requestBody), request_headers: safeJson(headerSnapshot(new Headers(requestHeaders))),
-      response_headers: safeJson(responseHeaders), request_signature: null, duration_ms: durationMs,
+      response_headers: safeJson(responseHeaders), request_signature: signature, duration_ms: durationMs,
       response_status: status, response_body: respText, attempt, succeeded: ok, delivered_at: new Date().toISOString(),
     });
     await sb.from("webhooks").update({
