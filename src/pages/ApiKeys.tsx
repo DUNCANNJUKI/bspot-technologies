@@ -25,6 +25,9 @@ export default function ApiKeys() {
   const [name, setName] = useState("");
   const [created, setCreated] = useState<{ key: string; name: string; rotated?: boolean } | null>(null);
   const [auditThreshold, setAuditThreshold] = useState("1000");
+  const [auditOpen, setAuditOpen] = useState(false);
+  const [selectedKey, setSelectedKey] = useState<any | null>(null);
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
 
   const load = async () => {
     if (!clientId) return;
@@ -61,6 +64,19 @@ export default function ApiKeys() {
   const revoke = async (id: string) => {
     const { error } = await supabase.from("api_keys").update({ status: "revoked" }).eq("id", id);
     if (error) toast.error(error.message); else { toast.success("Revoked"); load(); }
+  };
+
+  const openAudit = async (key: any) => {
+    setSelectedKey(key);
+    setAuditOpen(true);
+    const { data, error } = await supabase
+      .from("api_key_request_logs")
+      .select("*")
+      .eq("api_key_id", key.id)
+      .order("created_at", { ascending: false })
+      .limit(20);
+    if (error) return toast.error(error.message);
+    setAuditLogs(data ?? []);
   };
 
   const remove = async (id: string) => {
@@ -154,7 +170,7 @@ export default function ApiKeys() {
                         </AlertDialog>
                       )}
                       {k.status === "active" ? (
-                        <Button variant="ghost" size="sm" onClick={() => revoke(k.id)}><Trash2 className="h-3 w-3 mr-1" />Revoke</Button>
+                        <Button variant="ghost" size="sm" onClick={() => openAudit(k)}><ShieldAlert className="h-3 w-3 mr-1" />Audit</Button>
                       ) : (
                         <Button variant="ghost" size="sm" onClick={() => remove(k.id)}><Trash2 className="h-3 w-3 mr-1" />Delete</Button>
                       )}
@@ -208,7 +224,7 @@ export default function ApiKeys() {
                     <div className="text-xs text-muted-foreground font-mono">{key.key_prefix}…</div>
                   </div>
                   {key.status === "active" && suspicious && (
-                    <Button size="sm" variant="destructive" onClick={() => revoke(key.id)}>Revoke now</Button>
+                    <Button size="sm" variant="destructive" onClick={() => openAudit(key)}>Review & revoke</Button>
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
@@ -221,6 +237,38 @@ export default function ApiKeys() {
         </div>
       </Card>
       </div>
+
+      <Dialog open={auditOpen} onOpenChange={setAuditOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>API key audit drilldown</DialogTitle>
+            <DialogDescription>{selectedKey?.name} · review recent calls before revoking.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="rounded-md border border-border overflow-x-auto">
+              <Table>
+                <TableHeader><TableRow><TableHead>Time</TableHead><TableHead>Endpoint</TableHead><TableHead>Device</TableHead><TableHead>IP</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
+                <TableBody>
+                  {auditLogs.length === 0 && <TableRow><TableCell colSpan={5} className="py-8 text-center text-sm text-muted-foreground">No recent calls for this key.</TableCell></TableRow>}
+                  {auditLogs.map((log) => (
+                    <TableRow key={log.id}>
+                      <TableCell className="text-xs text-muted-foreground">{new Date(log.created_at).toLocaleString()}</TableCell>
+                      <TableCell className="font-mono text-xs">{log.request_method} {log.endpoint_path}</TableCell>
+                      <TableCell className="text-xs">{log.device_name || log.device_id || "—"}</TableCell>
+                      <TableCell className="font-mono text-xs">{log.ip_address || "—"}</TableCell>
+                      <TableCell className="text-xs">{log.status_code || "—"}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setAuditOpen(false)}>Close</Button>
+              {selectedKey?.status === "active" && <Button variant="destructive" onClick={async () => { await revoke(selectedKey.id); setAuditOpen(false); }}>Revoke key</Button>}
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
