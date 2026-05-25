@@ -14,14 +14,23 @@ export default function Dashboard() {
   const [stats, setStats] = useState<Stats>({ sent: 0, delivered: 0, failed: 0, queued: 0, devices_online: 0, devices_total: 0 });
   const [recent, setRecent] = useState<any[]>([]);
   const [series, setSeries] = useState<{ time: string; count: number }[]>([]);
+  const [queueHealth, setQueueHealth] = useState<{ device_id: string | null; device_name: string; status: string; last_seen: string | null; queued: number; processing: number }[]>([]);
+  const [unassigned, setUnassigned] = useState<{ queued: number; processing: number }>({ queued: 0, processing: 0 });
 
   const load = async () => {
     const msgQ = admin ? supabase.from("messages").select("status") : supabase.from("messages").select("status").eq("client_id", clientId ?? "");
     const devQ = admin ? supabase.from("devices").select("status") : supabase.from("devices").select("status").eq("client_id", clientId ?? "");
     const recentQ = admin ? supabase.from("messages").select("*").order("created_at", { ascending: false }).limit(10)
       : supabase.from("messages").select("*").eq("client_id", clientId ?? "").order("created_at", { ascending: false }).limit(10);
+    const queueQ = admin
+      ? supabase.from("messages").select("status,device_id").in("status", ["queued", "processing"])
+      : supabase.from("messages").select("status,device_id").eq("client_id", clientId ?? "").in("status", ["queued", "processing"]);
+    const devsFullQ = admin
+      ? supabase.from("devices").select("id,device_name,status,last_seen")
+      : supabase.from("devices").select("id,device_name,status,last_seen").eq("client_id", clientId ?? "");
 
-    const [{ data: msgs }, { data: devs }, { data: recentMsgs }] = await Promise.all([msgQ, devQ, recentQ]);
+    const [{ data: msgs }, { data: devs }, { data: recentMsgs }, { data: queueRows }, { data: devsFull }] =
+      await Promise.all([msgQ, devQ, recentQ, queueQ, devsFullQ]);
     const s: Stats = { sent: 0, delivered: 0, failed: 0, queued: 0, devices_online: 0, devices_total: devs?.length ?? 0 };
     (msgs ?? []).forEach((m: any) => {
       if (m.status === "sent") s.sent++;
@@ -52,6 +61,29 @@ export default function Dashboard() {
       }
     });
     setSeries(Array.from(buckets.entries()).map(([time, count]) => ({ time, count })));
+
+    // Queue health per device
+    const counts = new Map<string, { queued: number; processing: number }>();
+    let unQ = 0, unP = 0;
+    (queueRows ?? []).forEach((r: any) => {
+      if (!r.device_id) {
+        if (r.status === "queued") unQ++; else unP++;
+        return;
+      }
+      const c = counts.get(r.device_id) ?? { queued: 0, processing: 0 };
+      if (r.status === "queued") c.queued++; else c.processing++;
+      counts.set(r.device_id, c);
+    });
+    const health = (devsFull ?? []).map((d: any) => ({
+      device_id: d.id,
+      device_name: d.device_name,
+      status: d.status,
+      last_seen: d.last_seen,
+      queued: counts.get(d.id)?.queued ?? 0,
+      processing: counts.get(d.id)?.processing ?? 0,
+    })).sort((a, b) => (b.queued + b.processing) - (a.queued + a.processing));
+    setQueueHealth(health);
+    setUnassigned({ queued: unQ, processing: unP });
   };
 
   useEffect(() => {
@@ -135,6 +167,60 @@ export default function Dashboard() {
           </div>
         </Card>
       </div>
+
+      <Card className="p-5">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div>
+            <h3 className="font-semibold">Queue health by device</h3>
+            <p className="text-xs text-muted-foreground">Confirm messages are actually moving. Stale heartbeats &gt; 90s are flagged.</p>
+          </div>
+          <Badge variant="outline" className="text-xs">{stats.queued} pending</Badge>
+        </div>
+        {(unassigned.queued + unassigned.processing) > 0 && (
+          <div className="mb-3 text-xs p-2 rounded border border-warning/30 bg-warning/10 text-warning-foreground">
+            {unassigned.queued + unassigned.processing} message(s) are not assigned to any device yet ({unassigned.queued} queued, {unassigned.processing} processing).
+          </div>
+        )}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-xs text-muted-foreground border-b border-border">
+                <th className="py-2 pr-3">Device</th>
+                <th className="py-2 pr-3">Status</th>
+                <th className="py-2 pr-3 text-right tabular-nums">Queued</th>
+                <th className="py-2 pr-3 text-right tabular-nums">Processing</th>
+                <th className="py-2 pr-3">Last heartbeat</th>
+              </tr>
+            </thead>
+            <tbody>
+              {queueHealth.length === 0 && (
+                <tr><td colSpan={5} className="py-6 text-center text-muted-foreground text-sm">No devices registered yet.</td></tr>
+              )}
+              {queueHealth.map((d) => {
+                const ageMs = d.last_seen ? Date.now() - new Date(d.last_seen).getTime() : null;
+                const stale = ageMs !== null && ageMs > 90_000;
+                return (
+                  <tr key={d.device_id ?? "u"} className="border-b border-border/40 last:border-0">
+                    <td className="py-2 pr-3 font-medium truncate max-w-[180px]">{d.device_name}</td>
+                    <td className="py-2 pr-3"><StatusBadge status={d.status} /></td>
+                    <td className="py-2 pr-3 text-right tabular-nums">{d.queued}</td>
+                    <td className="py-2 pr-3 text-right tabular-nums">{d.processing}</td>
+                    <td className="py-2 pr-3 text-xs">
+                      {d.last_seen ? (
+                        <span className={stale ? "text-destructive" : "text-muted-foreground"}>
+                          {new Date(d.last_seen).toLocaleTimeString()} {ageMs !== null && `(${formatAge(ageMs)} ago${stale ? " — stale" : ""})`}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">never</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </Card>
     </div>
   );
 }
@@ -149,4 +235,14 @@ function StatusBadge({ status }: { status: string }) {
     cancelled: "bg-muted text-muted-foreground border-border",
   };
   return <span className={`text-[10px] px-2 py-0.5 rounded border ${map[status] ?? ""}`}>{status}</span>;
+}
+
+function formatAge(ms: number) {
+  const s = Math.round(ms / 1000);
+  if (s < 60) return `${s}s`;
+  const m = Math.round(s / 60);
+  if (m < 60) return `${m}m`;
+  const h = Math.round(m / 60);
+  if (h < 24) return `${h}h`;
+  return `${Math.round(h / 24)}d`;
 }

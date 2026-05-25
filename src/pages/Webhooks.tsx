@@ -43,6 +43,7 @@ export default function Webhooks() {
   const [historyPageSize, setHistoryPageSize] = useState(20);
   const [retryingId, setRetryingId] = useState<string | null>(null);
   const [deliveryCount, setDeliveryCount] = useState(0);
+  const [detail, setDetail] = useState<any | null>(null);
 
   const load = async () => {
     if (!clientId) return;
@@ -252,12 +253,19 @@ export default function Webhooks() {
           <div className="space-y-1 text-xs p-2">
           {deliveries.length === 0 && <div className="text-muted-foreground">No deliveries yet.</div>}
           {deliveries.map((d) => (
-            <div key={d.id} className="flex items-center gap-2 py-2 border-b border-border/40">
+            <div
+              key={d.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => setDetail(d)}
+              onKeyDown={(e) => { if (e.key === "Enter") setDetail(d); }}
+              className="flex items-center gap-2 py-2 border-b border-border/40 cursor-pointer hover:bg-muted/40 rounded px-1"
+            >
               <Badge variant={d.succeeded ? "default" : "destructive"} className="shrink-0">{d.response_status || "ERR"}</Badge>
               <span className="font-mono shrink-0">{d.event_type}</span>
               <Badge variant="secondary" className="shrink-0">Attempt {d.attempt ?? 1}</Badge>
               <span className="text-muted-foreground truncate">{d.response_body?.slice(0, 100)}</span>
-              <div className="ml-auto flex items-center gap-2 shrink-0">
+              <div className="ml-auto flex items-center gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
               {!d.succeeded && (
                 <Button size="sm" variant="outline" disabled={retryingId === d.id} onClick={() => retryDelivery(d)}>
                   {retryingId === d.id ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <RefreshCw className="h-3 w-3 mr-1" />}Retry
@@ -271,6 +279,42 @@ export default function Webhooks() {
         </ScrollArea>
         <div className="text-xs text-muted-foreground">Newest deliveries first. Each retry is stored as a new attempt.</div>
       </Card>
+
+      <Dialog open={!!detail} onOpenChange={(o) => !o && setDetail(null)}>
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 flex-wrap">
+              Delivery attempt
+              {detail && <Badge variant={detail.succeeded ? "default" : "destructive"}>HTTP {detail.response_status ?? "ERR"}</Badge>}
+              {detail && <Badge variant="secondary">Attempt {detail.attempt ?? 1}</Badge>}
+              {detail?.duration_ms != null && <Badge variant="outline">{detail.duration_ms}ms</Badge>}
+            </DialogTitle>
+          </DialogHeader>
+          {detail && (
+            <ScrollArea className="flex-1 pr-3">
+              <div className="space-y-4 text-xs">
+                <DetailRow label="Event" value={detail.event_type} onCopy={copy} />
+                <DetailRow label="Target URL" value={detail.target_url ?? ""} onCopy={copy} />
+                <DetailRow label="Timestamp" value={new Date(detail.created_at).toLocaleString()} onCopy={copy} />
+                {detail.delivered_at && <DetailRow label="Delivered at" value={new Date(detail.delivered_at).toLocaleString()} onCopy={copy} />}
+                {detail.request_signature && <DetailRow label="Signature" value={detail.request_signature} onCopy={copy} mono />}
+                <DetailBlock label="Request headers" json={detail.request_headers} onCopy={copy} />
+                <DetailBlock label="Request body" json={detail.request_body ?? detail.payload} onCopy={copy} />
+                <DetailBlock label="Response headers" json={detail.response_headers} onCopy={copy} />
+                <DetailBlock label="Response body" text={detail.response_body ?? "(empty)"} onCopy={copy} />
+              </div>
+            </ScrollArea>
+          )}
+          <DialogFooter className="gap-2">
+            {detail && !detail.succeeded && (
+              <Button variant="outline" onClick={() => { retryDelivery(detail); setDetail(null); }}>
+                <RefreshCw className="h-3 w-3 mr-1" />Retry now
+              </Button>
+            )}
+            <Button onClick={() => setDetail(null)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
@@ -295,6 +339,31 @@ export default function Webhooks() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function DetailRow({ label, value, onCopy, mono }: { label: string; value: string; onCopy: (s: string) => void; mono?: boolean }) {
+  return (
+    <div>
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 flex items-center justify-between">
+        <span>{label}</span>
+        <button onClick={() => onCopy(value)} className="hover:text-foreground"><Copy className="h-3 w-3" /></button>
+      </div>
+      <div className={`bg-muted p-2 rounded break-all ${mono ? "font-mono text-[10px]" : ""}`}>{value}</div>
+    </div>
+  );
+}
+
+function DetailBlock({ label, json, text, onCopy }: { label: string; json?: any; text?: string; onCopy: (s: string) => void }) {
+  const display = text !== undefined ? text : (() => { try { return JSON.stringify(json ?? {}, null, 2); } catch { return String(json ?? ""); } })();
+  return (
+    <div>
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 flex items-center justify-between">
+        <span>{label}</span>
+        <button onClick={() => onCopy(display)} className="hover:text-foreground"><Copy className="h-3 w-3" /></button>
+      </div>
+      <pre className="text-[10px] bg-muted p-2 rounded max-h-48 overflow-auto"><code>{display}</code></pre>
     </div>
   );
 }
