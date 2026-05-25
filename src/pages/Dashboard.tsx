@@ -167,6 +167,60 @@ export default function Dashboard() {
           </div>
         </Card>
       </div>
+
+      <Card className="p-5">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div>
+            <h3 className="font-semibold">Queue health by device</h3>
+            <p className="text-xs text-muted-foreground">Confirm messages are actually moving. Stale heartbeats &gt; 90s are flagged.</p>
+          </div>
+          <Badge variant="outline" className="text-xs">{stats.queued} pending</Badge>
+        </div>
+        {(unassigned.queued + unassigned.processing) > 0 && (
+          <div className="mb-3 text-xs p-2 rounded border border-warning/30 bg-warning/10 text-warning-foreground">
+            {unassigned.queued + unassigned.processing} message(s) are not assigned to any device yet ({unassigned.queued} queued, {unassigned.processing} processing).
+          </div>
+        )}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-xs text-muted-foreground border-b border-border">
+                <th className="py-2 pr-3">Device</th>
+                <th className="py-2 pr-3">Status</th>
+                <th className="py-2 pr-3 text-right tabular-nums">Queued</th>
+                <th className="py-2 pr-3 text-right tabular-nums">Processing</th>
+                <th className="py-2 pr-3">Last heartbeat</th>
+              </tr>
+            </thead>
+            <tbody>
+              {queueHealth.length === 0 && (
+                <tr><td colSpan={5} className="py-6 text-center text-muted-foreground text-sm">No devices registered yet.</td></tr>
+              )}
+              {queueHealth.map((d) => {
+                const ageMs = d.last_seen ? Date.now() - new Date(d.last_seen).getTime() : null;
+                const stale = ageMs !== null && ageMs > 90_000;
+                return (
+                  <tr key={d.device_id ?? "u"} className="border-b border-border/40 last:border-0">
+                    <td className="py-2 pr-3 font-medium truncate max-w-[180px]">{d.device_name}</td>
+                    <td className="py-2 pr-3"><StatusBadge status={d.status} /></td>
+                    <td className="py-2 pr-3 text-right tabular-nums">{d.queued}</td>
+                    <td className="py-2 pr-3 text-right tabular-nums">{d.processing}</td>
+                    <td className="py-2 pr-3 text-xs">
+                      {d.last_seen ? (
+                        <span className={stale ? "text-destructive" : "text-muted-foreground"}>
+                          {new Date(d.last_seen).toLocaleTimeString()} {ageMs !== null && `(${formatAge(ageMs)} ago${stale ? " — stale" : ""})`}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">never</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </Card>
     </div>
   );
 }
