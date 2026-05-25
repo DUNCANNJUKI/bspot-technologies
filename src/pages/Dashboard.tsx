@@ -61,6 +61,29 @@ export default function Dashboard() {
       }
     });
     setSeries(Array.from(buckets.entries()).map(([time, count]) => ({ time, count })));
+
+    // Queue health per device
+    const counts = new Map<string, { queued: number; processing: number }>();
+    let unQ = 0, unP = 0;
+    (queueRows ?? []).forEach((r: any) => {
+      if (!r.device_id) {
+        if (r.status === "queued") unQ++; else unP++;
+        return;
+      }
+      const c = counts.get(r.device_id) ?? { queued: 0, processing: 0 };
+      if (r.status === "queued") c.queued++; else c.processing++;
+      counts.set(r.device_id, c);
+    });
+    const health = (devsFull ?? []).map((d: any) => ({
+      device_id: d.id,
+      device_name: d.device_name,
+      status: d.status,
+      last_seen: d.last_seen,
+      queued: counts.get(d.id)?.queued ?? 0,
+      processing: counts.get(d.id)?.processing ?? 0,
+    })).sort((a, b) => (b.queued + b.processing) - (a.queued + a.processing));
+    setQueueHealth(health);
+    setUnassigned({ queued: unQ, processing: unP });
   };
 
   useEffect(() => {
