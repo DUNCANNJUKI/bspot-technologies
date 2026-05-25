@@ -342,3 +342,28 @@ export default function Webhooks() {
     </div>
   );
 }
+
+function DetailRow({ label, value, onCopy, mono }: { label: string; value: string; onCopy: (s: string) => void; mono?: boolean }) {
+  return (
+    <div>
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 flex items-center justify-between">
+        <span>{label}</span>
+        <button onClick={() => onCopy(value)} className="hover:text-foreground"><Copy className="h-3 w-3" /></button>
+      </div>
+      <div className={`bg-muted p-2 rounded break-all ${mono ? "font-mono text-[10px]" : ""}`}>{value}</div>
+    </div>
+  );
+}
+
+function DetailBlock({ label, json, text, onCopy }: { label: string; json?: any; text?: string; onCopy: (s: string) => void }) {
+  const display = text !== undefined ? text : (() => { try { return JSON.stringify(json ?? {}, null, 2); } catch { return String(json ?? ""); } })();
+  return (
+    <div>
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 flex items-center justify-between">
+        <span>{label}</span>
+        <button onClick={() => onCopy(display)} className="hover:text-foreground"><Copy className="h-3 w-3" /></button>
+      </div>
+      <pre className="text-[10px] bg-muted p-2 rounded max-h-48 overflow-auto"><code>{display}</code></pre>
+    </div>
+  );
+}
