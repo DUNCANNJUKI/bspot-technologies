@@ -25,14 +25,34 @@ Deno.serve(async (req) => {
   await sb.from("devices").update(update).eq("id", device.id);
   await sb.from("device_logs").insert({ device_id: device.id, event_type: "heartbeat", payload: body });
 
-  // return any queued messages assigned (or unassigned) so device can pull
+  // ===== Recover stale "processing" messages =====
+  // Any message stuck in "processing" for >90s (no status update from device) is
+  // re-queued so it gets re-delivered in this or the next heartbeat.
+  const staleCutoff = new Date(Date.now() - 90_000).toISOString();
+  await sb.from("messages")
+    .update({ status: "queued", device_id: null, processing_at: null })
+    .eq("client_id", device.client_id)
+    .eq("status", "processing")
+    .lt("processing_at", staleCutoff);
+
+  // Acknowledge messages the device reports as already handled (id list)
+  const acks: string[] = Array.isArray(body.delivered_ids) ? body.delivered_ids.map((x: any) => String(x)) : [];
+  if (acks.length) {
+    await sb.from("messages")
+      .update({ status: "sent", sent_at: new Date().toISOString() })
+      .in("id", acks)
+      .eq("client_id", device.client_id)
+      .in("status", ["processing", "queued"]);
+  }
+
+  // Pull queued messages for this client
   const { data: pending } = await sb.from("messages")
     .select("id, recipient, message, parts_count, encoding")
     .eq("client_id", device.client_id)
-    .in("status", ["queued"])
+    .eq("status", "queued")
     .order("priority", { ascending: false })
     .order("created_at", { ascending: true })
-    .limit(10);
+    .limit(20);
 
   const pendingIds = (pending ?? []).map((item: any) => item.id);
   if (pendingIds.length) {
@@ -42,6 +62,19 @@ Deno.serve(async (req) => {
       .eq("client_id", device.client_id)
       .eq("status", "queued");
   }
+
+  // Best-effort realtime broadcast so app variants that listen on a channel still wake up.
+  try {
+    if (pendingIds.length) {
+      const channel = sb.channel(`device:${device.device_token}`);
+      await channel.send({
+        type: "broadcast",
+        event: "messages.pending",
+        payload: { messages: pending },
+      });
+      await sb.removeChannel(channel);
+    }
+  } catch (_) { /* non-fatal */ }
 
   return json({
     ok: true,
