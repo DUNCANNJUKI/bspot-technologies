@@ -253,12 +253,19 @@ export default function Webhooks() {
           <div className="space-y-1 text-xs p-2">
           {deliveries.length === 0 && <div className="text-muted-foreground">No deliveries yet.</div>}
           {deliveries.map((d) => (
-            <div key={d.id} className="flex items-center gap-2 py-2 border-b border-border/40">
+            <div
+              key={d.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => setDetail(d)}
+              onKeyDown={(e) => { if (e.key === "Enter") setDetail(d); }}
+              className="flex items-center gap-2 py-2 border-b border-border/40 cursor-pointer hover:bg-muted/40 rounded px-1"
+            >
               <Badge variant={d.succeeded ? "default" : "destructive"} className="shrink-0">{d.response_status || "ERR"}</Badge>
               <span className="font-mono shrink-0">{d.event_type}</span>
               <Badge variant="secondary" className="shrink-0">Attempt {d.attempt ?? 1}</Badge>
               <span className="text-muted-foreground truncate">{d.response_body?.slice(0, 100)}</span>
-              <div className="ml-auto flex items-center gap-2 shrink-0">
+              <div className="ml-auto flex items-center gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
               {!d.succeeded && (
                 <Button size="sm" variant="outline" disabled={retryingId === d.id} onClick={() => retryDelivery(d)}>
                   {retryingId === d.id ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <RefreshCw className="h-3 w-3 mr-1" />}Retry
