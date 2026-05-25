@@ -22,8 +22,15 @@ export default function Dashboard() {
     const devQ = admin ? supabase.from("devices").select("status") : supabase.from("devices").select("status").eq("client_id", clientId ?? "");
     const recentQ = admin ? supabase.from("messages").select("*").order("created_at", { ascending: false }).limit(10)
       : supabase.from("messages").select("*").eq("client_id", clientId ?? "").order("created_at", { ascending: false }).limit(10);
+    const queueQ = admin
+      ? supabase.from("messages").select("status,device_id").in("status", ["queued", "processing"])
+      : supabase.from("messages").select("status,device_id").eq("client_id", clientId ?? "").in("status", ["queued", "processing"]);
+    const devsFullQ = admin
+      ? supabase.from("devices").select("id,device_name,status,last_seen")
+      : supabase.from("devices").select("id,device_name,status,last_seen").eq("client_id", clientId ?? "");
 
-    const [{ data: msgs }, { data: devs }, { data: recentMsgs }] = await Promise.all([msgQ, devQ, recentQ]);
+    const [{ data: msgs }, { data: devs }, { data: recentMsgs }, { data: queueRows }, { data: devsFull }] =
+      await Promise.all([msgQ, devQ, recentQ, queueQ, devsFullQ]);
     const s: Stats = { sent: 0, delivered: 0, failed: 0, queued: 0, devices_online: 0, devices_total: devs?.length ?? 0 };
     (msgs ?? []).forEach((m: any) => {
       if (m.status === "sent") s.sent++;
