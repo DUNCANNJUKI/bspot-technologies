@@ -14,6 +14,8 @@ export default function Dashboard() {
   const [stats, setStats] = useState<Stats>({ sent: 0, delivered: 0, failed: 0, queued: 0, devices_online: 0, devices_total: 0 });
   const [recent, setRecent] = useState<any[]>([]);
   const [series, setSeries] = useState<{ time: string; count: number }[]>([]);
+  const [queueHealth, setQueueHealth] = useState<{ device_id: string | null; device_name: string; status: string; last_seen: string | null; queued: number; processing: number }[]>([]);
+  const [unassigned, setUnassigned] = useState<{ queued: number; processing: number }>({ queued: 0, processing: 0 });
 
   const load = async () => {
     const msgQ = admin ? supabase.from("messages").select("status") : supabase.from("messages").select("status").eq("client_id", clientId ?? "");
