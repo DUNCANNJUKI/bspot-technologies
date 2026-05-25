@@ -43,6 +43,7 @@ export default function Webhooks() {
   const [historyPageSize, setHistoryPageSize] = useState(20);
   const [retryingId, setRetryingId] = useState<string | null>(null);
   const [deliveryCount, setDeliveryCount] = useState(0);
+  const [detail, setDetail] = useState<any | null>(null);
 
   const load = async () => {
     if (!clientId) return;
