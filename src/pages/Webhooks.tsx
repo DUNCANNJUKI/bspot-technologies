@@ -280,6 +280,42 @@ export default function Webhooks() {
         <div className="text-xs text-muted-foreground">Newest deliveries first. Each retry is stored as a new attempt.</div>
       </Card>
 
+      <Dialog open={!!detail} onOpenChange={(o) => !o && setDetail(null)}>
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 flex-wrap">
+              Delivery attempt
+              {detail && <Badge variant={detail.succeeded ? "default" : "destructive"}>HTTP {detail.response_status ?? "ERR"}</Badge>}
+              {detail && <Badge variant="secondary">Attempt {detail.attempt ?? 1}</Badge>}
+              {detail?.duration_ms != null && <Badge variant="outline">{detail.duration_ms}ms</Badge>}
+            </DialogTitle>
+          </DialogHeader>
+          {detail && (
+            <ScrollArea className="flex-1 pr-3">
+              <div className="space-y-4 text-xs">
+                <DetailRow label="Event" value={detail.event_type} onCopy={copy} />
+                <DetailRow label="Target URL" value={detail.target_url ?? ""} onCopy={copy} />
+                <DetailRow label="Timestamp" value={new Date(detail.created_at).toLocaleString()} onCopy={copy} />
+                {detail.delivered_at && <DetailRow label="Delivered at" value={new Date(detail.delivered_at).toLocaleString()} onCopy={copy} />}
+                {detail.request_signature && <DetailRow label="Signature" value={detail.request_signature} onCopy={copy} mono />}
+                <DetailBlock label="Request headers" json={detail.request_headers} onCopy={copy} />
+                <DetailBlock label="Request body" json={detail.request_body ?? detail.payload} onCopy={copy} />
+                <DetailBlock label="Response headers" json={detail.response_headers} onCopy={copy} />
+                <DetailBlock label="Response body" text={detail.response_body ?? "(empty)"} onCopy={copy} />
+              </div>
+            </ScrollArea>
+          )}
+          <DialogFooter className="gap-2">
+            {detail && !detail.succeeded && (
+              <Button variant="outline" onClick={() => { retryDelivery(detail); setDetail(null); }}>
+                <RefreshCw className="h-3 w-3 mr-1" />Retry now
+              </Button>
+            )}
+            <Button onClick={() => setDetail(null)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader><DialogTitle>New webhook</DialogTitle></DialogHeader>
