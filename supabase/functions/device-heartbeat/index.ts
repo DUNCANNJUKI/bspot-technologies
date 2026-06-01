@@ -27,13 +27,39 @@ Deno.serve(async (req) => {
 
   // ===== Recover stale "processing" messages =====
   // Any message stuck in "processing" for >90s (no status update from device) is
-  // re-queued so it gets re-delivered in this or the next heartbeat.
+  // re-queued so it gets re-delivered. We bump retry_count and mark as failed
+  // once max_retries is exceeded so the queue can't cycle forever.
   const staleCutoff = new Date(Date.now() - 90_000).toISOString();
-  await sb.from("messages")
-    .update({ status: "queued", device_id: null, processing_at: null })
+  const { data: stale } = await sb.from("messages")
+    .select("id, retry_count, max_retries, device_id")
     .eq("client_id", device.client_id)
     .eq("status", "processing")
     .lt("processing_at", staleCutoff);
+
+  for (const m of stale ?? []) {
+    const next = (m.retry_count ?? 0) + 1;
+    if (next > (m.max_retries ?? 3)) {
+      await sb.from("messages").update({
+        status: "failed",
+        failed_at: new Date().toISOString(),
+        error_message: "device never acknowledged delivery (max retries exceeded)",
+      }).eq("id", m.id);
+      await sb.from("message_events").insert({
+        message_id: m.id,
+        event_type: "requeue.failed",
+        payload: { source: "heartbeat", previous_device_id: m.device_id, retry_count: next },
+      });
+    } else {
+      await sb.from("messages").update({
+        status: "queued", device_id: null, processing_at: null, retry_count: next,
+      }).eq("id", m.id);
+      await sb.from("message_events").insert({
+        message_id: m.id,
+        event_type: "requeue.heartbeat",
+        payload: { previous_device_id: m.device_id, retry_count: next },
+      });
+    }
+  }
 
   // Acknowledge messages the device reports as already handled (id list)
   const acks: string[] = Array.isArray(body.delivered_ids) ? body.delivered_ids.map((x: any) => String(x)) : [];
@@ -43,6 +69,13 @@ Deno.serve(async (req) => {
       .in("id", acks)
       .eq("client_id", device.client_id)
       .in("status", ["processing", "queued"]);
+    await sb.from("message_events").insert(
+      acks.map((id) => ({
+        message_id: id,
+        event_type: "sent",
+        payload: { device_id: device.id, device_token: device.device_token },
+      })),
+    );
   }
 
   // Pull queued messages for this client
@@ -61,6 +94,13 @@ Deno.serve(async (req) => {
       .in("id", pendingIds)
       .eq("client_id", device.client_id)
       .eq("status", "queued");
+    await sb.from("message_events").insert(
+      pendingIds.map((id: string) => ({
+        message_id: id,
+        event_type: "picked_up",
+        payload: { device_id: device.id, device_name: device.device_name, client_id: device.client_id },
+      })),
+    );
   }
 
   // Best-effort realtime broadcast so app variants that listen on a channel still wake up.

@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Database, Download } from "lucide-react";
+import { isAdmin } from "@/lib/auth";
 
 export default function Settings() {
   const { user, clientId, roles, refreshRoles } = useAuth();
@@ -83,6 +84,31 @@ export default function Settings() {
           <p className="text-sm text-muted-foreground">Checking…</p>
         )}
       </Card>
+
+      {isAdmin(roles) && (
+        <Card className="p-5 space-y-3 border-primary/40">
+          <div className="flex items-center gap-2">
+            <Database className="h-5 w-5 text-primary" />
+            <h2 className="font-semibold">MySQL schema export</h2>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Download <code className="text-xs">My_mysql_db.sql</code> — a full MySQL 8.0 schema dump
+            (database name: <code className="text-xs">My_mysql_db</code>) mirroring all 13 public tables:
+            clients, profiles, user_roles, devices, device_logs, messages, message_events,
+            bulk_campaigns, api_keys, api_key_request_logs, webhooks, webhook_deliveries, settings.
+          </p>
+          <div className="flex gap-2">
+            <Button asChild>
+              <a href="/My_mysql_db.sql" download="My_mysql_db.sql">
+                <Download className="h-4 w-4 mr-2" /> Download My_mysql_db.sql
+              </a>
+            </Button>
+            <Button asChild variant="outline">
+              <a href="/My_mysql_db.sql" target="_blank" rel="noreferrer">View</a>
+            </Button>
+          </div>
+        </Card>
+      )}
     </div>
   );
 }
