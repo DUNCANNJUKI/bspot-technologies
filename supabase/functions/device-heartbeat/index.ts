@@ -69,6 +69,13 @@ Deno.serve(async (req) => {
       .in("id", acks)
       .eq("client_id", device.client_id)
       .in("status", ["processing", "queued"]);
+    await sb.from("message_events").insert(
+      acks.map((id) => ({
+        message_id: id,
+        event_type: "sent",
+        payload: { device_id: device.id, device_token: device.device_token },
+      })),
+    );
   }
 
   // Pull queued messages for this client
@@ -87,6 +94,13 @@ Deno.serve(async (req) => {
       .in("id", pendingIds)
       .eq("client_id", device.client_id)
       .eq("status", "queued");
+    await sb.from("message_events").insert(
+      pendingIds.map((id: string) => ({
+        message_id: id,
+        event_type: "picked_up",
+        payload: { device_id: device.id, device_name: device.device_name, client_id: device.client_id },
+      })),
+    );
   }
 
   // Best-effort realtime broadcast so app variants that listen on a channel still wake up.
