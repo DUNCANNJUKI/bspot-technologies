@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, Smartphone, MessageSquare, Send, KeyRound,
   Users, BarChart3, ScrollText, FileCode2, Settings as SettingsIcon,
-  Webhook, Bot,
+  Webhook, Bot, Activity,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
@@ -25,6 +25,7 @@ const dev = [
 ];
 const insights = [
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
+  { title: "Message Trace", url: "/message-trace", icon: Activity },
   { title: "Logs", url: "/logs", icon: ScrollText },
 ];
 const adminItems = [{ title: "Clients", url: "/clients", icon: Users }];

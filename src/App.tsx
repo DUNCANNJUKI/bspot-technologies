@@ -23,6 +23,7 @@ import Settings from "@/pages/Settings";
 import ApiDocs from "@/pages/ApiDocs";
 import Webhooks from "@/pages/Webhooks";
 import AndroidClient from "@/pages/AndroidClient";
+import MessageTrace from "@/pages/MessageTrace";
 import NotFound from "@/pages/NotFound";
 
 const App = () => (
@@ -50,6 +51,7 @@ const App = () => (
               <Route path="/api-docs" element={<ApiDocs />} />
               <Route path="/webhooks" element={<Webhooks />} />
               <Route path="/android-client" element={<AndroidClient />} />
+              <Route path="/message-trace" element={<MessageTrace />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
 
