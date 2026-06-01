@@ -35,3 +35,6 @@ verify_jwt = false
 
 [functions.webhook-test]
 verify_jwt = false
+
+[functions.requeue-stuck-messages]
+verify_jwt = false
