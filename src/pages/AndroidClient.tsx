@@ -122,52 +122,89 @@ class GatewayService : Service() {
     prefs.edit().putString("device_token", token).apply()   // <-- persisted
   }
 
-  /** 2) HEARTBEAT every 30 seconds */
+  /** 2) HEARTBEAT every 30 seconds. Also flushes any locally-buffered delivered ids
+   *  so the server can mark them sent even if /device-status-update calls were dropped. */
+  private val deliveredBuffer = java.util.Collections.synchronizedSet(mutableSetOf<String>())
   private fun startHeartbeat(token: String) = scope.launch {
     while (isActive) {
       runCatching {
+        val ids = synchronized(deliveredBuffer) { deliveredBuffer.toList().also { deliveredBuffer.clear() } }
+        val idsJson = ids.joinToString(",") { "\"${'$'}it\"" }
         HttpClient(Android).post("${ENDPOINTS.heartbeat}") {
           header("Authorization", "Bearer \$token")
           contentType(ContentType.Application.Json)
-          setBody("""{"battery_level":\${battery()},"signal_strength":\${signal()},"internet_type":"\${netType()}","app_version":"1.0"}""")
+          setBody("""{"battery_level":\${battery()},"signal_strength":\${signal()},"internet_type":"\${netType()}","app_version":"1.0","delivered_ids":[\$idsJson]}""")
         }
       }
       delay(30_000)
     }
   }
 
-  /** 3) REALTIME — listen for new messages and send via SmsManager */
+  /** 3) REALTIME — listen for new messages and send via SmsManager with PendingIntents */
   private fun listenForMessages(token: String) = scope.launch {
-    val supabase = createSupabaseClient(BTextman.URL, BTextman.ANON) {
-      install(Realtime); install(Postgrest)
-    }
+    val supabase = createSupabaseClient(BTextman.URL, BTextman.ANON) { install(Realtime); install(Postgrest) }
     val channel = supabase.realtime.channel("device:\$token")
-    channel.postgresChangeFlow<PostgresAction.Insert>(schema = "public") {
-      table = "messages"
-    }.onEach { change ->
-      val row = change.record
-      val id = row["id"].toString()
-      val to = row["recipient"].toString()
-      val text = row["message"].toString()
-      try {
-        SmsManager.getDefault().sendTextMessage(to, null, text, null, null)
-        reportStatus(token, id, "sent")
-      } catch (e: Exception) {
-        reportStatus(token, id, "failed", e.message)
-      }
-    }.launchIn(this)
+    channel.postgresChangeFlow<PostgresAction.Insert>(schema = "public") { table = "messages" }
+      .onEach { change ->
+        val row = change.record
+        sendSms(token, row["id"].toString(), row["recipient"].toString(), row["message"].toString())
+      }.launchIn(this)
     channel.subscribe()
   }
 
-  /** 4) STATUS update back to server */
-  suspend fun reportStatus(token: String, messageId: String, status: String, err: String? = null) {
-    HttpClient(Android).post("${ENDPOINTS.statusUpdate}") {
-      header("Authorization", "Bearer \$token")
-      contentType(ContentType.Application.Json)
-      setBody("""{"message_id":"\$messageId","status":"\$status","error_message":\${err?.let { "\\"\$it\\"" } ?: "null"}}""")
+  /** Sends one SMS and wires sent/delivered PendingIntents to /message-status. */
+  private fun sendSms(token: String, id: String, to: String, text: String) {
+    val sentAction = "btextman.SMS_SENT.\$id"
+    val delivAction = "btextman.SMS_DELIVERED.\$id"
+    val sentPI = PendingIntent.getBroadcast(this, 0, Intent(sentAction).setPackage(packageName), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+    val delivPI = PendingIntent.getBroadcast(this, 0, Intent(delivAction).setPackage(packageName), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
+    registerReceiver(object : BroadcastReceiver() {
+      override fun onReceive(c: Context, i: Intent) {
+        unregisterReceiver(this)
+        if (resultCode == Activity.RESULT_OK) {
+          scope.launch { reportStatus(token, id, "sent") }
+          deliveredBuffer.add(id)               // fallback via next heartbeat
+        } else {
+          scope.launch { reportStatus(token, id, "failed", "sent resultCode=\$resultCode") }
+        }
+      }
+    }, IntentFilter(sentAction), Context.RECEIVER_NOT_EXPORTED)
+
+    registerReceiver(object : BroadcastReceiver() {
+      override fun onReceive(c: Context, i: Intent) {
+        unregisterReceiver(this)
+        if (resultCode == Activity.RESULT_OK) scope.launch { reportStatus(token, id, "delivered") }
+      }
+    }, IntentFilter(delivAction), Context.RECEIVER_NOT_EXPORTED)
+
+    try {
+      val sms = SmsManager.getDefault()
+      val parts = sms.divideMessage(text)
+      if (parts.size > 1) {
+        sms.sendMultipartTextMessage(to, null, parts,
+          ArrayList(List(parts.size) { sentPI }),
+          ArrayList(List(parts.size) { delivPI }))
+      } else {
+        sms.sendTextMessage(to, null, text, sentPI, delivPI)
+      }
+    } catch (e: Exception) {
+      scope.launch { reportStatus(token, id, "failed", e.message) }
     }
   }
+
+  /** 4) STATUS update back to server — POSTed after every successful sendTextMessage */
+  suspend fun reportStatus(token: String, messageId: String, status: String, err: String? = null) {
+    runCatching {
+      HttpClient(Android).post("${ENDPOINTS.statusUpdate}") {
+        header("Authorization", "Bearer \$token")
+        contentType(ContentType.Application.Json)
+        setBody("""{"message_id":"\$messageId","status":"\$status","error_message":\${err?.let { "\\"\$it\\"" } ?: "null"}}""")
+      }
+    }.onFailure { deliveredBuffer.add(messageId) } // retry via heartbeat
+  }
 }`;
+
 
   const ManifestRow = ({ label, value }: { label: string; value: string }) => (
     <div className="space-y-1">
