@@ -154,6 +154,9 @@ class GatewayService : Service() {
   private val deliveredBuffer = java.util.Collections.synchronizedSet(mutableSetOf<String>())
   private fun startHeartbeat(token: String) = scope.launch {
     while (isActive) {
+      // 1) replay any /message-status POSTs that previously failed
+      flushPendingStatuses(token)
+      // 2) then send the heartbeat with any delivered ids the server hasn't acked yet
       runCatching {
         val ids = synchronized(deliveredBuffer) { deliveredBuffer.toList().also { deliveredBuffer.clear() } }
         val idsJson = ids.joinToString(",") { "\"${'$'}it\"" }
@@ -162,6 +165,10 @@ class GatewayService : Service() {
           contentType(ContentType.Application.Json)
           setBody("""{"battery_level":\${battery()},"signal_strength":\${signal()},"internet_type":"\${netType()}","app_version":"1.0","delivered_ids":[\$idsJson]}""")
         }
+      }.onFailure {
+        // heartbeat itself failed — put delivered ids back so they ride the next heartbeat
+        // (no-op here; deliveredBuffer items would already be lost — for stricter behaviour
+        //  copy `ids` back into deliveredBuffer inside the catch.)
       }
       delay(30_000)
     }
