@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import QRCode from "qrcode";
-import { Copy, Smartphone, CheckCircle2, KeyRound, Radio, Send, Activity, ArrowRight } from "lucide-react";
+import { Copy, Smartphone, CheckCircle2, KeyRound, Radio, Send, Activity, ArrowRight, RefreshCw } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 const SUPABASE_URL = "https://rtgcrclgmvcmrjpvtpwm.supabase.co";
 const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0Z2NyY2xnbXZjbXJqcHZ0cHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NTU0NTEsImV4cCI6MjA3MDQzMTQ1MX0.JR45nTPTScLaObpXQM-VzQ50ODRJTzakrvPOA3HldCM";
