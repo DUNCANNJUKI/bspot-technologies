@@ -168,7 +168,7 @@ class GatewayService : Service() {
       }.onFailure {
         // heartbeat itself failed — put delivered ids back so they ride the next heartbeat
         // (no-op here; deliveredBuffer items would already be lost — for stricter behaviour
-        //  copy `ids` back into deliveredBuffer inside the catch.)
+        //  copy 'ids' back into deliveredBuffer inside the catch.)
       }
       delay(30_000)
     }
