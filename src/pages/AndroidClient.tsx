@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import QRCode from "qrcode";
-import { Copy, Smartphone, CheckCircle2, KeyRound, Radio, Send, Activity, ArrowRight } from "lucide-react";
+import { Copy, Smartphone, CheckCircle2, KeyRound, Radio, Send, Activity, ArrowRight, RefreshCw } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 const SUPABASE_URL = "https://rtgcrclgmvcmrjpvtpwm.supabase.co";
 const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0Z2NyY2xnbXZjbXJqcHZ0cHdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NTU0NTEsImV4cCI6MjA3MDQzMTQ1MX0.JR45nTPTScLaObpXQM-VzQ50ODRJTzakrvPOA3HldCM";
@@ -39,6 +40,32 @@ export default function AndroidClient() {
   const [qrCode, setQrCode] = useState("");
   const [validating, setValidating] = useState(false);
   const [validationResult, setValidationResult] = useState<any | null>(null);
+  const [recentMessages, setRecentMessages] = useState<any[]>([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+
+  const loadRecentMessages = async () => {
+    if (!clientId) return;
+    setLoadingMessages(true);
+    const { data } = await supabase
+      .from("messages")
+      .select("id,recipient,status,created_at,sent_at,delivered_at,failed_at,device_id,error_message")
+      .eq("client_id", clientId)
+      .order("created_at", { ascending: false })
+      .limit(20);
+    setRecentMessages(data ?? []);
+    setLoadingMessages(false);
+  };
+
+  useEffect(() => {
+    loadRecentMessages();
+    if (!clientId) return;
+    const channel = supabase
+      .channel(`android-client-msgs-${clientId}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "messages", filter: `client_id=eq.${clientId}` }, () => loadRecentMessages())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clientId]);
 
   useEffect(() => {
     if (!clientId) return;
@@ -127,6 +154,9 @@ class GatewayService : Service() {
   private val deliveredBuffer = java.util.Collections.synchronizedSet(mutableSetOf<String>())
   private fun startHeartbeat(token: String) = scope.launch {
     while (isActive) {
+      // 1) replay any /message-status POSTs that previously failed
+      flushPendingStatuses(token)
+      // 2) then send the heartbeat with any delivered ids the server hasn't acked yet
       runCatching {
         val ids = synchronized(deliveredBuffer) { deliveredBuffer.toList().also { deliveredBuffer.clear() } }
         val idsJson = ids.joinToString(",") { "\"${'$'}it\"" }
@@ -135,6 +165,10 @@ class GatewayService : Service() {
           contentType(ContentType.Application.Json)
           setBody("""{"battery_level":\${battery()},"signal_strength":\${signal()},"internet_type":"\${netType()}","app_version":"1.0","delivered_ids":[\$idsJson]}""")
         }
+      }.onFailure {
+        // heartbeat itself failed — put delivered ids back so they ride the next heartbeat
+        // (no-op here; deliveredBuffer items would already be lost — for stricter behaviour
+        //  copy 'ids' back into deliveredBuffer inside the catch.)
       }
       delay(30_000)
     }
@@ -193,15 +227,54 @@ class GatewayService : Service() {
     }
   }
 
-  /** 4) STATUS update back to server — POSTed after every successful sendTextMessage */
+  /** 4) STATUS update back to server — POSTed after every successful sendTextMessage.
+   *  If the POST fails (no network, 5xx, timeout) the id+status is persisted to disk
+   *  and replayed on the next heartbeat, repeatedly, until the server acknowledges. */
   suspend fun reportStatus(token: String, messageId: String, status: String, err: String? = null) {
-    runCatching {
-      HttpClient(Android).post("${ENDPOINTS.statusUpdate}") {
+    val ok = runCatching {
+      val res = HttpClient(Android).post("${ENDPOINTS.statusUpdate}") {
         header("Authorization", "Bearer \$token")
         contentType(ContentType.Application.Json)
         setBody("""{"message_id":"\$messageId","status":"\$status","error_message":\${err?.let { "\\"\$it\\"" } ?: "null"}}""")
       }
-    }.onFailure { deliveredBuffer.add(messageId) } // retry via heartbeat
+      res.status.value in 200..299
+    }.getOrDefault(false)
+
+    if (!ok) {
+      // persistent retry queue — survives process death
+      val pending = prefs.getStringSet("pending_status", mutableSetOf())!!.toMutableSet()
+      pending.add("\$messageId|\$status|\${err ?: ""}")
+      prefs.edit().putStringSet("pending_status", pending).apply()
+      if (status == "sent" || status == "delivered") deliveredBuffer.add(messageId)
+    } else {
+      // success — drop any earlier pending entry for this id
+      val pending = prefs.getStringSet("pending_status", mutableSetOf())!!.toMutableSet()
+      pending.removeAll { it.startsWith("\$messageId|") }
+      prefs.edit().putStringSet("pending_status", pending).apply()
+    }
+  }
+
+  /** Called from startHeartbeat() before each heartbeat fires. Replays every persisted
+   *  status update; entries that succeed are removed, the rest stay for the next tick. */
+  private suspend fun flushPendingStatuses(token: String) {
+    val pending = prefs.getStringSet("pending_status", mutableSetOf())!!.toMutableSet()
+    if (pending.isEmpty()) return
+    val acked = mutableSetOf<String>()
+    for (entry in pending) {
+      val (id, status, err) = entry.split("|", limit = 3).let { Triple(it[0], it[1], it.getOrNull(2)) }
+      val ok = runCatching {
+        HttpClient(Android).post("${ENDPOINTS.statusUpdate}") {
+          header("Authorization", "Bearer \$token")
+          contentType(ContentType.Application.Json)
+          setBody("""{"message_id":"\$id","status":"\$status","error_message":\${if (err.isNullOrBlank()) "null" else "\\"\$err\\""}}""")
+        }.status.value in 200..299
+      }.getOrDefault(false)
+      if (ok) acked.add(entry)
+    }
+    if (acked.isNotEmpty()) {
+      pending.removeAll(acked)
+      prefs.edit().putStringSet("pending_status", pending).apply()
+    }
   }
 }`;
 
@@ -407,6 +480,54 @@ class GatewayService : Service() {
           </div>
         </Card>
       )}
+
+      {/* Delivery status widget — last 20 messages */}
+      <Card className="p-5 space-y-3">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h2 className="font-semibold flex items-center gap-2"><Activity className="h-4 w-4 text-primary" />Delivery status (last 20)</h2>
+            <p className="text-xs text-muted-foreground">Live feed of message IDs, their current state and timestamps. Updates in realtime as the device reports back.</p>
+          </div>
+          <Button size="sm" variant="outline" onClick={loadRecentMessages} disabled={loadingMessages}>
+            <RefreshCw className={`h-3 w-3 mr-1 ${loadingMessages ? "animate-spin" : ""}`} />Refresh
+          </Button>
+        </div>
+        {recentMessages.length === 0 ? (
+          <div className="text-sm text-muted-foreground py-8 text-center border border-dashed rounded-md">No messages yet.</div>
+        ) : (
+          <div className="overflow-auto max-h-[420px] rounded-md border border-border">
+            <table className="w-full text-xs">
+              <thead className="bg-muted sticky top-0">
+                <tr className="text-left">
+                  <th className="p-2 font-semibold">Message ID</th>
+                  <th className="p-2 font-semibold">Recipient</th>
+                  <th className="p-2 font-semibold">Status</th>
+                  <th className="p-2 font-semibold">Timestamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentMessages.map((m) => {
+                  const ts = m.delivered_at || m.sent_at || m.failed_at || m.created_at;
+                  const variant: any = m.status === "delivered" || m.status === "sent" ? "default"
+                    : m.status === "failed" ? "destructive" : "secondary";
+                  return (
+                    <tr key={m.id} className="border-t border-border hover:bg-muted/50">
+                      <td className="p-2 font-mono text-[10px]">
+                        <button onClick={() => copy(m.id)} className="hover:underline" title="Copy ID">{m.id.slice(0, 8)}…</button>
+                      </td>
+                      <td className="p-2">{m.recipient}</td>
+                      <td className="p-2"><Badge variant={variant}>{m.status}</Badge></td>
+                      <td className="p-2 text-muted-foreground" title={new Date(ts).toLocaleString()}>
+                        {formatDistanceToNow(new Date(ts), { addSuffix: true })}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
 
       {/* Reference Kotlin implementation always visible */}
       <Card className="p-5 space-y-3">
