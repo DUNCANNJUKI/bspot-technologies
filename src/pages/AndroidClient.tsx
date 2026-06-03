@@ -220,15 +220,54 @@ class GatewayService : Service() {
     }
   }
 
-  /** 4) STATUS update back to server — POSTed after every successful sendTextMessage */
+  /** 4) STATUS update back to server — POSTed after every successful sendTextMessage.
+   *  If the POST fails (no network, 5xx, timeout) the id+status is persisted to disk
+   *  and replayed on the next heartbeat, repeatedly, until the server acknowledges. */
   suspend fun reportStatus(token: String, messageId: String, status: String, err: String? = null) {
-    runCatching {
-      HttpClient(Android).post("${ENDPOINTS.statusUpdate}") {
+    val ok = runCatching {
+      val res = HttpClient(Android).post("${ENDPOINTS.statusUpdate}") {
         header("Authorization", "Bearer \$token")
         contentType(ContentType.Application.Json)
         setBody("""{"message_id":"\$messageId","status":"\$status","error_message":\${err?.let { "\\"\$it\\"" } ?: "null"}}""")
       }
-    }.onFailure { deliveredBuffer.add(messageId) } // retry via heartbeat
+      res.status.value in 200..299
+    }.getOrDefault(false)
+
+    if (!ok) {
+      // persistent retry queue — survives process death
+      val pending = prefs.getStringSet("pending_status", mutableSetOf())!!.toMutableSet()
+      pending.add("\$messageId|\$status|\${err ?: ""}")
+      prefs.edit().putStringSet("pending_status", pending).apply()
+      if (status == "sent" || status == "delivered") deliveredBuffer.add(messageId)
+    } else {
+      // success — drop any earlier pending entry for this id
+      val pending = prefs.getStringSet("pending_status", mutableSetOf())!!.toMutableSet()
+      pending.removeAll { it.startsWith("\$messageId|") }
+      prefs.edit().putStringSet("pending_status", pending).apply()
+    }
+  }
+
+  /** Called from startHeartbeat() before each heartbeat fires. Replays every persisted
+   *  status update; entries that succeed are removed, the rest stay for the next tick. */
+  private suspend fun flushPendingStatuses(token: String) {
+    val pending = prefs.getStringSet("pending_status", mutableSetOf())!!.toMutableSet()
+    if (pending.isEmpty()) return
+    val acked = mutableSetOf<String>()
+    for (entry in pending) {
+      val (id, status, err) = entry.split("|", limit = 3).let { Triple(it[0], it[1], it.getOrNull(2)) }
+      val ok = runCatching {
+        HttpClient(Android).post("${ENDPOINTS.statusUpdate}") {
+          header("Authorization", "Bearer \$token")
+          contentType(ContentType.Application.Json)
+          setBody("""{"message_id":"\$id","status":"\$status","error_message":\${if (err.isNullOrBlank()) "null" else "\\"\$err\\""}}""")
+        }.status.value in 200..299
+      }.getOrDefault(false)
+      if (ok) acked.add(entry)
+    }
+    if (acked.isNotEmpty()) {
+      pending.removeAll(acked)
+      prefs.edit().putStringSet("pending_status", pending).apply()
+    }
   }
 }`;
 
