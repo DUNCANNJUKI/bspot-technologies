@@ -481,6 +481,54 @@ class GatewayService : Service() {
         </Card>
       )}
 
+      {/* Delivery status widget — last 20 messages */}
+      <Card className="p-5 space-y-3">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h2 className="font-semibold flex items-center gap-2"><Activity className="h-4 w-4 text-primary" />Delivery status (last 20)</h2>
+            <p className="text-xs text-muted-foreground">Live feed of message IDs, their current state and timestamps. Updates in realtime as the device reports back.</p>
+          </div>
+          <Button size="sm" variant="outline" onClick={loadRecentMessages} disabled={loadingMessages}>
+            <RefreshCw className={`h-3 w-3 mr-1 ${loadingMessages ? "animate-spin" : ""}`} />Refresh
+          </Button>
+        </div>
+        {recentMessages.length === 0 ? (
+          <div className="text-sm text-muted-foreground py-8 text-center border border-dashed rounded-md">No messages yet.</div>
+        ) : (
+          <div className="overflow-auto max-h-[420px] rounded-md border border-border">
+            <table className="w-full text-xs">
+              <thead className="bg-muted sticky top-0">
+                <tr className="text-left">
+                  <th className="p-2 font-semibold">Message ID</th>
+                  <th className="p-2 font-semibold">Recipient</th>
+                  <th className="p-2 font-semibold">Status</th>
+                  <th className="p-2 font-semibold">Timestamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentMessages.map((m) => {
+                  const ts = m.delivered_at || m.sent_at || m.failed_at || m.created_at;
+                  const variant: any = m.status === "delivered" || m.status === "sent" ? "default"
+                    : m.status === "failed" ? "destructive" : "secondary";
+                  return (
+                    <tr key={m.id} className="border-t border-border hover:bg-muted/50">
+                      <td className="p-2 font-mono text-[10px]">
+                        <button onClick={() => copy(m.id)} className="hover:underline" title="Copy ID">{m.id.slice(0, 8)}…</button>
+                      </td>
+                      <td className="p-2">{m.recipient}</td>
+                      <td className="p-2"><Badge variant={variant}>{m.status}</Badge></td>
+                      <td className="p-2 text-muted-foreground" title={new Date(ts).toLocaleString()}>
+                        {formatDistanceToNow(new Date(ts), { addSuffix: true })}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+
       {/* Reference Kotlin implementation always visible */}
       <Card className="p-5 space-y-3">
         <div className="flex items-center justify-between">
