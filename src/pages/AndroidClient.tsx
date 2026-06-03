@@ -40,6 +40,32 @@ export default function AndroidClient() {
   const [qrCode, setQrCode] = useState("");
   const [validating, setValidating] = useState(false);
   const [validationResult, setValidationResult] = useState<any | null>(null);
+  const [recentMessages, setRecentMessages] = useState<any[]>([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+
+  const loadRecentMessages = async () => {
+    if (!clientId) return;
+    setLoadingMessages(true);
+    const { data } = await supabase
+      .from("messages")
+      .select("id,recipient,status,created_at,sent_at,delivered_at,failed_at,device_id,error_message")
+      .eq("client_id", clientId)
+      .order("created_at", { ascending: false })
+      .limit(20);
+    setRecentMessages(data ?? []);
+    setLoadingMessages(false);
+  };
+
+  useEffect(() => {
+    loadRecentMessages();
+    if (!clientId) return;
+    const channel = supabase
+      .channel(`android-client-msgs-${clientId}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "messages", filter: `client_id=eq.${clientId}` }, () => loadRecentMessages())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clientId]);
 
   useEffect(() => {
     if (!clientId) return;
