@@ -529,7 +529,7 @@ class GatewayService : Service() {
               value={pollInterval}
               onChange={(e) => setPollInterval(Math.max(2, Number(e.target.value) || 10))}
               className="h-8 w-20"
-              disabled={!autoPoll}
+              disabled={!autoPoll || realtimeStatus === "live"}
             />
             <span className="text-muted-foreground">sec</span>
             <Button size="sm" variant="outline" onClick={loadRecentMessages} disabled={loadingMessages}>
