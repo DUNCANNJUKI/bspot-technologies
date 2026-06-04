@@ -502,11 +502,27 @@ class GatewayService : Service() {
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h2 className="font-semibold flex items-center gap-2"><Activity className="h-4 w-4 text-primary" />Delivery status (last 20)</h2>
-            <p className="text-xs text-muted-foreground">Live feed of message IDs, their current state and timestamps. Updates in realtime as the device reports back.</p>
+            <p className="text-xs text-muted-foreground">Live feed of message IDs, state, timestamps and failure reasons. Auto-pauses when the tab is hidden.</p>
           </div>
-          <Button size="sm" variant="outline" onClick={loadRecentMessages} disabled={loadingMessages}>
-            <RefreshCw className={`h-3 w-3 mr-1 ${loadingMessages ? "animate-spin" : ""}`} />Refresh
-          </Button>
+          <div className="flex items-center gap-2 text-xs">
+            <label className="flex items-center gap-1">
+              <input type="checkbox" checked={autoPoll} onChange={(e) => setAutoPoll(e.target.checked)} />
+              Auto-poll
+            </label>
+            <Input
+              type="number"
+              min={2}
+              max={300}
+              value={pollInterval}
+              onChange={(e) => setPollInterval(Math.max(2, Number(e.target.value) || 10))}
+              className="h-8 w-20"
+              disabled={!autoPoll}
+            />
+            <span className="text-muted-foreground">sec</span>
+            <Button size="sm" variant="outline" onClick={loadRecentMessages} disabled={loadingMessages}>
+              <RefreshCw className={`h-3 w-3 mr-1 ${loadingMessages ? "animate-spin" : ""}`} />Refresh
+            </Button>
+          </div>
         </div>
         {recentMessages.length === 0 ? (
           <div className="text-sm text-muted-foreground py-8 text-center border border-dashed rounded-md">No messages yet.</div>
@@ -518,6 +534,7 @@ class GatewayService : Service() {
                   <th className="p-2 font-semibold">Message ID</th>
                   <th className="p-2 font-semibold">Recipient</th>
                   <th className="p-2 font-semibold">Status</th>
+                  <th className="p-2 font-semibold">Failure reason</th>
                   <th className="p-2 font-semibold">Timestamp</th>
                 </tr>
               </thead>
@@ -527,13 +544,22 @@ class GatewayService : Service() {
                   const variant: any = m.status === "delivered" || m.status === "sent" ? "default"
                     : m.status === "failed" ? "destructive" : "secondary";
                   return (
-                    <tr key={m.id} className="border-t border-border hover:bg-muted/50">
+                    <tr key={m.id} className="border-t border-border hover:bg-muted/50 align-top">
                       <td className="p-2 font-mono text-[10px]">
                         <button onClick={() => copy(m.id)} className="hover:underline" title="Copy ID">{m.id.slice(0, 8)}…</button>
                       </td>
                       <td className="p-2">{m.recipient}</td>
                       <td className="p-2"><Badge variant={variant}>{m.status}</Badge></td>
-                      <td className="p-2 text-muted-foreground" title={new Date(ts).toLocaleString()}>
+                      <td className="p-2 max-w-[280px]">
+                        {m.status === "failed" ? (
+                          <span className="text-destructive break-words" title={m.error_message || "unknown error"}>
+                            {m.error_message || "unknown error"}
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </td>
+                      <td className="p-2 text-muted-foreground whitespace-nowrap" title={new Date(ts).toLocaleString()}>
                         {formatDistanceToNow(new Date(ts), { addSuffix: true })}
                       </td>
                     </tr>
@@ -543,6 +569,19 @@ class GatewayService : Service() {
             </table>
           </div>
         )}
+      </Card>
+
+      {/* Prompt to give an app generator so it syncs properly with the gateway */}
+      <Card className="p-5 space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold flex items-center gap-2"><Smartphone className="h-4 w-4 text-primary" />App-generator sync prompt</h2>
+          <Button size="sm" variant="outline" onClick={() => copy(APP_GENERATOR_PROMPT)}><Copy className="h-3 w-3 mr-1" />Copy prompt</Button>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Paste this into your Android app generator (Cursor, Claude, ChatGPT, etc.) to make the client fetch queued messages
+          and report delivery state to this gateway correctly.
+        </p>
+        <pre className="text-xs bg-muted rounded-md p-4 overflow-auto max-h-[420px] whitespace-pre-wrap"><code>{APP_GENERATOR_PROMPT}</code></pre>
       </Card>
 
       {/* Reference Kotlin implementation always visible */}
@@ -556,3 +595,30 @@ class GatewayService : Service() {
     </div>
   );
 }
+
+const APP_GENERATOR_PROMPT = `Modify the Android SMS-gateway client so it fetches data from and syncs reliably with the B-SPOT gateway.
+
+Endpoints (Supabase edge functions, base = ${"https://rtgcrclgmvcmrjpvtpwm.supabase.co"}/functions/v1):
+  POST /device-heartbeat        — auth: Bearer <device_token>; body: { battery_level, signal_strength, internet_type, ip_address, app_version, delivered_ids: string[] }
+                                  → returns { pending_sms: [{ id, phone_number, content, sim_slot }] }
+  POST /device-status-update    — auth: Bearer <device_token>; body: { message_id, status: "processing"|"sent"|"delivered"|"failed", error_message? }
+
+Required behavior:
+1. Foreground service runs forever; WorkManager periodic worker every 1 min as a backup wake-up.
+2. Heartbeat every 20–30 s. Always include delivered_ids[] for any messages that succeeded but whose /device-status-update POST has not yet been acknowledged (the server treats this list as authoritative).
+3. For each message returned in pending_sms:
+   a. Immediately POST /device-status-update status=processing.
+   b. Send via SmsManager.sendMultipartTextMessage with two PendingIntent arrays:
+      - SMS_SENT.<id>      → on success: POST status=sent; on failure: POST status=failed with error_message = result-code name (GENERIC_FAILURE, NO_SERVICE, NULL_PDU, RADIO_OFF, etc.).
+      - SMS_DELIVERED.<id> → POST status=delivered.
+   c. If any POST fails (network/5xx), persist {id,status,error_message} to SharedPreferences "pending_status" and replay it before the next heartbeat; on 2xx, remove it.
+4. Retry/replay loop must be idempotent — server accepts repeated terminal status updates without side effects.
+5. Permissions: SEND_SMS, READ_PHONE_STATE, RECEIVE_BOOT_COMPLETED, FOREGROUND_SERVICE, POST_NOTIFICATIONS, INTERNET, ACCESS_NETWORK_STATE. Request runtime SMS permission with rationale.
+6. Battery: addToBatteryOptimizationWhitelist via ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS; show a card in the UI if not whitelisted.
+7. Network: use OkHttp with 15 s connect / 30 s read timeout, exponential backoff (1s,2s,4s,8s capped 30s) on 5xx and IOException.
+8. Logging: ring-buffer last 200 events (heartbeat, picked_up, sent, delivered, failed, retry) visible in-app for debugging.
+9. Device token is stored in EncryptedSharedPreferences; never log it.
+10. On every successful sendTextMessage, increment a local counter and surface "sent today / failed today" in the app UI for parity with the gateway dashboard.
+
+Acceptance test: send an SMS from the gateway dashboard to the device's number → within 30 s the message row flips queued → processing → sent → delivered, with no rows getting stuck in "processing" longer than 90 seconds.`;
+
