@@ -42,6 +42,8 @@ export default function AndroidClient() {
   const [validationResult, setValidationResult] = useState<any | null>(null);
   const [recentMessages, setRecentMessages] = useState<any[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [autoPoll, setAutoPoll] = useState(true);
+  const [pollInterval, setPollInterval] = useState(10);
 
   const loadRecentMessages = async () => {
     if (!clientId) return;
