@@ -514,8 +514,12 @@ class GatewayService : Service() {
             <p className="text-xs text-muted-foreground">Live feed of message IDs, state, timestamps and failure reasons. Auto-pauses when the tab is hidden.</p>
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <label className="flex items-center gap-1">
-              <input type="checkbox" checked={autoPoll} onChange={(e) => setAutoPoll(e.target.checked)} />
+            <Badge variant={realtimeStatus === "live" ? "default" : realtimeStatus === "fallback" ? "destructive" : "secondary"} className="gap-1">
+              <span className={`h-1.5 w-1.5 rounded-full ${realtimeStatus === "live" ? "bg-success animate-pulse" : realtimeStatus === "fallback" ? "bg-destructive" : "bg-muted-foreground"}`} />
+              {realtimeStatus === "live" ? "Realtime" : realtimeStatus === "fallback" ? "Polling (fallback)" : "Connecting…"}
+            </Badge>
+            <label className="flex items-center gap-1" title={realtimeStatus === "live" ? "Polling disabled while realtime is connected" : ""}>
+              <input type="checkbox" checked={autoPoll} onChange={(e) => setAutoPoll(e.target.checked)} disabled={realtimeStatus === "live"} />
               Auto-poll
             </label>
             <Input
