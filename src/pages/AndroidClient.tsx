@@ -44,6 +44,7 @@ export default function AndroidClient() {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [autoPoll, setAutoPoll] = useState(true);
   const [pollInterval, setPollInterval] = useState(10);
+  const [realtimeStatus, setRealtimeStatus] = useState<"connecting" | "live" | "fallback">("connecting");
 
   const loadRecentMessages = async () => {
     if (!clientId) return;
@@ -58,20 +59,27 @@ export default function AndroidClient() {
     setLoadingMessages(false);
   };
 
+  // Realtime stream (Supabase WebSocket) — falls back to polling on error/timeout.
   useEffect(() => {
     loadRecentMessages();
     if (!clientId) return;
+    let cancelled = false;
     const channel = supabase
       .channel(`android-client-msgs-${clientId}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "messages", filter: `client_id=eq.${clientId}` }, () => loadRecentMessages())
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
+      .subscribe((status) => {
+        if (cancelled) return;
+        if (status === "SUBSCRIBED") setRealtimeStatus("live");
+        else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") setRealtimeStatus("fallback");
+      });
+    return () => { cancelled = true; supabase.removeChannel(channel); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId]);
 
-  // Auto-polling: only ticks while tab is visible.
+  // Polling — only runs when realtime is NOT live (fallback) and autoPoll is enabled.
+  // Auto-pauses when the tab is hidden.
   useEffect(() => {
-    if (!autoPoll || !clientId) return;
+    if (!autoPoll || !clientId || realtimeStatus === "live") return;
     let timer: number | undefined;
     const tick = () => { if (!document.hidden) loadRecentMessages(); };
     const start = () => { timer = window.setInterval(tick, Math.max(2, pollInterval) * 1000); };
@@ -81,7 +89,8 @@ export default function AndroidClient() {
     document.addEventListener("visibilitychange", onVis);
     return () => { stop(); document.removeEventListener("visibilitychange", onVis); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoPoll, pollInterval, clientId]);
+  }, [autoPoll, pollInterval, clientId, realtimeStatus]);
+
 
   useEffect(() => {
     if (!clientId) return;
