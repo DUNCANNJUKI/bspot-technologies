@@ -69,6 +69,20 @@ export default function AndroidClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId]);
 
+  // Auto-polling: only ticks while tab is visible.
+  useEffect(() => {
+    if (!autoPoll || !clientId) return;
+    let timer: number | undefined;
+    const tick = () => { if (!document.hidden) loadRecentMessages(); };
+    const start = () => { timer = window.setInterval(tick, Math.max(2, pollInterval) * 1000); };
+    const stop = () => { if (timer) { clearInterval(timer); timer = undefined; } };
+    const onVis = () => { stop(); if (!document.hidden) { tick(); start(); } };
+    if (!document.hidden) start();
+    document.addEventListener("visibilitychange", onVis);
+    return () => { stop(); document.removeEventListener("visibilitychange", onVis); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoPoll, pollInterval, clientId]);
+
   useEffect(() => {
     if (!clientId) return;
     supabase.from("api_keys").select("id").eq("client_id", clientId).eq("status", "active").limit(1)
