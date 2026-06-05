@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, Radio } from "lucide-react";
+import Seo from "@/components/Seo";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -36,10 +37,15 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+      <Seo
+        title="Reset password — B-TEXTMAN"
+        description="Set a new password for your B-TEXTMAN SMS gateway account."
+        path="/reset-password"
+      />
       <Card className="w-full max-w-md p-8">
         <div className="flex items-center gap-2 mb-6">
           <div className="h-10 w-10 rounded-lg bg-gradient-primary flex items-center justify-center"><Radio className="h-5 w-5 text-primary-foreground" /></div>
-          <div><div className="font-bold text-lg">Set a new password</div></div>
+          <div><h1 className="font-bold text-lg">Set a new password</h1></div>
         </div>
         {ready && (
           <form onSubmit={submit} className="space-y-4">

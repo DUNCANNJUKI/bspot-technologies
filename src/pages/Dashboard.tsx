@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Smartphone, MessageSquare, CheckCircle2, XCircle, Clock, Activity } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, AreaChart, Area } from "recharts";
+import Seo from "@/components/Seo";
 
 type Stats = { sent: number; delivered: number; failed: number; queued: number; devices_online: number; devices_total: number };
 
@@ -119,6 +120,11 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
+      <Seo
+        title="Dashboard — B-TEXTMAN SMS Gateway"
+        description="Realtime overview of your SMS gateway: traffic, device health, queue status, and recent message activity."
+        path="/dashboard"
+      />
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-sm text-muted-foreground">Realtime view of your SMS gateway</p>
@@ -139,7 +145,7 @@ export default function Dashboard() {
       <div className="grid lg:grid-cols-3 gap-4">
         <Card className="p-5 lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold">Traffic — last 24 hours</h3>
+            <h2 className="font-semibold">Traffic — last 24 hours</h2>
             <Badge variant="outline" className="text-xs">Realtime</Badge>
           </div>
           <div className="h-64">
@@ -162,7 +168,7 @@ export default function Dashboard() {
         </Card>
 
         <Card className="p-5">
-          <h3 className="font-semibold mb-4">Recent messages</h3>
+          <h2 className="font-semibold mb-4">Recent messages</h2>
           <div className="space-y-2 max-h-64 overflow-auto">
             {recent.length === 0 && <p className="text-sm text-muted-foreground">No messages yet</p>}
             {recent.map((m) => (
@@ -181,7 +187,7 @@ export default function Dashboard() {
       <Card className="p-5">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <div>
-            <h3 className="font-semibold">Queue health by device</h3>
+            <h2 className="font-semibold">Queue health by device</h2>
             <p className="text-xs text-muted-foreground">Confirm messages are actually moving. Stale heartbeats &gt; 90s are flagged.</p>
           </div>
           <Badge variant="outline" className="text-xs">{stats.queued} pending</Badge>

@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Radio, Loader2 } from "lucide-react";
+import Seo from "@/components/Seo";
 import { z } from "zod";
 
 const emailSchema = z.string().trim().email("Invalid email").max(255);
@@ -70,6 +71,11 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+      <Seo
+        title="Sign in to B-TEXTMAN — SMS Gateway Console"
+        description="Sign in or create a B-TEXTMAN account to manage your Android SMS gateway devices, API keys, and message traffic."
+        path="/auth"
+      />
       <div className="absolute inset-0 bg-grid opacity-30" />
       <div className="absolute inset-0" style={{ background: "var(--gradient-glow)" }} />
       <Card className="w-full max-w-md p-8 relative z-10 shadow-card border-border/60">
@@ -78,7 +84,7 @@ export default function Auth() {
             <Radio className="h-5 w-5 text-primary-foreground" />
           </div>
           <div>
-            <div className="font-bold text-lg leading-none">B TEXTMAN</div>
+            <h1 className="font-bold text-lg leading-none">Sign in to B-TEXTMAN</h1>
             <div className="text-xs text-muted-foreground">SMS Gateway Control Center</div>
           </div>
         </div>
