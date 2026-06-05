@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
@@ -45,39 +45,113 @@ export default function AndroidClient() {
   const [autoPoll, setAutoPoll] = useState(true);
   const [pollInterval, setPollInterval] = useState(10);
   const [realtimeStatus, setRealtimeStatus] = useState<"connecting" | "live" | "fallback">("connecting");
+  const [reconnectAttempt, setReconnectAttempt] = useState(0);
 
-  const loadRecentMessages = async () => {
+  // ---- De-dup + ordering ----
+  // Status progression rank: terminal states (delivered/failed) cannot be overwritten
+  // by a stale "queued"/"processing"/"sent" update arriving out of order.
+  const STATUS_RANK: Record<string, number> = {
+    queued: 1, processing: 2, sent: 3, delivered: 4, failed: 4,
+  };
+  // Tracks the highest-rank state we've already applied per message id, so realtime
+  // and polled updates can't introduce duplicates or regress a row.
+  const seenRef = useRef<Map<string, { rank: number; updated_at: string }>>(new Map());
+
+  const shouldApply = (row: any) => {
+    if (!row?.id) return false;
+    const incomingRank = STATUS_RANK[row.status] ?? 0;
+    const incomingTs = row.updated_at || row.delivered_at || row.sent_at || row.failed_at || row.created_at || "";
+    const prev = seenRef.current.get(row.id);
+    if (!prev) return true;
+    if (incomingRank < prev.rank) return false;                       // status regressed → drop
+    if (incomingRank === prev.rank && incomingTs <= prev.updated_at) return false; // duplicate / older
+    return true;
+  };
+
+  const mergeRows = useCallback((incoming: any[]) => {
+    setRecentMessages((prev) => {
+      const map = new Map<string, any>(prev.map((m) => [m.id, m]));
+      for (const row of incoming) {
+        if (!shouldApply(row)) continue;
+        map.set(row.id, { ...(map.get(row.id) ?? {}), ...row });
+        seenRef.current.set(row.id, {
+          rank: STATUS_RANK[row.status] ?? 0,
+          updated_at: row.updated_at || row.delivered_at || row.sent_at || row.failed_at || row.created_at || "",
+        });
+      }
+      // newest first by created_at, capped at 20
+      return Array.from(map.values())
+        .sort((a, b) => (b.created_at ?? "").localeCompare(a.created_at ?? ""))
+        .slice(0, 20);
+    });
+  }, []);
+
+  const loadRecentMessages = useCallback(async () => {
     if (!clientId) return;
     setLoadingMessages(true);
     const { data } = await supabase
       .from("messages")
-      .select("id,recipient,status,created_at,sent_at,delivered_at,failed_at,device_id,error_message")
+      .select("id,recipient,status,created_at,updated_at,sent_at,delivered_at,failed_at,device_id,error_message")
       .eq("client_id", clientId)
       .order("created_at", { ascending: false })
       .limit(20);
-    setRecentMessages(data ?? []);
+    if (data) mergeRows(data);
     setLoadingMessages(false);
-  };
+  }, [clientId, mergeRows]);
 
-  // Realtime stream (Supabase WebSocket) — falls back to polling on error/timeout.
+  // ---- Realtime stream w/ exponential backoff reconnect ----
+  // Backoff: 2,4,8,16,30,30… seconds. Each failed subscribe bumps reconnectAttempt,
+  // which schedules the next attempt — never spams the gateway with rapid retries.
   useEffect(() => {
-    loadRecentMessages();
     if (!clientId) return;
+    loadRecentMessages();
     let cancelled = false;
+    let openTimer: number | undefined;
+    setRealtimeStatus((s) => (s === "live" ? "connecting" : s));
+
     const channel = supabase
-      .channel(`android-client-msgs-${clientId}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "messages", filter: `client_id=eq.${clientId}` }, () => loadRecentMessages())
+      .channel(`android-client-msgs-${clientId}-${reconnectAttempt}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "messages", filter: `client_id=eq.${clientId}` },
+        (payload: any) => {
+          const row = (payload.new ?? payload.old);
+          if (row) mergeRows([row]);
+        },
+      )
       .subscribe((status) => {
         if (cancelled) return;
-        if (status === "SUBSCRIBED") setRealtimeStatus("live");
-        else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") setRealtimeStatus("fallback");
+        if (status === "SUBSCRIBED") {
+          setRealtimeStatus("live");
+          if (openTimer) { clearTimeout(openTimer); openTimer = undefined; }
+        } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+          setRealtimeStatus("fallback");
+          // schedule next reconnect with exponential backoff (cap 30s)
+          const delay = Math.min(30_000, 2_000 * Math.pow(2, reconnectAttempt));
+          window.setTimeout(() => { if (!cancelled) setReconnectAttempt((n) => n + 1); }, delay);
+        }
       });
-    return () => { cancelled = true; supabase.removeChannel(channel); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clientId]);
 
-  // Polling — only runs when realtime is NOT live (fallback) and autoPoll is enabled.
-  // Auto-pauses when the tab is hidden.
+    // 10s open guard — if we never see SUBSCRIBED, treat as fallback and schedule retry
+    openTimer = window.setTimeout(() => {
+      setRealtimeStatus((s) => {
+        if (s === "live") return s;
+        const delay = Math.min(30_000, 2_000 * Math.pow(2, reconnectAttempt));
+        window.setTimeout(() => { if (!cancelled) setReconnectAttempt((n) => n + 1); }, delay);
+        return "fallback";
+      });
+    }, 10_000);
+
+    return () => {
+      cancelled = true;
+      if (openTimer) clearTimeout(openTimer);
+      supabase.removeChannel(channel);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clientId, reconnectAttempt]);
+
+  // ---- Polling fallback ----
+  // Only runs when realtime is NOT live and autoPoll is on. Auto-pauses on hidden tab.
   useEffect(() => {
     if (!autoPoll || !clientId || realtimeStatus === "live") return;
     let timer: number | undefined;
@@ -90,6 +164,8 @@ export default function AndroidClient() {
     return () => { stop(); document.removeEventListener("visibilitychange", onVis); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoPoll, pollInterval, clientId, realtimeStatus]);
+
+
 
 
   useEffect(() => {
