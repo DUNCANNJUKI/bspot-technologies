@@ -2,10 +2,16 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Smartphone, Zap, ShieldCheck, BarChart3, Globe2, ArrowRight, CheckCircle2 } from "lucide-react";
 import logo from "@/assets/btextman-logo.png";
+import Seo from "@/components/Seo";
 
 export default function Landing() {
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
+      <Seo
+        title="B-TEXTMAN — Cloud SMS Gateway from Android Phones"
+        description="Turn Android phones with real SIM cards into a programmable SMS gateway. REST API, multi-device routing, and realtime delivery reports."
+        path="/"
+      />
       <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
       <div className="absolute inset-0 pointer-events-none" style={{ background: "var(--gradient-glow)" }} />
 

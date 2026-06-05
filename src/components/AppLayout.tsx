@@ -24,7 +24,7 @@ export default function AppLayout() {
           <header className="h-14 border-b border-border flex items-center px-4 gap-2 sticky top-0 bg-background/80 backdrop-blur z-30">
             <SidebarTrigger />
             <div className="flex-1" />
-            <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+            <Button variant="ghost" size="icon" aria-label="Toggle theme" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
             <DropdownMenu>
