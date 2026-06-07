@@ -663,27 +663,3 @@ class GatewayService : Service() {
     </div>
   );
 }
-
-  Subscribe topic: "realtime:device:<device_token>"  (Supabase broadcast channel — server pushes { event: "messages.pending", payload: { messages: [...] } } the moment new SMS are queued).
-  Fallback rule: if the socket fails to OPEN within 10 s, drops, or returns CHANNEL_ERROR/TIMED_OUT, switch to heartbeat polling at 20–30 s intervals. Auto-retry the socket every 60 s with exponential backoff; once SUBSCRIBED, throttle polling back down.
-
-Required behavior:
-1. Foreground service runs forever; WorkManager periodic worker every 1 min as a backup wake-up.
-2. Heartbeat every 20–30 s (or every 60 s when realtime socket is SUBSCRIBED). Always include delivered_ids[] for any messages that succeeded but whose /device-status-update POST has not yet been acknowledged (the server treats this list as authoritative).
-3. For each message received (via realtime push OR heartbeat pending_sms):
-   a. Immediately POST /device-status-update status=processing.
-   b. Send via SmsManager.sendMultipartTextMessage with two PendingIntent arrays:
-      - SMS_SENT.<id>      → on success: POST status=sent; on failure: POST status=failed with error_message = result-code name (GENERIC_FAILURE, NO_SERVICE, NULL_PDU, RADIO_OFF, etc.).
-      - SMS_DELIVERED.<id> → POST status=delivered.
-   c. If any POST fails (network/5xx), persist {id,status,error_message} to SharedPreferences "pending_status" and replay it before the next heartbeat; on 2xx, remove it.
-4. Retry/replay loop must be idempotent — server accepts repeated terminal status updates without side effects.
-5. De-dupe message IDs across realtime + heartbeat sources so the same SMS is never sent twice (LRU cache of last 500 IDs).
-6. Permissions: SEND_SMS, READ_PHONE_STATE, RECEIVE_BOOT_COMPLETED, FOREGROUND_SERVICE, POST_NOTIFICATIONS, INTERNET, ACCESS_NETWORK_STATE. Request runtime SMS permission with rationale.
-7. Battery: addToBatteryOptimizationWhitelist via ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS; show a card in the UI if not whitelisted.
-8. Network: use OkHttp with 15 s connect / 30 s read timeout, exponential backoff (1s,2s,4s,8s capped 30s) on 5xx and IOException.
-9. Logging: ring-buffer last 200 events (socket_open, socket_error, heartbeat, picked_up, sent, delivered, failed, retry) visible in-app for debugging. Surface a "Realtime / Polling (fallback)" indicator in the UI.
-10. Device token is stored in EncryptedSharedPreferences; never log it.
-11. On every successful sendTextMessage, increment a local counter and surface "sent today / failed today" in the app UI for parity with the gateway dashboard.
-
-Acceptance test: send an SMS from the gateway dashboard to the device's number → within 5 s (realtime) or 30 s (polling fallback) the message row flips queued → processing → sent → delivered, with no rows getting stuck in "processing" longer than 90 seconds. Killing wifi mid-send must replay terminal statuses on reconnect with no duplicates.`;
-
