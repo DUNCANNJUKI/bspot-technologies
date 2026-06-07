@@ -68,7 +68,7 @@ export default function Onboarding() {
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
-      <Seo title="Onboarding — B-TEXTMAN" description="Connect your Android gateway by pasting the device token and verifying it with a heartbeat call." canonical="https://btextman.lovable.app/onboarding" />
+      <Seo title="Onboarding — B-TEXTMAN" description="Connect your Android gateway by pasting the device token and verifying it with a heartbeat call." path="/onboarding" />
 
       <div className="flex items-center gap-3">
         <div className="h-12 w-12 rounded-md bg-gradient-primary flex items-center justify-center shadow-glow">
