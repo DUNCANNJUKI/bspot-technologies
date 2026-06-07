@@ -118,7 +118,28 @@ export default function Devices() {
                   <TableCell className="tabular-nums">{d.total_sms_sent}</TableCell>
                   <TableCell className="tabular-nums">{d.total_sms_failed}</TableCell>
                   <TableCell className="text-xs text-muted-foreground">{d.last_seen ? new Date(d.last_seen).toLocaleString() : "never"}</TableCell>
-                  <TableCell><Button variant="ghost" size="sm" onClick={() => toggle(d)}>{d.status === "disabled" ? "Enable" : "Disable"}</Button></TableCell>
+                  <TableCell>
+                    <div className="flex gap-1 justify-end">
+                      <Button variant="ghost" size="sm" onClick={() => toggle(d)}>{d.status === "disabled" ? "Enable" : "Disable"}</Button>
+                      {admin && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive"><Trash2 className="h-3 w-3" /></Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete device "{d.device_name}"?</AlertDialogTitle>
+                              <AlertDialogDescription>This permanently removes the device. Any app using its token will stop working immediately.</AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => remove(d)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
