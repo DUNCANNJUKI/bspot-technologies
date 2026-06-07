@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Smartphone, Plus, Search, Copy, Battery, Signal, Wifi } from "lucide-react";
+import { Smartphone, Plus, Search, Copy, Battery, Signal, Wifi, Trash2 } from "lucide-react";
 
 export default function Devices() {
   const { clientId, roles } = useAuth();
@@ -53,6 +54,11 @@ export default function Devices() {
     const next = d.status === "disabled" ? "offline" : "disabled";
     const { error } = await supabase.from("devices").update({ status: next }).eq("id", d.id);
     if (error) toast.error(error.message);
+  };
+
+  const remove = async (d: any) => {
+    const { error } = await supabase.from("devices").delete().eq("id", d.id);
+    if (error) toast.error(error.message); else { toast.success("Device deleted"); load(); }
   };
 
   const filtered = devices.filter((d) =>
