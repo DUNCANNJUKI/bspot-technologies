@@ -6,12 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { ShieldCheck, Database, Download } from "lucide-react";
+import { ShieldCheck, Database, Download, Eye } from "lucide-react";
 import { isAdmin } from "@/lib/auth";
+import { useUiPrefs, setUiPref } from "@/lib/uiPrefs";
 
 export default function Settings() {
   const { user, clientId, roles, refreshRoles } = useAuth();
+  const prefs = useUiPrefs();
   const [displayName, setDisplayName] = useState("");
   const [company, setCompany] = useState("");
   const [loading, setLoading] = useState(false);
@@ -64,6 +67,20 @@ export default function Settings() {
           </div>
         </div>
         <Button onClick={save} disabled={loading}>{loading ? "Saving…" : "Save changes"}</Button>
+      </Card>
+
+      <Card className="p-5 space-y-3">
+        <div className="flex items-center gap-2">
+          <Eye className="h-5 w-5 text-primary" />
+          <h2 className="font-semibold">Interface</h2>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <div className="space-y-0.5">
+            <Label className="text-sm">Show Messages page</Label>
+            <p className="text-xs text-muted-foreground">When off, the Messages page is hidden from the sidebar. It stays reachable by typing <code>/messages</code> directly.</p>
+          </div>
+          <Switch checked={prefs.showMessagesPage} onCheckedChange={(v) => setUiPref("showMessagesPage", v)} />
+        </div>
       </Card>
 
       <Card className="p-5 space-y-3 border-primary/40">

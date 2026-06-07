@@ -9,14 +9,15 @@ import {
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, useSidebar,
 } from "@/components/ui/sidebar";
 import { useAuth, isAdmin } from "@/lib/auth";
+import { useUiPrefs } from "@/lib/uiPrefs";
 import logo from "@/assets/btextman-logo.png";
 
-const main = [
+const mainBase = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Devices", url: "/devices", icon: Smartphone },
-  { title: "Messages", url: "/messages", icon: MessageSquare },
   { title: "Bulk SMS", url: "/bulk-sms", icon: Send },
 ];
+const messagesItem = { title: "Messages", url: "/messages", icon: MessageSquare };
 const dev = [
   { title: "API Keys", url: "/api-keys", icon: KeyRound },
   { title: "Webhooks", url: "/webhooks", icon: Webhook },
@@ -36,6 +37,8 @@ export function AppSidebar() {
   const { pathname } = useLocation();
   const { roles } = useAuth();
   const admin = isAdmin(roles);
+  const prefs = useUiPrefs();
+  const main = prefs.showMessagesPage ? [mainBase[0], mainBase[1], messagesItem, mainBase[2]] : mainBase;
 
   const active = (p: string) => pathname === p || pathname.startsWith(p + "/");
 

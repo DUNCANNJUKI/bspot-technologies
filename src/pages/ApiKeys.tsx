@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
+import { useAuth, isAdmin } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,8 @@ async function sha256Hex(s: string) {
 const genKey = () => "btx_" + crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "");
 
 export default function ApiKeys() {
-  const { clientId } = useAuth();
+  const { clientId, roles } = useAuth();
+  const admin = isAdmin(roles);
   const [keys, setKeys] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -171,8 +172,23 @@ export default function ApiKeys() {
                       )}
                       {k.status === "active" ? (
                         <Button variant="ghost" size="sm" onClick={() => openAudit(k)}><ShieldAlert className="h-3 w-3 mr-1" />Audit</Button>
-                      ) : (
-                        <Button variant="ghost" size="sm" onClick={() => remove(k.id)}><Trash2 className="h-3 w-3 mr-1" />Delete</Button>
+                      ) : null}
+                      {(admin || k.status !== "active") && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive"><Trash2 className="h-3 w-3 mr-1" />Delete</Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete "{k.name}"?</AlertDialogTitle>
+                              <AlertDialogDescription>Permanently removes the key and its audit logs. This cannot be undone.</AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => remove(k.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       )}
                     </div>
                   </TableCell>
