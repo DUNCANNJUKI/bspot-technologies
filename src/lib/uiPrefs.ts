@@ -1,4 +1,5 @@
-// Persistent UI preferences (localStorage). Read synchronously, written via setters.
+import { useEffect, useState } from "react";
+
 const KEY = "btextman.ui.prefs.v1";
 
 export type UiPrefs = {
@@ -26,8 +27,8 @@ export function setUiPref<K extends keyof UiPrefs>(k: K, v: UiPrefs[K]) {
 }
 
 export function useUiPrefs(): UiPrefs {
-  const [prefs, setPrefs] = (require("react") as typeof import("react")).useState<UiPrefs>(() => getUiPrefs());
-  (require("react") as typeof import("react")).useEffect(() => {
+  const [prefs, setPrefs] = useState<UiPrefs>(() => getUiPrefs());
+  useEffect(() => {
     const handler = () => setPrefs(getUiPrefs());
     window.addEventListener("btextman-ui-prefs", handler);
     window.addEventListener("storage", handler);
