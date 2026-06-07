@@ -660,40 +660,10 @@ class GatewayService : Service() {
         )}
       </Card>
 
-      {/* Prompt to give an app generator so it syncs properly with the gateway */}
-      <Card className="p-5 space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="font-semibold flex items-center gap-2"><Smartphone className="h-4 w-4 text-primary" />App-generator sync prompt</h2>
-          <Button size="sm" variant="outline" onClick={() => copy(APP_GENERATOR_PROMPT)}><Copy className="h-3 w-3 mr-1" />Copy prompt</Button>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Paste this into your Android app generator (Cursor, Claude, ChatGPT, etc.) to make the client fetch queued messages
-          and report delivery state to this gateway correctly.
-        </p>
-        <pre className="text-xs bg-muted rounded-md p-4 overflow-auto max-h-[420px] whitespace-pre-wrap"><code>{APP_GENERATOR_PROMPT}</code></pre>
-      </Card>
-
-      {/* Reference Kotlin implementation always visible */}
-      <Card className="p-5 space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="font-semibold">Kotlin reference implementation</h2>
-          <Button size="sm" variant="outline" onClick={() => copy(KOTLIN_SAMPLE)}><Copy className="h-3 w-3 mr-1" />Copy</Button>
-        </div>
-        <pre className="text-xs bg-muted rounded-md p-4 overflow-auto max-h-[480px]"><code>{KOTLIN_SAMPLE}</code></pre>
-      </Card>
     </div>
   );
 }
 
-const APP_GENERATOR_PROMPT = `Modify the Android SMS-gateway client so it fetches data from and syncs reliably with the B-SPOT gateway.
-
-Endpoints (Supabase edge functions, base = ${"https://rtgcrclgmvcmrjpvtpwm.supabase.co"}/functions/v1):
-  POST /device-heartbeat        — auth: Bearer <device_token>; body: { battery_level, signal_strength, internet_type, ip_address, app_version, delivered_ids: string[] }
-                                  → returns { pending_sms: [{ id, phone_number, content, sim_slot }] }
-  POST /device-status-update    — auth: Bearer <device_token>; body: { message_id, status: "processing"|"sent"|"delivered"|"failed", error_message? }
-
-Realtime stream (preferred, replaces polling when available):
-  WSS ${"https://rtgcrclgmvcmrjpvtpwm.supabase.co".replace("https://", "wss://")}/realtime/v1/websocket?apikey=<SUPABASE_ANON_KEY>&vsn=1.0.0
   Subscribe topic: "realtime:device:<device_token>"  (Supabase broadcast channel — server pushes { event: "messages.pending", payload: { messages: [...] } } the moment new SMS are queued).
   Fallback rule: if the socket fails to OPEN within 10 s, drops, or returns CHANNEL_ERROR/TIMED_OUT, switch to heartbeat polling at 20–30 s intervals. Auto-retry the socket every 60 s with exponential backoff; once SUBSCRIBED, throttle polling back down.
 
